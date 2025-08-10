@@ -1,0 +1,48 @@
+<mat-toolbar class="nav" color="transparent">
+  <!-- Left: Sign In + Heart -->
+  <div class="left">
+    <button mat-button class="signin">Sign In</button>
+    <button mat-icon-button aria-label="Wishlist">
+      <mat-icon>favorite_border</mat-icon>
+    </button>
+  </div>
+
+  <!-- Center: Logo -->
+  <div class="logo" aria-label="OtterBox">OTTERBOX</div>
+
+  <!-- Right: Search + Cart -->
+  <div class="right">
+    <form class="search-wrap" (ngSubmit)="onSearch()">
+      <mat-form-field appearance="outline" class="search-field">
+        <input
+          #searchBox
+          matInput
+          [formControl]="search"
+          placeholder="What are you looking for?"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          aria-label="Focus search"
+          (click)="focusSearch()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+      <!-- ẩn nút submit thật (Enter vẫn submit được) -->
+      <button type="submit" style="display:none"></button>
+    </form>
+
+    <button
+      mat-icon-button
+      class="cart-btn"
+      (click)="onCartClick()"
+      aria-label="Cart"
+      [matBadge]="cartCount"
+      matBadgeOverlap="false"
+    >
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>

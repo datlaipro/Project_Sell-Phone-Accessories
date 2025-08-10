@@ -1,0 +1,45 @@
+<nav class="nav">
+  <ul class="nav-list">
+    <!-- Dropdown bằng details/summary -->
+    <li class="nav-item dropdown">
+      <details class="dd" #dd>
+        <summary class="dd-btn">Cases</summary>
+
+        <!-- Panel xổ xuống, bạn tự thay nội dung -->
+        <div class="dd-panel">
+          <div class="col">
+            <h4>Apple Iphone</h4>
+            <a href="#" (click)="dd.open=false">iPhone 16 Pro Max</a>
+            <a href="#">iPhone 16 Pro</a>
+            <a href="#">iPhone 16 Plus</a>
+            <a href="#">iPhone 16e</a>
+          </div>
+          <div class="col">
+            <h4>Apple Ipad</h4>
+            <a href="#" (click)="dd.open=false">IPad(A16)</a>
+            <a href="#">iPad Air 11-inch (M3)</a>
+            <a href="#">iPad Air 13-inch (M3)</a>
+            <a href="#">iPad mini (A17 Pro)</a>
+          </div>
+          <div class="col">
+            <h4>SamSung</h4>
+            <a href="#">Galaxy S25 Ultra</a>
+            <a href="#">Galaxy S25</a>
+            <a href="#">Galaxy S25+</a>
+            <a href="#">Galaxy S25 Edge</a>
+          </div>
+        </div>
+      </details>
+    </li>
+
+    <!-- Các mục khác (không dropdown) -->
+    <li class="nav-item"><a href="#" class="nav-link">Screen Protection</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Wearables</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">The Drop</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Power</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Accessories</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Customize</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Sale</a></li>
+    <li class="nav-item"><a href="#" class="nav-link">Explore</a></li>
+  </ul>
+</nav>
