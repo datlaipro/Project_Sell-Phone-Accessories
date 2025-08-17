@@ -2,32 +2,17 @@
   <ul class="nav-list">
     <!-- Dropdown bằng details/summary -->
     <li class="nav-item dropdown">
-      <details class="dd" #dd>
+      <details class="dd" #dd >
         <summary class="dd-btn">Cases</summary>
 
         <!-- Panel xổ xuống, bạn tự thay nội dung -->
-        <div class="dd-panel">
-          <div class="col">
-            <h4>Apple Iphone</h4>
-            <a href="#" (click)="dd.open=false">iPhone 16 Pro Max</a>
-            <a href="#">iPhone 16 Pro</a>
-            <a href="#">iPhone 16 Plus</a>
-            <a href="#">iPhone 16e</a>
+        <div class="dd-panel"  >
+          <div class="col" *ngFor="let cat of products">
+            <h4>{{cat.title}}</h4>
+            <a href="#" (click)="dd.open=false;layId(p.id)" *ngFor="let p of cat.product" [attr.data-id]="p.id">{{p.name}}</a>
+           
           </div>
-          <div class="col">
-            <h4>Apple Ipad</h4>
-            <a href="#" (click)="dd.open=false">IPad(A16)</a>
-            <a href="#">iPad Air 11-inch (M3)</a>
-            <a href="#">iPad Air 13-inch (M3)</a>
-            <a href="#">iPad mini (A17 Pro)</a>
-          </div>
-          <div class="col">
-            <h4>SamSung</h4>
-            <a href="#">Galaxy S25 Ultra</a>
-            <a href="#">Galaxy S25</a>
-            <a href="#">Galaxy S25+</a>
-            <a href="#">Galaxy S25 Edge</a>
-          </div>
+         
         </div>
       </details>
     </li>

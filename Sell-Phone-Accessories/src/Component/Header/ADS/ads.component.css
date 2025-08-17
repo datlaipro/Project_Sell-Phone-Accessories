@@ -1,0 +1,556 @@
+:root {
+  --cream: #fff7cf;
+  /* nền vàng nhạt giống ảnh */
+  --ink: #0e0e0e;
+  --muted: #6b6b6b;
+  --brand: #111111;
+  --pill: #121212;
+  --accent: #f6b21a;
+  /* vàng cam */
+  --accent-2: #ffd54d;
+  --blue: #5c82b1;
+  /* ô xanh ở ảnh */
+  --case-ring: #bcb4d2;
+  /* viền ốp */
+  --case-body: #e6e2f1;
+  /* nền ốp */
+  --radius: 28px;
+}
+
+* {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--ink);
+  background: #fff;
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  background-color: rgb(234, 234, 199);
+  overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 56px 24px 160px;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  /* chữ trái – collage phải */
+  gap: 32px;
+  align-items: center;
+  min-height: 560px;
+}
+
+/* ===== LEFT COPY ===== */
+.copy h1 {
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  font-weight: 900;
+  font-size: clamp(32px, 4.8vw, 64px);
+  margin: 0 0 16px;
+
+}
+
+.copy h1 .line {
+  display: block
+}
+
+.copy p {
+  margin: 8px 0;
+  color: #262626;
+  font-size: 18px;
+}
+
+.actions {
+
+  margin: 24px 0 8px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+/* Nút pill đen như ảnh */
+.btn {
+  --bg: #1c1a18;
+  /* đen hơi nâu như ảnh */
+  --fg: #fff;
+
+  background: var(--bg);
+  color: var(--fg);
+  border: none;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1;
+
+  /* bóng + highlight nhẹ ở viền trên để nút “nổi” */
+
+  cursor: pointer;
+}
+
+/* Hover tối hơn và bóng sâu hơn một chút */
+
+
+/* Active nhấn xuống nhẹ */
+.btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, .35),
+    0 6px 14px rgba(0, 0, 0, .22);
+}
+
+/* Focus ring rõ ràng để truy cập bàn phím */
+.btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 6px #1c1a18,
+    0 10px 22px rgba(0, 0, 0, .24);
+}
+
+.terms:hover {
+  text-decoration: underline
+}
+
+/* Cách 1: đổi sang inline-block để margin-top có tác dụng */
+.copy .terms{
+  display: inline-block;
+  margin-top: 100px;   /* chỉnh số theo ý */
+}
+
+/* ===== RIGHT COLLAGE ===== */
+.collage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  min-height: 420px;
+}
+
+/* khối chung */
+.tile {
+  position: absolute;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block
+}
+
+/* tấm nền vàng to phía sau (giống ô vàng lớn ở ảnh) */
+.t1 {
+  inset: 4% 6% 26% 0%;
+  background: #ffeaa7;
+  /* vàng sáng */
+  border-radius: 32px;
+}
+
+/* iPhone case to – làm “khung ốp” bằng padding + viền dày */
+.t2 {
+  width: 62%;
+  height: 44%;
+  right: 10%;
+  top: 16%;
+  padding: 14px;
+  /* tạo viền ốp */
+  background: var(--case-body);
+  border: 10px solid var(--case-ring);
+  border-radius: 34px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+  transform: rotate(-1.5deg);
+  /* nghiêng nhẹ như layout mẫu */
+}
+
+.t2 img {
+  border-radius: 22px;
+  object-fit: cover;
+  filter: contrast(1.02) saturate(0.95);
+}
+
+/* ảnh “Students” nhỏ ở góc phải dưới */
+.t3 {
+  width: 40%;
+  height: 32%;
+  right: 10%;
+  bottom: 8%;
+  border-radius: 24px;
+  border: 10px solid #ffecb3;
+  /* viền vàng nhạt */
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .18);
+}
+
+/* khối xanh ở góc trái dưới */
+.t4 {
+  width: 30%;
+  height: 34%;
+  left: 54%;
+  bottom: -2%;
+  background: #e8f0f9;
+  border: 10px solid var(--blue);
+  border-radius: 28px;
+}
+
+/* ===== SEARCH PILL ===== */
+.search-pill {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px;
+  width: min(1040px, calc(100% - 24px));
+  background: var(--pill);
+  color: #fff;
+  border-radius: 999px;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 12px 38px rgba(0, 0, 0, .35);
+}
+
+.sp-start {
+  font-weight: 900;
+  letter-spacing: .02em;
+  font-size: 16px;
+  text-transform: uppercase;
+  line-height: 1.1;
+  opacity: .95;
+}
+
+.sp-item {
+  background: rgba(255, 255, 255, .06);
+  border-radius: 999px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, .12);
+  transition: background .2s ease, transform .08s ease;
+}
+
+.sp-item:hover {
+  background: rgba(255, 255, 255, .1)
+}
+
+.sp-item:active {
+  transform: translateY(1px)
+}
+
+.sp-item::after {
+  content: "▾";
+  font-size: 18px;
+  line-height: 1;
+  margin-left: 10px;
+  opacity: .9;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    padding-bottom: 200px;
+  }
+
+  .collage {
+    order: -1
+  }
+
+  .t1 {
+    inset: 0 8% 30% 0
+  }
+
+  .t2 {
+    width: 72%;
+    height: 42%;
+    right: 8%;
+    top: 14%
+  }
+
+  .t3 {
+    width: 48%;
+    right: 8%
+  }
+
+  .t4 {
+    left: 56%
+  }
+}
+
+@media (max-width: 640px) {
+  .copy h1 {
+    font-size: clamp(28px, 9vw, 44px)
+  }
+
+  .search-pill {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  /* mobile: chỉ giữ nền vàng + ốp máy để gọn */
+  .t3,
+  .t4 {
+    display: none
+  }
+
+  .t1 {
+    inset: 0 0 28% 0
+  }
+
+  .t2 {
+    width: 86%;
+    right: 7%;
+    top: 12%
+  }
+}
+
+
+/* ====== OVERRIDES: Hero giống ảnh có iPhone ====== */
+
+/* màu tổng thể giống ảnh */
+:root {
+  --cream: #fff7cf;
+  --blue: #5c82b1;
+  --case-ring: #bcb4d2;
+  --case-body: #e6e2f1;
+}
+
+/* hero nền vàng nhạt */
+.hero {
+  background-color: rgb(234, 234, 199);
+}
+
+/* bố cục giữ như cũ, chỉ tinh chỉnh nhẹ chiều cao */
+.hero-inner {
+  min-height: 600px;
+}
+
+/* ---------- COLLAGE ---------- */
+.collage {
+  position: relative;
+  aspect-ratio: 4/3;
+  min-height: 440px;
+}
+
+/* Nền vàng to phía sau */
+.t1 {
+  inset: 4% 8% 24% 0%;
+  background: #ffe39a;
+  border-radius: 32px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .10) inset;
+}
+
+/* ỐP iPhone to (không dùng ảnh nữa) */
+.t2 {
+  width: 64%;
+  height: 46%;
+  right: 10%;
+  top: 14%;
+  border: 12px solid var(--case-ring);
+  /* viền ốp */
+  background: linear-gradient(135deg, #d9dced 0%, #eff2fb 70%);
+  /* “mặt lưng” */
+  border-radius: 36px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+  transform: rotate(-1.5deg);
+  position: absolute;
+}
+
+/* Ẩn <img> bên trong để không hiện alt khi ảnh lỗi */
+.t2 img {
+  display: none;
+}
+
+/* Cụm camera nổi + 3 ống kính + flash (CSS thuần) */
+.t2::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 128px;
+  height: 128px;
+  background: #eceaf6;
+  border: 8px solid #cfc8df;
+  border-radius: 24px;
+  box-shadow:
+    inset 0 -6px 10px rgba(0, 0, 0, .06),
+    0 6px 10px rgba(0, 0, 0, .08);
+}
+
+.t2::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 128px;
+  height: 128px;
+  border-radius: 24px;
+  /* 3 lens + 1 flash bằng nhiều radial-gradient */
+  background:
+    /* lens 1 (trên trái) */
+    radial-gradient(circle at 32px 32px, #0a0d14 0 16px, #1a2030 17px 30px, transparent 31px),
+    radial-gradient(circle at 32px 32px, rgba(255, 255, 255, .25) 0 6px, transparent 7px),
+    /* lens 2 (trên phải) */
+    radial-gradient(circle at 96px 32px, #0a0d14 0 16px, #1a2030 17px 30px, transparent 31px),
+    radial-gradient(circle at 96px 32px, rgba(255, 255, 255, .25) 0 6px, transparent 7px),
+    /* lens 3 (dưới trái) */
+    radial-gradient(circle at 32px 96px, #0a0d14 0 16px, #1a2030 17px 30px, transparent 31px),
+    radial-gradient(circle at 32px 96px, rgba(255, 255, 255, .25) 0 6px, transparent 7px),
+    /* flash (dưới phải) */
+    radial-gradient(circle at 96px 96px, #fff 0 8px, #ffe 9px 13px, transparent 14px);
+}
+
+/* Thẻ nhỏ “Students” giống frame trắng viền vàng nhạt */
+.t3 {
+  width: 42%;
+  height: 32%;
+  right: 10%;
+  bottom: 8%;
+  background: #fff;
+  border: 10px solid #ffecc0;
+  border-radius: 24px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .18);
+  overflow: visible;
+}
+
+.t3 img {
+  display: none;
+}
+
+/* dùng ô màu bên trong thay ảnh */
+.t3::after {
+  content: "";
+  position: absolute;
+  inset: 26% 18% 16% 18%;
+  background: #dfe9f6;
+  border-radius: 20px;
+  /* ô xanh nhạt bên trong */
+  box-shadow: inset 0 6px 10px rgba(0, 0, 0, .05);
+}
+
+/* Ô xanh viền xanh đậm ở góc trái dưới */
+.t4 {
+  width: 30%;
+  height: 34%;
+  left: 54%;
+  bottom: -2%;
+  background: #eaf2fb;
+  border: 10px solid var(--blue);
+  border-radius: 28px;
+}
+
+/* ---------- SEARCH PILL: nền trắng như ảnh ---------- */
+.search-pill {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .16);
+}
+
+.sp-item {
+  background: #f7f7f7;
+  border: 1px solid #eee;
+}
+
+.sp-item:hover {
+  background: #f2f2f2;
+}
+
+/* ---------- Responsive giữ bố cục giống ảnh ---------- */
+@media (max-width:1024px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    padding-bottom: 200px;
+  }
+
+  .collage {
+    order: -1
+  }
+
+  .t1 {
+    inset: 0 8% 30% 0
+  }
+
+  .t2 {
+    width: 76%;
+    height: 44%;
+    right: 8%;
+    top: 12%;
+  }
+
+  .t3 {
+    width: 50%;
+    right: 8%;
+  }
+}
+
+@media (max-width:640px) {
+
+  .t3,
+  .t4 {
+    display: none;
+  }
+
+  .t1 {
+    inset: 0 0 28% 0
+  }
+
+  .t2 {
+    width: 86%;
+    right: 7%;
+    top: 12%;
+    transform: rotate(-1deg);
+  }
+
+  .search-pill {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+}
+
+/* Đặt copy ở cột trái, collage ở cột phải */
+.hero-inner {
+  grid-template-columns: 1.05fr 1fr;
+  grid-template-areas: "copy collage";
+  padding-left: 0;
+  /* nếu muốn sát mép của hero */
+}
+
+.copy {
+  grid-area: copy;
+  justify-self: start;
+}
+
+.collage {
+  grid-area: collage;
+}
+
+/* Mobile: cho collage lên trước, rồi đến copy */
+@media (max-width:1024px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "collage"
+      "copy";
+    padding-left: 16px;
+    /* trả lại chút đệm trên mobile */
+    padding-right: 16px;
+  }
+}

@@ -1,0 +1,21 @@
+<h1 style="text-align:center">The case showcase</h1>
+
+<div class="case-showcase">
+  <button class="arrow" (click)="scroll(-1)" [disabled]="atStart">←</button>
+
+  <!-- KHUNG chỉ hiển thị đúng 6 thẻ -->
+  <div class="viewport" [style.width.px]="viewportWidth">
+    <!-- Thanh trượt thực tế -->
+    <div class="rail" #vp (scroll)="onScroll()" >
+      <div class="display" *ngFor="let p of productsPreview">
+        <div class="p-media" [attr.id]="p.id"><img [src]="p.image" alt="" /></div>
+        <header class="p-head">
+          <h4 class="p-eyebrow">{{ p.name }}</h4>
+          <div class="p-price">{{ p.price }}</div>
+        </header>
+      </div>
+    </div>
+  </div>
+
+  <button class="arrow" (click)="scroll(1)" [disabled]="atEnd">→</button>
+</div>
