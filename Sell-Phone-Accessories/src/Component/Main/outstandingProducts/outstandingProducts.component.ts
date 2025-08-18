@@ -99,7 +99,7 @@ export class BannerProductList {
   viewportWidth = 0;
 
   private cardW = 250;
-  private gap = 14;
+  private gap = 13;
 
   atStart = true;
   atEnd = false;

@@ -1,0 +1,508 @@
+/* Reset nhẹ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Container ảnh */
+.hero {
+  margin-top: 100px;
+  position: relative;
+  width: 100vw;
+  /* tràn full chiều ngang */
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ảnh nền */
+.hero__img {
+  display: block;
+  width: 100%;
+  height: clamp(320px, 36vw, 700px);
+  /* tỉ lệ gần 1920x700, co giãn theo viewport */
+  object-fit: cover;
+}
+
+/* Nội dung chồng lên ảnh: xếp theo cột để nút ở dưới */
+.hero__content {
+  max-width: min(56vw, 920px);
+  /* chỉ chiếm phía trái, không lấn qua ảnh */
+
+  position: absolute;
+  left: clamp(16px, 6vw, 96px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  /* <— quan trọng: nút xuống dưới */
+  align-items: flex-start;
+  gap: clamp(8px, 1vw, 14px);
+  max-width: min(70vw, 1000px);
+  /* rộng hơn để tiêu đề không phải xuống dòng */
+  color: #111;
+}
+
+/* Tiêu đề 1 dòng, nằm ngang */
+.hero__title {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-size: clamp(20px, 5vw, 60px);
+  white-space: normal;
+  /* ⬅️ cho phép xuống dòng */
+}
+
+.hero__title .br {
+  display: block;
+  /* ⬅️ ép ngắt dòng trước “THREADS” */
+}
+
+/* Mô tả */
+.hero__desc {
+  margin: 0;
+  font-size: clamp(14px, 1.4vw, 18px);
+  opacity: .9;
+}
+
+/* Nút bo tròn */
+.hero__cta {
+  align-self: flex-start;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: #111;
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .18), 0 0 0 1px rgba(0, 0, 0, .08);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+.hero__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .22), 0 0 0 1px rgba(0, 0, 0, .12);
+}
+
+.hero__cta:active {
+  transform: translateY(0);
+  opacity: .9;
+}
+
+.hero__cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+
+/* Mobile: cho phép xuống dòng khi màn hình hẹp */
+@media (max-width:640px) {
+  .hero__title {
+    white-space: normal;
+  }
+
+  .hero__content {
+    bottom: clamp(16px, 6vw, 24px);
+    top: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__content {
+    max-width: 90vw;
+  }
+}
+
+
+/* ===== Base & container ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.featured {
+  width: min(1200px, 92vw);
+  margin: 48px auto 64px;
+}
+
+.featured__head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.featured__title {
+  margin: 0 0 6px;
+  font-size: clamp(28px, 4.6vw, 56px);
+  font-weight: 700;
+  color: #222;
+}
+
+.featured__sub {
+  margin: 0;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: #555;
+}
+
+/* ===== Tiles grid ===== */
+.tiles {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  /* trái lớn, phải nhỏ */
+  gap: clamp(16px, 2vw, 28px);
+}
+
+/* ===== Single tile ===== */
+.tile {
+  cursor: pointer;
+
+  position: relative;
+  border-radius: 28px;
+  padding: clamp(18px, 2.2vw, 28px);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  height: clamp(320px, 36vw, 560px);
+  /* chiều cao linh hoạt */
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
+}
+
+/* Màu nền gần giống ảnh mẫu để hợp với hình */
+.tile--large {
+  background: #FEF8DE;
+}
+
+/* vàng kem chấm bi */
+.tile--small {
+  background: #F9B923;
+}
+
+/* vàng đậm */
+
+.tile__title {
+  cursor: pointer;
+
+  position: absolute;
+  top: clamp(16px, 2.2vw, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(18px, 2.8vw, 32px);
+  font-weight: 700;
+  color: #111;
+}
+
+/* Ảnh bên trong tile */
+.tile__art {
+
+  max-width: 92%;
+  max-height: 78%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .15));
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ===== Hover (tùy thích) ===== */
+/* .tile:hover { transform: translateY(-2px); transition: transform .18s ease; } */
+
+/* Cho tile dạng full-bleed */
+.tile--bleed {
+  padding: 0;
+  /* bỏ khoảng đệm để ảnh sát mép */
+}
+
+.tile--bleed .tile__art {
+  position: absolute;
+  inset: 0;
+  /* top/right/bottom/left = 0 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* phủ kín, không méo ảnh */
+  border-radius: inherit;
+  /* bo góc trùng với tile */
+  filter: none;
+  /* bỏ drop-shadow nếu có */
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/* Tiêu đề vẫn đặt chồng lên ảnh */
+.tile--bleed .tile__title {
+  position: absolute;
+  z-index: 1;
+  top: clamp(14px, 2vw, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(18px, 2.8vw, 32px);
+
+  /* tuỳ chọn: nền mờ giúp chữ dễ đọc hơn */
+  background: rgba(255, 255, 255, .75);
+  padding: .45em .9em;
+  border-radius: 12px;
+  backdrop-filter: blur(2px);
+}
+
+
+/* Container của tile */
+.tile.tile--bleed {
+  position: relative;
+  overflow: hidden;
+  /* cắt phần ảnh tràn ra ngoài */
+  border-radius: 28px;
+  /* bo góc theo ý bạn */
+  padding: 0;
+  
+}
+
+/* Ảnh tràn full tile */
+.tile.tile--bleed>img {
+  position: absolute;
+  inset: 0;
+  /* top/right/bottom/left = 0 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* phủ kín mà không méo */
+  object-position: center;
+  /* căn giữa */
+  display: block;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+
+  .tile {
+    height: clamp(300px, 60vw, 520px);
+  }
+}
+
+/* === FULL-BLEED IMG (đặt ở cuối file) === */
+.tile.tile--bleed {
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+  /* bỏ khoảng đệm của .tile */
+  border-radius: 28px;
+  display: block;
+  /* tránh grid/center làm ảnh co cụm */
+}
+
+.tile.tile--bleed>img.tile__art {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* inset:0 */
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  /* xoá giới hạn 92% */
+  max-height: none !important;
+  /* xoá giới hạn 78% */
+  object-fit: cover;
+  /* phủ kín tile */
+  object-position: center;
+  filter: none !important;
+  /* bỏ bóng đổ nếu còn */
+  display: block;
+}
+
+
+/* Base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Grid 3 cột */
+.tiles3 {
+  width: min(1300px, 94vw);
+  margin: 32px auto 64px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 32px);
+}
+
+/* Tile chung */
+.tile {
+  position: relative;
+  border-radius: 36px;
+  height: clamp(280px, 32vw, 460px);
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+}
+
+/* Nền theo ô */
+.tile--blue {
+  background: #CFE7F6;
+}
+
+/* xanh nhạt */
+.tile--green {
+  background: #173816;
+}
+
+/* xanh đậm */
+.tile--orange {
+  background: #F08214;
+}
+
+/* cam */
+
+.tile__title {
+  position: absolute;
+  top: clamp(16px, 2.4vw, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  margin: 0;
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(18px, 2.6vw, 32px);
+  line-height: 1.15;
+  color: #111;
+}
+
+
+.tile--orange .tile__title {
+  color: #111;
+}
+.tile--green .tile__title{
+  color: white;
+}
+
+/* chữ đen nổi rõ */
+
+/* Ảnh trong tile */
+.tile__art {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  width: 88%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .18));
+  user-select: none;
+  cursor: pointer;
+  /* theo yêu cầu */
+}
+
+/* Tinh chỉnh vị trí/size cho từng ô để giống bố cục ảnh mẫu */
+.tile--blue .tile__art {
+  left: 20px;
+  bottom: 0;
+  width: 100%;
+  transform: translateX(-2%);
+  /* dịch nhẹ để “lọt” vào khung như ảnh mẫu */
+}
+
+.tile--green .tile__art {
+  left: auto;
+  right: clamp(12px, 2vw, 24px);
+  bottom: clamp(12px, 2vw, 24px);
+  width: 56%;
+  transform: rotate(-12deg);
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, .25));
+}
+
+.tile--orange .tile__art {
+  left: auto;
+  right: clamp(12px, 2vw, 24px);
+  bottom: clamp(12px, 2vw, 24px);
+  width: 46%;
+
+}
+
+/* Hover nhẹ cho ảnh */
+.tile__art:hover {
+  transform: translateY(-2px) scale(1.02) rotate(var(--rot, 0deg));
+}
+
+.tile--green .tile__art:hover {
+  --rot: -12deg;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .tiles3 {
+    grid-template-columns: 1fr;
+  }
+
+  .tile {
+    height: clamp(300px, 60vw, 520px);
+  }
+
+  .tile__title {
+    width: 92%;
+  }
+
+  .tile--blue .tile__art {
+    width: 112%;
+    left: -6%;
+  }
+
+  .tile--green .tile__art {
+    width: 58%;
+  }
+
+  .tile--orange .tile__art {
+    width: 52%;
+  }
+}
+
+
+
+/* === ép ảnh trong 2 ô xanh đậm & cam tràn sát mép như ô xanh dương === */
+.tile--green .tile__art,
+.tile--orange .tile__art {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  /* ảnh (khung PNG) chạm 2 mép trái/phải */
+  /* height: auto !important; */
+  transform: none !important;
+  /* xoá rotate/translate cũ nếu có */
+  filter: none;
+  /* tuỳ chọn: bỏ drop-shadow để phẳng màu */
+  cursor: pointer;
+}
+
+/* Tuỳ chọn: PNG có khoảng trong suốt lớn → scale lên một chút để nhìn “đã” hơn */
+.tile--green .tile__art {
+  transform: scale(1.18) translateY(2%);
+}
+
+.tile--orange .tile__art {
+  transform: scale(1.22) translateY(2%);
+}
+

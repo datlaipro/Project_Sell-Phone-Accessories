@@ -1,0 +1,175 @@
+/* Reset gọn */
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+/* Lưới 2 cột, tự xuống 1 cột khi màn hẹp */
+.ob-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .ob-tiles { grid-template-columns: 1fr; }
+}
+
+/* Căn giữa khối 2 tile như .ob-benefits */
+.ob-tiles {
+  max-width: 1280px;      /* bề rộng tối đa của khung */
+  margin: 40px auto;      /*auto 2 bên để ra giữa, 40px trên/dưới tuỳ chỉnh*/
+  padding: 0 24px;        /* gutter 2 bên cho thoáng */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-left: 200px;
+}
+
+
+
+/* Ảnh nền */
+.ob-tile__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Lớp tối dần phía dưới để chữ nổi bật */
+.ob-tile__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0) 40%,
+    rgba(0,0,0,0.30) 60%,
+    rgba(0,0,0,0.60) 75%,
+    rgba(0,0,0,0.85) 100%
+  );
+}
+
+/* Nội dung chữ */
+.ob-tile__content {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ob-tile__title {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  font-size: clamp(28px, 5vw, 64px);
+}
+
+.ob-tile__desc {
+  margin: 0;
+  max-width: 38em;
+  line-height: 1.6;
+  font-size: clamp(14px, 1.6vw, 18px);
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+}
+
+/* Nút */
+.ob-btn {
+  align-self: flex-start;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.ob-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+
+
+/* Vùng nền trắng + dải xám rất nhạt phía dưới giống ảnh */
+.ob-benefits-wrap {
+  background: linear-gradient(#ffffff 0 85%, #f2f2f2 85% 100%);
+}
+
+/* Lưới 4 cột, căn giữa, khoảng cách lớn như site gốc */
+.ob-benefits {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: clamp(20px, 6vw, 120px);
+  align-items: center;
+  justify-items: center;
+}
+
+/* Item */
+.ob-benefit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #6b6b6b;          /* xám đậm như ảnh */
+  text-align: left;
+  white-space: nowrap;     /* giữ text 1–2 dòng gọn */
+}
+
+/* Icon nét mảnh màu xám */
+.ob-ico {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: #7a7a7a;
+}
+
+/* Chữ */
+.ob-benefit__text strong {
+  display: block;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.ob-benefit__text span {
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.ob-benefit__text small {
+  display: block;
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: .75;
+  margin-top: 4px;
+}
+
+/* Responsive: 2 cột và 1 cột khi màn hẹp */
+@media (max-width: 980px) {
+  .ob-benefits { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
+@media (max-width: 560px) {
+  .ob-benefits { grid-template-columns: 1fr; gap: 18px; }
+  .ob-benefit { justify-content: flex-start; }
+}
+
+.ob-ico.mat-icon {
+  font-size: 56px;
+  width: 1em !important;
+  height: 1em !important;
+  color: #7a7a7a;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
