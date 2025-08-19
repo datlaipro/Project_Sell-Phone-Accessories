@@ -4,9 +4,10 @@
   <button class="arrow" (click)="scroll(-1)" [disabled]="atStart">←</button>
 
   <!-- KHUNG chỉ hiển thị đúng 6 thẻ -->
-  <div class="viewport" [style.width.px]="viewportWidth">
-    <!-- Thanh trượt thực tế -->
-    <div class="rail" #vp (scroll)="onScroll()" >
+<div #vp class="viewport"
+       [style.width.px]="viewportWidth ?? null"
+       (scroll)="onScroll()">    <!-- Thanh trượt thực tế -->
+    <div class="rail"  >
       <div class="display" *ngFor="let p of productsPreview">
         <div class="p-media" [attr.id]="p.id"><img [src]="p.image" alt="" /></div>
         <header class="p-head">

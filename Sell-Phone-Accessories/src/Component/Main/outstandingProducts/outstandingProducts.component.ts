@@ -93,50 +93,64 @@ export class BannerProductList {
   ];
 
 
-  @ViewChild('vp') vp!: ElementRef<HTMLDivElement>;
+ @ViewChild('vp', { static: true }) vp!: ElementRef<HTMLDivElement>;
 
- readonly visible = 7;
-  viewportWidth = 0;
+readonly visible = 6;
+viewportWidth: number | null = null;   // ⭐ bắt đầu = null để không sinh width:0
 
-  private cardW = 250;
-  private gap = 13;
+private cardW = 250;
+private gap = 13;
 
-  atStart = true;
-  atEnd = false;
+atStart = true;
+atEnd = false;
 
-  ngAfterViewInit(): void {
-    // đo đúng bề rộng 1 thẻ & gap từ DOM
-    const first = this.vp.nativeElement.querySelector('.display') as HTMLElement | null;
-    if (first) this.cardW = first.offsetWidth;
+ngAfterViewInit() {
+  const viewport = this.vp.nativeElement;
+  const rail = viewport.querySelector('.rail') as HTMLElement | null;
+  const first = rail?.querySelector('.display') as HTMLElement | null;
 
-    const style = getComputedStyle(this.vp.nativeElement);
-    const g = parseInt(style.getPropertyValue('gap') || '14', 10);
+  // đo kích thước thực (gồm border) ổn định hơn
+  if (first) this.cardW = Math.round(first.getBoundingClientRect().width);
+
+  // đọc đúng gap ở .rail
+  if (rail) {
+    const g = parseInt(getComputedStyle(rail).gap || '0', 10);
     if (!Number.isNaN(g)) this.gap = g;
-
-    // KHÓA viewport để chỉ thấy đúng 6 thẻ
-    this.viewportWidth = this.visible * this.cardW + (this.visible - 1) * this.gap;
-
-    this.updateArrowState();
   }
 
-  scroll(dir: number) {
-    const step = this.cardW + this.gap;                 // cuộn đúng 1 thẻ
-    this.vp.nativeElement.scrollBy({ left: dir * step, behavior: 'smooth' });
-    requestAnimationFrame(() => this.updateArrowState());
-  }
+  // nếu .rail có padding hai bên, cộng thêm:
+  const railStyle = rail ? getComputedStyle(rail) : null;
+  const pad =
+    (railStyle ? parseInt(railStyle.paddingLeft || '0', 10) : 0) +
+    (railStyle ? parseInt(railStyle.paddingRight || '0', 10) : 0);
 
-  onScroll(){ this.updateArrowState(); }
+  // KHÓA viewport đúng 5 thẻ (có chống lệch pixel)
+  this.viewportWidth = Math.ceil(this.visible * this.cardW + (this.visible - 1) * this.gap + pad);
+  // cập nhật nút
+  this.updateArrowState();
+}
 
-  private updateArrowState() {
-    const rail = this.vp.nativeElement;
-    const step = this.cardW + this.gap;
+scroll(dir: number) {
+  const step = this.cardW + this.gap;
+  this.vp.nativeElement.querySelector('.rail')
+    ?.scrollBy({ left: dir * step, behavior: 'smooth' });
+  requestAnimationFrame(() => this.updateArrowState());
+}
 
-    const maxIndex = Math.max(0, this.totalItems() - this.visible);
-    const idx = Math.round(rail.scrollLeft / step);
+onScroll() { this.updateArrowState(); }
 
-    this.atStart = idx <= 0;
-    this.atEnd = idx >= maxIndex;
-  }
+private updateArrowState() {
+  const rail = this.vp.nativeElement.querySelector('.rail') as HTMLElement | null;
+  if (!rail) return;
+  const step = this.cardW + this.gap;
+  const maxIdx = Math.max(0, this.totalItems() - this.visible);
+  const idx = Math.round((rail.scrollLeft || 0) / step);
+  this.atStart = idx <= 0;
+  this.atEnd = idx >= maxIdx;
+}
 
-  private totalItems(){ return this.vp.nativeElement.querySelectorAll('.display').length; }
+private totalItems() {
+  return this.vp.nativeElement.querySelectorAll('.display').length;
+}
+
 }

@@ -1,6 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
+import { mergeApplicationConfig } from '@angular/core';
 import { AppComponent } from './app/app.component';
-// đây là file giống với index.js bên reactjs
+import { appConfig } from './app/app.config';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
+import { HomeComponent } from './app/home.component';
 bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+  .catch(err => console.error(err));

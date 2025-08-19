@@ -5,14 +5,15 @@ import {
   MatCommonModule,
   _IdGenerator,
   _VisuallyHiddenLoader
-} from "./chunk-VIKWH3XW.js";
-import "./chunk-U5YZGSI2.js";
+} from "./chunk-A4PF2D72.js";
+import "./chunk-VOQMCNFD.js";
 import {
   _CdkPrivateStyleLoader
-} from "./chunk-SF5HSBJH.js";
+} from "./chunk-P2J4AEST.js";
+import "./chunk-CFKH3W5X.js";
 import {
   DOCUMENT
-} from "./chunk-4B4WLURK.js";
+} from "./chunk-RVKDV7C7.js";
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -32,7 +33,7 @@ import {
   ɵɵdefineDirective,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-} from "./chunk-BF3C3RBX.js";
+} from "./chunk-XLE5N5VE.js";
 
 // node_modules/@angular/material/fesm2022/badge.mjs
 var BADGE_CONTENT_CLASS = "mat-badge-content";

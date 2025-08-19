@@ -75,3 +75,69 @@
   .signin { display: none; }
   .search-field { width: 220px; }
 }
+
+/* ---------- BASE TWEAK ---------- */
+/* co giãn chiều rộng ô tìm kiếm theo viewport */
+.search-field { width: clamp(220px, 52vw, 420px); }
+
+/* ---------- ≥1200px (desktop lớn) ---------- */
+@media (max-width: 1200px){
+  .logo{ font-size: 24px; }
+  .nav{ gap: 12px; }
+  .search-field{ width: clamp(220px, 46vw, 360px); }
+}
+
+/* ---------- ≤992px (tablet ngang) ---------- */
+@media (max-width: 992px){
+  .logo{ font-size: 22px; letter-spacing: 1px; }
+  .signin{ display: none; }            /* ẩn chữ Sign In, chỉ giữ icon nếu có */
+  .search-field{ width: clamp(220px, 52vw, 320px); }
+  .search-field .mat-mdc-text-field-wrapper{ height: 38px; }
+}
+
+/* ---------- ≤768px (tablet dọc) ---------- */
+/* chuyển navbar thành 2 hàng, cho thanh tìm kiếm chiếm full hàng thứ 2 */
+@media (max-width: 768px){
+  .nav{
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 56px auto;     /* hàng 1: logo + icon, hàng 2: search */
+    row-gap: 10px;
+    padding: 0 12px;
+    height: auto;                      /* không cố định 72px nữa */
+  }
+
+  /* nếu search là phần tử con trực tiếp của .nav */
+  .nav > .search-wrap{ grid-column: 1 / -1; justify-content: center; }
+
+  /* nếu search nằm trong .right thì đẩy cả cụm .right xuống hàng 2 */
+  .nav > .right{ grid-column: 1 / -1; justify-content: center; }
+
+  .search-field{
+    width: min(560px, 92vw);
+    max-width: 92vw;
+    margin-top: 0;
+  }
+
+  .cart-btn{ margin-left: 12px; }
+}
+
+/* ---------- ≤600px (điện thoại) ---------- */
+@media (max-width: 600px){
+  .logo{ font-size: 20px; }
+  .nav{ gap: 10px; }
+  .left, .right{ gap: 6px; }
+  .search-field{ width: 100%; }
+  .search-field .mat-mdc-text-field-wrapper{ height: 36px; }
+  .search-field input::placeholder{ font-size: 14px; }
+}
+
+/* ---------- ≤480px (điện thoại nhỏ) ---------- */
+@media (max-width: 480px){
+  .nav{
+    grid-template-rows: 52px auto;
+    padding: 0 10px;
+  }
+  .logo{ font-size: 18px; }
+  .search-field .mat-mdc-text-field-wrapper{ height: 34px; padding: 0 4px; }
+  .cart-btn{ margin-left: 8px; }
+}

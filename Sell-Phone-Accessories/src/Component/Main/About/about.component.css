@@ -12,18 +12,17 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
   .ob-tiles { grid-template-columns: 1fr; }
 }
 
-/* Căn giữa khối 2 tile như .ob-benefits */
-.ob-tiles {
-  max-width: 1280px;      /* bề rộng tối đa của khung */
-  margin: 40px auto;      /*auto 2 bên để ra giữa, 40px trên/dưới tuỳ chỉnh*/
-  padding: 0 24px;        /* gutter 2 bên cho thoáng */
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  margin-left: 200px;
+/* Card tile */
+.ob-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 36px;
+  height: clamp(360px, 42vw, 720px);
+  color: #fff;
+  text-decoration: none;
+  background: #000; /* phòng khi ảnh chưa tải */
 }
-
-
 
 /* Ảnh nền */
 .ob-tile__img {
@@ -93,10 +92,7 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
 }
 
 
-/* Vùng nền trắng + dải xám rất nhạt phía dưới giống ảnh */
-.ob-benefits-wrap {
-  background: linear-gradient(#ffffff 0 85%, #f2f2f2 85% 100%);
-}
+
 
 /* Lưới 4 cột, căn giữa, khoảng cách lớn như site gốc */
 .ob-benefits {
@@ -108,6 +104,7 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
   gap: clamp(20px, 6vw, 120px);
   align-items: center;
   justify-items: center;
+  margin-left: 200px;
 }
 
 /* Item */
@@ -118,6 +115,7 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
   color: #6b6b6b;          /* xám đậm như ảnh */
   text-align: left;
   white-space: nowrap;     /* giữ text 1–2 dòng gọn */
+
 }
 
 /* Icon nét mảnh màu xám */

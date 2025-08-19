@@ -1,0 +1,83 @@
+<nav class="nav">
+  <!-- ===== DESKTOP (≥992px): menu ngang + MatMenu ===== -->
+  <ul class="nav-list desktop-only">
+    <li class="nav-item">
+      <button mat-button [matMenuTriggerFor]="casesMenu">
+        Cases <mat-icon>expand_more</mat-icon>
+      </button>
+
+      <mat-menu #casesMenu="matMenu" [overlapTrigger]="false" panelClass="mega-menu-panel">
+        <div class="mega-menu">
+          <div class="col" *ngFor="let cat of products">
+            <h4>{{ cat.title }}</h4>
+            <button mat-menu-item *ngFor="let p of cat.product"
+                    [routerLink]="['/product']"
+                    (click)="layId(p.id)">
+              {{ p.name }}
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+    </li>
+
+    <li class="nav-item"><a mat-button [routerLink]="['/screen-protection']">Screen Protection</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/wearables']">Wearables</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/the-drop']">The Drop</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/power']">Power</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/accessories']">Accessories</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/customize']">Customize</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/sale']">Sale</a></li>
+    <li class="nav-item"><a mat-button [routerLink]="['/explore']">Explore</a></li>
+  </ul>
+
+  <!-- ===== MOBILE (<992px): hamburger + drawer trượt từ trái ===== -->
+  <div class="mobile-only mobile-bar">
+    <button mat-icon-button class="hamburger" (click)="drawer.open()" aria-label="Mở menu" aria-controls="mobile-drawer">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a class="logo">BRAND</a>
+  </div>
+
+  <mat-sidenav-container class="mobile-only drawer-container">
+    <mat-sidenav #drawer mode="over" position="start" id="mobile-drawer">
+      <div class="drawer-head">
+        <span class="logo">Menu</span>
+        <button mat-icon-button (click)="drawer.close()" aria-label="Đóng menu">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <mat-nav-list>
+        <!-- Cases: mở rộng ra danh sách -->
+        <mat-expansion-panel [expanded]="expanded==='cases'"
+                             (opened)="expanded='cases'" (closed)="expanded=null" class="exp">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Cases</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of products">
+              <h4>{{ cat.title }}</h4>
+              <a mat-list-item *ngFor="let p of cat.product"
+                 [routerLink]="['/product']"
+                 (click)="layId(p.id); drawer.close()">
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Các mục còn lại -->
+        <a mat-list-item [routerLink]="['/screen-protection']" (click)="drawer.close()">Screen Protection</a>
+        <a mat-list-item [routerLink]="['/wearables']" (click)="drawer.close()">Wearables</a>
+        <a mat-list-item [routerLink]="['/the-drop']" (click)="drawer.close()">The Drop</a>
+        <a mat-list-item [routerLink]="['/power']" (click)="drawer.close()">Power</a>
+        <a mat-list-item [routerLink]="['/accessories']" (click)="drawer.close()">Accessories</a>
+        <a mat-list-item [routerLink]="['/customize']" (click)="drawer.close()">Customize</a>
+        <a mat-list-item [routerLink]="['/sale']" (click)="drawer.close()">Sale</a>
+        <a mat-list-item [routerLink]="['/explore']" (click)="drawer.close()">Explore</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content></mat-sidenav-content>
+  </mat-sidenav-container>
+</nav>

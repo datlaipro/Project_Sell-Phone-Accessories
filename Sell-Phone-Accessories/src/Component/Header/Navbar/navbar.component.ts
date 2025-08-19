@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -20,6 +20,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatFormFieldModule,
     MatInputModule,
     MatBadgeModule,
+    RouterLink,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -44,4 +45,6 @@ export class NavbarComponent {
   onCartClick() {
     console.log('🛒 Mở giỏ hàng');
   }
+
+
 }

@@ -1,0 +1,175 @@
+<footer class="site-footer" role="contentinfo" aria-labelledby="footer-heading">
+  <div class="container footer-grid">
+    <!-- ===== Left: Newsletter ===== -->
+    <section class="newsletter" aria-labelledby="nl-title">
+      <h3 id="nl-title" class="nl-title">Be the first to know.</h3>
+      <p class="nl-subtitle">
+        Enter an email address or phone number to receive news, promotions &amp;
+        deals.
+      </p>
+
+      <form class="nl-form" (submit)="$event.preventDefault()">
+        <mat-form-field appearance="outline" class="nl-field">
+          <mat-label>email address</mat-label>
+          <input matInput type="email" placeholder="email address" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="nl-field">
+          <mat-label>phone number</mat-label>
+          <input matInput type="tel" placeholder="phone number" />
+        </mat-form-field>
+
+        <button
+          class="nl-submit"
+          mat-raised-button
+          color="primary"
+          type="submit"
+        >
+          SIGN UP
+        </button>
+      </form>
+
+      <p class="nl-terms">
+        By entering your email and/or mobile number you agree to our
+        <a href="#">Privacy Policy</a> and
+        <a href="#">SMS Terms and Conditions</a>.
+      </p>
+
+      <div class="social-row" aria-label="social links">
+        <button mat-icon-button class="social" aria-label="Facebook">
+          <mat-icon class="mi">facebook</mat-icon>
+        </button>
+        <button mat-icon-button class="social" aria-label="Instagram">
+          <mat-icon class="mi">instagram</mat-icon>
+        </button>
+        <button mat-icon-button class="social" aria-label="LinkedIn">
+          <mat-icon class="mi">linkedin</mat-icon>
+        </button>
+        <button mat-icon-button class="social" aria-label="TikTok">
+          <mat-icon class="mi">music_note</mat-icon>
+        </button>
+        <button mat-icon-button class="social" aria-label="Pinterest">
+          <mat-icon class="mi">pinterest</mat-icon>
+        </button>
+        <button mat-icon-button class="social" aria-label="YouTube">
+          <mat-icon class="mi">play_circle</mat-icon>
+        </button>
+      </div>
+
+      <div class="rating-row">
+        <span>Excellent</span>
+        <span class="score">4.5</span>
+        <span>out of 5</span>
+        <span class="tp">★ Trustpilot</span>
+      </div>
+
+      <!-- Badge minh họa (đổi sang ảnh của bạn trong assets) -->
+      <img
+        class="badge"
+        src="https://www.otterbox.com/on/demandware.static/-/Sites-ob_us-Library/default/dw8f70461b/2025_Files/logos_and_icons/Most_Loved_Brands_2025.png"
+        alt="America's Most Loved Brands badge"
+      />
+    </section>
+
+    <!-- ===== Right: Link columns ===== -->
+    <nav class="link-columns" aria-label="footer links">
+      <!-- Shop -->
+      <div class="col">
+        <h4 class="col-head">Shop</h4>
+
+        <h5 class="group">Most Popular Apple</h5>
+        <ul class="linklist">
+          <li><a href="#">iPhone 16e</a></li>
+          <li><a href="#">iPhone 16</a></li>
+          <li><a href="#">iPhone 16 Plus</a></li>
+          <li><a href="#">iPhone 16 Pro</a></li>
+          <li><a href="#">iPhone 16 Pro Max</a></li>
+          <li><a href="#">iPhone 15</a></li>
+          <li><a href="#">iPhone 15 Plus</a></li>
+          <li><a href="#">iPhone 15 Pro</a></li>
+          <li><a href="#">iPhone 15 Pro Max</a></li>
+          <li><a href="#">iPhone 14</a></li>
+          <li><a href="#">iPhone 14 Plus</a></li>
+          <li><a href="#">iPhone 14 Pro</a></li>
+          <li><a href="#">iPhone 14 Pro Max</a></li>
+        </ul>
+
+        <h5 class="group">Most Popular Samsung</h5>
+        <ul class="linklist">
+          <li><a href="#">Galaxy S25 Ultra</a></li>
+          <li><a href="#">Galaxy S25</a></li>
+          <li><a href="#">Galaxy S25+</a></li>
+          <li><a href="#">Galaxy S24 Ultra</a></li>
+          <li><a href="#">Galaxy S24</a></li>
+          <li><a href="#">Galaxy S24+</a></li>
+          <li><a href="#">Galaxy S23 Ultra</a></li>
+          <li><a href="#">Galaxy S23</a></li>
+          <li><a href="#">Galaxy S23+</a></li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div class="col">
+        <h4 class="col-head">About</h4>
+
+        <h5 class="group">Giving Back</h5>
+        <ul class="linklist">
+          <li><a href="#">OtterCares Foundation</a></li>
+          <li><a href="#">Our Efforts</a></li>
+          <li><a href="#">Project Heart</a></li>
+        </ul>
+
+        <h5 class="group">Support</h5>
+        <ul class="linklist">
+          <li><a href="#">Support Center</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Order Status</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">Shipping Information</a></li>
+          <li><a href="#">Billing &amp; Payment</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Information -->
+      <div class="col">
+        <h4 class="col-head">Information</h4>
+
+        <h5 class="group">General</h5>
+        <ul class="linklist">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Media Center</a></li>
+          <li><a href="#">OtterBusiness</a></li>
+          <li><a href="#">Otter Shop</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Distributors</a></li>
+          <li><a href="#">Promotional Suppliers</a></li>
+          <li><a href="#">Where Else To Buy</a></li>
+          <li><a href="#">Authorized Reseller Program</a></li>
+          <li><a href="#">Report Counterfeits</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div class="col">
+        <h4 class="col-head">Legal</h4>
+        <ul class="linklist">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Security Policy</a></li>
+          <li><a href="#">Accessibility Statement</a></li>
+          <li><a href="#">Intellectual Property</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">California Privacy</a></li>
+          <li><a href="#">Modern Slavery Statement</a></li>
+          <li><a href="#">Do Not Sell My Personal Information</a></li>
+          <li><a href="#">Minimum Advertised Price (MAP) Policy</a></li>
+          <li><a href="#">Vulnerability Disclosure Policy</a></li>
+          <li><a href="#">Cookie Settings</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</footer>
