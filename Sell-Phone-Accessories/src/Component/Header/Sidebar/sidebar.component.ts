@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewEncapsulation } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+ 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -17,6 +17,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule, MatMenuModule, MatIconModule,
     MatSidenavModule, MatListModule, MatExpansionModule,
   ],
+    encapsulation: ViewEncapsulation.None,
+
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })

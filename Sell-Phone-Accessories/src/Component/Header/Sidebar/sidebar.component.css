@@ -1,52 +1,240 @@
 /* ====== BASE ====== */
-.nav{ position:relative; background:#fff; border-bottom:1px solid #eee; z-index:5; }
-.nav-list{ max-width:1200px; margin:0 auto; padding:12px 24px; display:flex; gap:36px; align-items:center; list-style:none; }
-.nav-item > button[mat-button]{ font-weight:700; }
-.logo{ font-weight:900; letter-spacing:1px; cursor:pointer; }
+.nav {
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  z-index: 2100;
+  /* nâng cao để luôn nhận click khi đóng drawer */
+}
+
+.nav-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  list-style: none;
+}
+
+.nav-item>button[mat-button] {
+  font-weight: 700;
+}
+
+.logo {
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
 
 /* ====== DESKTOP MatMenu (mega) ====== */
-.mega-menu-panel{ width:min(900px,92vw)!important; max-width:none!important; }
-.mega-menu-panel .mat-mdc-menu-content{ padding:0!important; }
-.mega-menu{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 24px; padding:18px 20px; }
-.mega-menu .col h4{ margin:0 0 8px; font-size:13px; color:#666; font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
+/* GỠ rule cũ đang khóa bề rộng – bỏ hoàn toàn mấy dòng width: min(900px,...) */
+
+
+
+/* Lưới phủ toàn bộ bề ngang */
+.mega-menu {
+  display: grid !important;
+  width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px 24px;
+  padding: 18px 20px;
+}
+
+.mega-menu .col h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #666;
+  font-weight: 700;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
 
 /* ====== MOBILE BAR + DRAWER ====== */
-.mobile-bar{ display:flex; align-items:center; gap:12px; padding:10px 14px; width:100%; }
-.hamburger{ border:none; background:transparent; width:42px; height:42px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.mobile-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  width: 100%;
+  position: relative;
+  z-index: 2101;
+}
 
-.drawer-container{ position:fixed; inset:0; z-index:1300; pointer-events:none; }
-.drawer-container.mat-drawer-opened{ pointer-events:auto; }
-.drawer-container.mat-drawer-container{ background:transparent; }
-.drawer-container .mat-drawer{ width:min(82vw,320px); }
+.hamburger {
+  border: none;
+  background: transparent;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 2102;
+}
 
-.drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:12px 12px 4px; }
-.drawer-section h4, .exp-col h4{ margin:12px 12px 6px; font-size:12px; color:#666; text-transform:uppercase; }
+/* Khi ĐÓNG: container không chặn click, z thấp hơn header */
+.drawer-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Khi MỞ: cho phép tương tác và nổi trên nội dung */
+.drawer-container.mat-drawer-opened {
+  pointer-events: auto;
+  z-index: 99999;
+  /* cao hơn header để drawer nằm trên */
+}
+
+.drawer-container .mat-drawer {
+  width: min(82vw, 320px);
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 4px;
+}
+
+.drawer-section h4,
+.exp-col h4 {
+  margin: 12px 12px 6px;
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+}
 
 /* Expansion panel trong drawer */
-.exp .mat-expansion-panel-header{ padding:0 12px; }
-.exp .mat-expansion-panel-content > .mat-expansion-panel-body{ padding:0 0 8px 0; }
-.exp-cols{ display:grid; grid-template-columns:1fr; gap:4px 0; padding:4px 0 8px; }
-.exp-col a[mat-list-item]{ padding-left:12px; }
+.exp .mat-expansion-panel-header {
+  padding: 0 12px;
+}
+
+.exp .mat-expansion-panel-content>.mat-expansion-panel-body {
+  padding: 0 0 8px 0;
+}
+
+.exp-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px 0;
+  padding: 4px 0 8px;
+}
+
+.exp-col a[mat-list-item] {
+  padding-left: 12px;
+}
 
 /* ====== SHOW/HIDE theo breakpoint ====== */
-.desktop-only{ display:flex; }
-.mobile-only{ display:none; }
+.desktop-only {
+  display: flex;
+}
 
-@media (max-width:1280px){
-  .nav-list{ gap:28px; }
-  .mega-menu-panel{ width:min(840px,92vw)!important; }
+.mobile-only {
+  display: none;
 }
-@media (max-width:1024px){
-  .nav-list{ gap:24px; padding:12px 20px; }
-  .nav-item > button[mat-button]{ font-size:15px; }
-  .mega-menu-panel{ width:min(760px,94vw)!important; }
-  .mega-menu{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+@media (max-width:1280px) {
+  .nav-list {
+    gap: 28px;
+  }
+
+  /* KHÔNG đặt lại width cho .mega-menu-panel ở đây nữa */
 }
-@media (max-width:992px){
-  .desktop-only{ display:none; }   /* Ẩn menu ngang */
-  .mobile-only{ display:block; }   /* Chỉ hiện hamburger + drawer */
-  .mega-menu{ grid-template-columns:1fr; }
+
+@media (max-width:1024px) {
+  .nav-list {
+    gap: 24px;
+    padding: 12px 20px;
+  }
+
+  .nav-item>button[mat-button] {
+    font-size: 15px;
+  }
+
+  /* Lưới vẫn auto-fit, không ép 2 cột nếu chưa đủ rộng */
 }
-@media (max-width:480px){
-  .hamburger{ width:38px; height:38px; }
+
+@media (max-width:992px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  /* KHÔNG ép 1 cột nữa – để auto-fit tự quyết, nếu muốn 1 cột thì thêm dòng dưới */
+  /* .mega-menu{ grid-template-columns:1fr !important; } */
 }
+
+@media (max-width:480px) {
+  .hamburger {
+    width: 38px;
+    height: 38px;
+  }
+  
+}
+
+
+/* Thanh bar mobile luôn bấm được */
+.mobile-bar { position: relative; z-index: 1500; }
+
+/* Container phủ toàn bộ màn hình để drawer có chỗ trượt ra */
+.drawer-container {
+  position: fixed;
+  inset: 0;              /* top/right/bottom/left: 0 */
+  height: 100vh;
+  z-index: 1000;         /* thấp hơn .mobile-bar khi ĐÓNG */
+  pointer-events: none;  /* KHÔNG chặn click khi ĐÓNG */
+}
+
+/* Khi MỞ, Material sẽ thêm class .mat-drawer-opened lên container */
+.drawer-container.mat-drawer-opened {
+  z-index: 2200;         /* nổi lên trên mọi thứ */
+  pointer-events: auto;  /* cho phép tương tác */
+}
+
+/* Bên trong container vẫn nhận sự kiện khi mở */
+.drawer-container .mat-drawer,
+.drawer-container .mat-drawer-content {
+  pointer-events: auto;
+}
+/* === Mobile-first: mặc định === */
+.desktop-only { display: none; }     /* ẩn menu desktop */
+.mobile-only  { display: flex; }     /* hiện thanh mobile & drawer */
+
+/* Drawer overlay (mobile) – giữ nguyên như bạn đã làm */
+.mobile-bar { position: relative; z-index: 1500; }
+
+.drawer-container {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  z-index: 1000;
+  pointer-events: none;          /* không chặn click khi ĐÓNG */
+}
+.drawer-container.mat-drawer-opened {
+  z-index: 2200;
+  pointer-events: auto;          /* cho phép tương tác khi MỞ */
+}
+.drawer-container .mat-drawer,
+.drawer-container .mat-drawer-content { pointer-events: auto; }
+
+/* === Desktop (≥992px): bật menu desktop, tắt mobile hoàn toàn === */
+@media (min-width: 992px) {
+  .desktop-only { display: flex !important; }  /* hiện UL desktop */
+  .mobile-only  { display: none !important; }  /* ẩn cả bar + container */
+
+  /* bảo đảm container mobile không còn đè giao diện desktop */
+  .drawer-container { display: none !important; }
+}
+
+
+
