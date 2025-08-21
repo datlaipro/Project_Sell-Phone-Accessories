@@ -76,14 +76,14 @@
   z-index: 2102;
 }
 
-/* Khi ĐÓNG: container không chặn click, z thấp hơn header */
+/* Khi ĐÓNG: container không chặn click, z thấp hơn header
 .drawer-container {
   position: fixed;
   inset: 0;
   z-index: 100;
   pointer-events: none;
   background: transparent;
-}
+} */
 
 /* Khi MỞ: cho phép tương tác và nổi trên nội dung */
 .drawer-container.mat-drawer-opened {
@@ -170,6 +170,8 @@
     display: block;
   }
 
+  
+
   /* KHÔNG ép 1 cột nữa – để auto-fit tự quyết, nếu muốn 1 cột thì thêm dòng dưới */
   /* .mega-menu{ grid-template-columns:1fr !important; } */
 }
@@ -179,6 +181,8 @@
     width: 38px;
     height: 38px;
   }
+  
+  
   
 }
 
@@ -191,21 +195,23 @@
   position: fixed;
   inset: 0;              /* top/right/bottom/left: 0 */
   height: 100vh;
-  z-index: 1000;         /* thấp hơn .mobile-bar khi ĐÓNG */
-  pointer-events: none;  /* KHÔNG chặn click khi ĐÓNG */
+  z-index: 0 !important;
+    pointer-events: auto; /* chỉ khi mở */
+  /* KHÔNG chặn click khi ĐÓNG */
 }
+
 
 /* Khi MỞ, Material sẽ thêm class .mat-drawer-opened lên container */
 .drawer-container.mat-drawer-opened {
-  z-index: 2200;         /* nổi lên trên mọi thứ */
+  z-index: 2200;        /* nổi lên trên mọi thứ*/
   pointer-events: auto;  /* cho phép tương tác */
 }
 
 /* Bên trong container vẫn nhận sự kiện khi mở */
-.drawer-container .mat-drawer,
+/* .drawer-container .mat-drawer,
 .drawer-container .mat-drawer-content {
   pointer-events: auto;
-}
+} */
 /* === Mobile-first: mặc định === */
 .desktop-only { display: none; }     /* ẩn menu desktop */
 .mobile-only  { display: flex; }     /* hiện thanh mobile & drawer */
@@ -213,17 +219,8 @@
 /* Drawer overlay (mobile) – giữ nguyên như bạn đã làm */
 .mobile-bar { position: relative; z-index: 1500; }
 
-.drawer-container {
-  position: fixed;
-  inset: 0;
-  height: 100vh;
-  z-index: 1000;
-  pointer-events: none;          /* không chặn click khi ĐÓNG */
-}
-.drawer-container.mat-drawer-opened {
-  z-index: 2200;
-  pointer-events: auto;          /* cho phép tương tác khi MỞ */
-}
+
+
 .drawer-container .mat-drawer,
 .drawer-container .mat-drawer-content { pointer-events: auto; }
 

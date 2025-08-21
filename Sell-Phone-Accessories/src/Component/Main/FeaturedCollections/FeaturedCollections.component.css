@@ -107,6 +107,10 @@ body {
     white-space: normal;
   }
 
+  .hero__desc{
+ max-width: 18ch;  
+
+  }
   .hero__content {
     bottom: clamp(16px, 6vw, 24px);
     top: auto;

@@ -160,20 +160,20 @@ body {
 }
 
 /* iPhone case to – làm “khung ốp” bằng padding + viền dày */
-.t2 {
+/* .t2 
+{
   width: 62%;
   height: 44%;
   right: 10%;
   top: 16%;
   padding: 14px;
-  /* tạo viền ốp */
+  
   background: var(--case-body);
   border: 10px solid var(--case-ring);
   border-radius: 34px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
   transform: rotate(-1.5deg);
-  /* nghiêng nhẹ như layout mẫu */
-}
+} */
 
 .t2 img {
   border-radius: 22px;
@@ -473,18 +473,24 @@ body {
 }
 
 /* ---------- Responsive giữ bố cục giống ảnh ---------- */
+
+
+
 @media (max-width:1024px) {
   .hero-inner {
     grid-template-columns: 1fr;
     padding-bottom: 200px;
   }
+ .copy p{
+        max-width: 30ch;           /* giới hạn độ dài để tự xuống dòng đẹp */
 
+  }
   .collage {
-    order: -1
+    height: 10px;
   }
 
   .t1 {
-    inset: 0 8% 30% 0
+    inset: 0 0 42% 0; 
   }
 
   .t2 {

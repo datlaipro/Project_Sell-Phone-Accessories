@@ -134,10 +134,16 @@ body {
 }
 
 /* bo góc thẻ mượt hơn trên mobile */
-@media (hover:hover) {
+@media (max-width:992px) {
   .p-card {
     border-radius: 30px;
   }
+  .rail {
+  display: flex;
+  gap: 70px;        /* 👈 tăng khoảng cách */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
 }
 
 .display{
@@ -193,5 +199,6 @@ body {
   gap: 35px;        /* 👈 tăng khoảng cách */
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-}.rail::-webkit-scrollbar { display: none; }
+}
+.rail::-webkit-scrollbar { display: none; }
 .display { flex: 0 0 var(--cardW, 250px); scroll-snap-align: start; }
