@@ -1,0 +1,275 @@
+<mat-sidenav-container class="shell">
+  <!-- SIDEBAR -->
+  <mat-sidenav
+    #drawer
+    class="app-sidenav"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)"
+    [autoFocus]="false"
+  >
+    <div class="logo">
+      <div class="mark"></div>
+      <div class="brand">SAKAI</div>
+    </div>
+
+    <mat-nav-list style="background-color: beige;">
+      <div class="section-title">HOME</div>
+      <a mat-list-item class="active">
+        <mat-icon class="li-ic">home</mat-icon>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="section-title">UI COMPONENTS</div>
+      <a mat-list-item
+        ><mat-icon class="li-ic">format_align_left</mat-icon
+        ><span>Form Layout</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">text_fields</mat-icon><span>Input</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">smart_button</mat-icon><span>Button</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">table_chart</mat-icon><span>Table</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">list</mat-icon><span>List</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">account_tree</mat-icon><span>Tree</span></a
+      >
+      <a mat-list-item
+        ><mat-icon class="li-ic">dashboard_customize</mat-icon
+        ><span>Panel</span></a
+      >
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- CONTENT -->
+  <mat-sidenav-content>
+    <!-- TOPBAR -->
+    <mat-toolbar color="primary" class="topbar" role="banner">
+      <button mat-icon-button aria-label="Toggle menu" (click)="toggleDrawer()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="flex-1"></span>
+
+      <button mat-icon-button matTooltip="Theme">
+        <mat-icon>dark_mode</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matBadge="3"
+        matBadgeColor="warn"
+        aria-label="Cart"
+      >
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matBadge="5"
+        matBadgeColor="warn"
+        aria-label="Notifications"
+      >
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Account">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- MAIN CONTENT -->
+    <div class="page">
+      <div class="page-wrap">
+        <!-- ========== BLOCK 1: OVERVIEW ========== -->
+        <section class="section-block">
+          <header class="section-head">
+            <h3 class="section-title">Overview</h3>
+            <div class="section-actions">
+              <!-- chỗ để đặt actions (Export, Save view, ...) nếu cần -->
+            </div>
+          </header>
+
+          <div class="section-body">
+            <section class="cards">
+              <article class="card">
+                <div class="kpi">
+                  <div class="kpi-icon warn">$</div>
+                  <div>
+                    <div class="title">Orders</div>
+                    <div class="value">152</div>
+                    <div class="help">24 new since last visit</div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="kpi">
+                  <div class="kpi-icon success">$</div>
+                  <div>
+                    <div class="title">Revenue</div>
+                    <div class="value">$2,100</div>
+                    <div class="help">↑ 52% since last week</div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="kpi">
+                  <div class="kpi-icon info">group</div>
+                  <div>
+                    <div class="title">Customers</div>
+                    <div class="value">28,441</div>
+                    <div class="help">520 newly registered</div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="kpi">
+                  <div class="kpi-icon violet">chat</div>
+                  <div>
+                    <div class="title">Comments</div>
+                    <div class="value">152 Unread</div>
+                    <div class="help">85 responded</div>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <!-- ========== BLOCK 2: SALES & REVENUE ========== -->
+        <section class="section-block">
+          <header class="section-head">
+            <h3 class="section-title">Sales & Revenue</h3>
+            <div class="section-actions"></div>
+          </header>
+
+          <div class="section-body">
+            <section class="grid-2">
+              <!-- Recent Sales -->
+              <article class="card">
+                <header class="card-head">
+                  <strong>Recent Sales</strong>
+                  <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </header>
+
+                <div class="table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>View</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let s of sales">
+                        <td>
+                          <span class="badge">{{ s.img }}</span>
+                        </td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.price }}</td>
+                        <td><mat-icon>search</mat-icon></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="pager">
+                  <button mat-stroked-button>&laquo;</button>
+                  <button mat-stroked-button>&lsaquo;</button>
+                  <button mat-flat-button color="primary">1</button>
+                  <button mat-stroked-button>2</button>
+                  <button mat-stroked-button>&rsaquo;</button>
+                  <button mat-stroked-button>&raquo;</button>
+                </div>
+              </article>
+
+              <!-- Revenue Stream -->
+              <article class="card">
+                <header class="card-head">
+                  <strong>Revenue Stream</strong>
+                  <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </header>
+
+                <div class="chart">
+                  <div class="bar" style="height: 120px" data-label="Q1"></div>
+                  <div class="bar" style="height: 170px" data-label="Q2"></div>
+                  <div class="bar" style="height: 210px" data-label="Q3"></div>
+                  <div class="bar" style="height: 240px" data-label="Q4"></div>
+                </div>
+
+                <div class="legend">
+                  <span class="chip sub">Subscriptions</span>
+                  <span class="chip adv">Advertising</span>
+                  <span class="chip aff">Affiliate</span>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <!-- ========== BLOCK 3: PRODUCTS & NOTIFICATIONS ========== -->
+        <section class="section-block">
+          <header class="section-head">
+            <h3 class="section-title">Products & Notifications</h3>
+            <div class="section-actions"></div>
+          </header>
+
+          <div class="section-body">
+            <section class="grid-2">
+              <!-- Best Selling -->
+              <article class="card">
+                <header class="card-head">
+                  <strong>Best Selling Products</strong>
+                  <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </header>
+
+                <div class="best-list">
+                  <div class="best-item" *ngFor="let b of best">
+                    <div>
+                      {{ b.title }}<br />
+                      <span class="help">{{ b.cat }}</span>
+                    </div>
+                    <div class="progress"><i [style.width.%]="b.pct"></i></div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Notifications -->
+              <article class="card">
+                <header class="card-head">
+                  <strong>Notifications</strong>
+                  <button mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                </header>
+
+                <div class="note" *ngFor="let n of notes">
+                  <div class="bubble">
+                    <mat-icon>{{ n.icon }}</mat-icon>
+                  </div>
+                  <div class="txt">
+                    <div>{{ n.text }}</div>
+                    <small class="help">{{ n.sub }}</small>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
