@@ -1,51 +1,143 @@
 <nav class="nav" role="navigation" aria-label="Main">
   <!-- ===== DESKTOP (≥992px): menu ngang + MatMenu ===== -->
   <ul class="nav-list desktop-only">
-    <li class="nav-item">
-      <button mat-button [matMenuTriggerFor]="casesMenu">
-        Cases <mat-icon>expand_more</mat-icon>
-      </button>
-
-      <mat-menu
-        #casesMenu="matMenu"
-        [overlapTrigger]="false"
-        panelClass="mega-menu-panel"
-      >
-        <div class="mega-menu">
+    <li class="nav-item mega" >
+      <button type="button" class="trigger"  (click)="isOn = false">Cases</button>
+      <div class="dropdown" role="menu" aria-label="Cases mega">
+        <div class="mega" [class.display]=" isOn " >
           <div class="col" *ngFor="let cat of products">
             <h4>{{ cat.title }}</h4>
-            <button
-              mat-menu-item
+            <a
+              class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId(p.id)"
+               (click)="isOn = !isOn"
+              [attr.id]="p.id"
             >
               {{ p.name }}
-            </button>
+            </a>
           </div>
         </div>
-      </mat-menu>
+      </div>
     </li>
 
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/screen-protection']">Screen Protection</a>
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Screen Protection</button>
+      <div class="dropdown" role="menu" aria-label="Screen Protection mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of screenProtection">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/wearables']">Wearables</a>
+
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Power</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/the-drop']">The Drop</a>
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Accessories</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
-    <li class="nav-item"><a mat-button [routerLink]="['/power']">Power</a></li>
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/accessories']">Accessories</a>
+
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Customize</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/customize']">Customize</a>
+
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Sale</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
-    <li class="nav-item"><a mat-button [routerLink]="['/sale']">Sale</a></li>
-    <li class="nav-item">
-      <a mat-button [routerLink]="['/explore']">Explore</a>
+
+    <li class="nav-item mega">
+      <button type="button" class="trigger">Explore</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+              (click)="layId()"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
     </li>
   </ul>
 
@@ -110,7 +202,7 @@
                 mat-list-item
                 *ngFor="let p of cat.product"
                 [routerLink]="['/product']"
-                (click)="layId(p.id); drawer.close()"
+                (click)="layId(); drawer.close()"
               >
                 {{ p.name }}
               </a>

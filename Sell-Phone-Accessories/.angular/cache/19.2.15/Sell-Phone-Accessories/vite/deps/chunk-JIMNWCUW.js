@@ -1,13 +1,13 @@
 import {
+  _CdkPrivateStyleLoader,
+  _bindEventWithOptions
+} from "./chunk-NQFH2KWY.js";
+import {
   BreakpointObserver
 } from "./chunk-G6N3Y5LQ.js";
 import {
   BidiModule
 } from "./chunk-G2I27IPQ.js";
-import {
-  _CdkPrivateStyleLoader,
-  _bindEventWithOptions
-} from "./chunk-NQFH2KWY.js";
 import {
   coerceElement,
   coerceNumberProperty
@@ -2970,4 +2970,4 @@ export {
   AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-YPTAQMN5.js.map
+//# sourceMappingURL=chunk-JIMNWCUW.js.map

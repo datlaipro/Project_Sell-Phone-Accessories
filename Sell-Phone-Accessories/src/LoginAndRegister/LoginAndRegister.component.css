@@ -1,0 +1,46 @@
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f6f7f9;
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  padding: 8px 8px 16px;
+}
+
+.brand {
+  margin: 4px 8px 8px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.mode-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+
+.row { margin-bottom: 12px; }
+.w100 { width: 100%; }
+.mt8 { margin-top: 8px; }
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.back-btn-fixed {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 2000;
+}

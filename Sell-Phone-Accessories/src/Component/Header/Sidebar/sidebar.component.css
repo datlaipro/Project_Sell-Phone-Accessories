@@ -4,11 +4,11 @@
   background: #fff;
   border-bottom: 1px solid #eee;
   z-index: 2100;
-  /* nâng cao để luôn nhận click khi đóng drawer */
+    --pill-hover: #1a2d53;      /* hover xám nhạt */
+  --pill-active-bg: #1f355b;  /* xanh nhạt khi active */
 }
-
 .nav-list {
-  max-width: 1200px;
+  width: min(1200px, 100%);
   margin: 0 auto;
   padding: 12px 24px;
   display: flex;
@@ -16,181 +16,147 @@
   align-items: center;
   list-style: none;
 }
-
-.nav-item>button[mat-button] {
-  font-weight: 700;
+.logo { font-weight: 900; letter-spacing: 1px; cursor: pointer; }
+.nav-item .trigger {
+  background: none; border-radius: 999px; font: inherit; font-weight: 700;
+  padding: 8px 10px; cursor: pointer; color: #111827; text-decoration: none;
 }
+.nav-item .trigger:hover { color: #000; }
+.caret { margin-left: 4px; font-size: 12px; }
 
-.logo {
-  font-weight: 900;
-  letter-spacing: 1px;
-  cursor: pointer;
+/* ====== MEGA DROPDOWN (desktop) ====== */
+/* Panel phủ toàn chiều ngang, bám vào đáy nav, lùi xuống 12px */
+.nav .dropdown {
+  position: absolute;
+  left: 0; right: 0; top: 100%;
+  transform: translateY(12px);
+  background: #fff;
+  border-top: 1px solid #eee;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  max-height: 75vh; overflow: auto;
+  z-index: 2099; /* đủ cao để nổi trên nội dung dưới */
 }
-
-/* ====== DESKTOP MatMenu (mega) ====== */
-/* GỠ rule cũ đang khóa bề rộng – bỏ hoàn toàn mấy dòng width: min(900px,...) */
-
-
-
-/* Lưới phủ toàn bộ bề ngang */
-.mega-menu {
-  display: grid !important;
-  width: 100%;
-  box-sizing: border-box;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px 24px;
-  padding: 18px 20px;
+/* Mở khi hover/focus */
+.nav-item.mega:hover > .dropdown,
+.nav-item.mega:focus-within > .dropdown {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translateY(14px);
 }
-
-.mega-menu .col h4 {
-  margin: 0 0 8px;
-  font-size: 13px;
-  color: #666;
-  font-weight: 700;
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
-
-/* ====== MOBILE BAR + DRAWER ====== */
-.mobile-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  width: 100%;
-  position: relative;
-  z-index: 2101;
-}
-
-.hamburger {
-  border: none;
-  background: transparent;
-  width: 42px;
-  height: 42px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 2102;
-}
-
-/* Khi ĐÓNG: container không chặn click, z thấp hơn header
-.drawer-container {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  background: transparent;
-} */
-
-/* Khi MỞ: cho phép tương tác và nổi trên nội dung */
-.drawer-container.mat-drawer-opened {
-  pointer-events: auto;
-  z-index: 99999;
-  /* cao hơn header để drawer nằm trên */
-}
-
-.drawer-container .mat-drawer {
-  width: min(82vw, 320px);
-}
-
-.drawer-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 12px 4px;
-}
-
-.drawer-section h4,
-.exp-col h4 {
-  margin: 12px 12px 6px;
-  font-size: 12px;
-  color: #666;
-  text-transform: uppercase;
-}
-
-/* Expansion panel trong drawer */
-.exp .mat-expansion-panel-header {
-  padding: 0 12px;
-}
-
-.exp .mat-expansion-panel-content>.mat-expansion-panel-body {
-  padding: 0 0 8px 0;
-}
-
-.exp-cols {
+/* Lưới bên trong, canh theo container 1200px */
+.mega {
+  width: min(1200px, 100% - 48px);
+  margin: 0 auto;
+  padding: 18px 0 22px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 4px 0;
-  padding: 4px 0 8px;
+  grid-template-columns: repeat(4, minmax(0px, 1fr));
+  gap: 16px 24px;
 }
+.mega .col h4 {
+  margin: 0 0 8px;
+  font-size: 13px; color: #000; font-weight: 700;
+  letter-spacing: .3px; text-transform: uppercase;
+}
+.mega .item {
+  display: block;
+  padding: 9px 0;
+  color: #111827; text-decoration: none;
+}
+.mega .item:hover { text-decoration: underline; }
 
-.exp-col a[mat-list-item] {
-  padding-left: 12px;
+/* ====== MOBILE BAR + DRAWER (giữ nguyên) ====== */
+.mobile-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; width: 100%;
+  position: relative; z-index: 2101;
 }
+.hamburger {
+  border: none; background: transparent; width: 42px; height: 42px;
+  border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative; z-index: 2102;
+}
+.drawer-container.mat-drawer-opened { pointer-events: auto; z-index: 99999; }
+.drawer-container .mat-drawer { width: min(82vw, 320px); }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 4px; }
+.drawer-section h4, .exp-col h4 { margin: 12px 12px 6px; font-size: 12px; color: #666; text-transform: uppercase; }
+.exp .mat-expansion-panel-header { padding: 0 12px; }
+.exp .mat-expansion-panel-content > .mat-expansion-panel-body { padding: 0 0 8px 0; }
+.exp-cols { display: grid; grid-template-columns: 1fr; gap: 4px 0; padding: 4px 0 8px; }
+.exp-col a[mat-list-item] { padding-left: 12px; }
 
 /* ====== SHOW/HIDE theo breakpoint ====== */
-.desktop-only {
-  display: flex;
+.desktop-only { display: flex; }
+.mobile-only  { display: none; }
+@media (max-width:1280px) { .nav-list { gap: 28px; } }
+@media (max-width:1024px) {
+  .nav-list { gap: 24px; padding: 12px 20px; }
+  .nav-item .trigger { font-size: 15px; }
+}
+@media (max-width:992px) {
+  .desktop-only { display: none; }
+  .mobile-only  { display: block; }
+}
+@media (max-width:480px) {
+  .hamburger { width: 38px; height: 38px; }
 }
 
-.mobile-only {
+/* (Tuỳ chọn) số cột linh hoạt hơn: bật dòng dưới nếu muốn auto-fit */
+/* .mega { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } */
+
+
+/* ---- màu và hiệu ứng pill ---- */
+
+
+.display{
   display: none;
 }
-
-@media (max-width:1280px) {
-  .nav-list {
-    gap: 28px;
-  }
-
-  /* KHÔNG đặt lại width cho .mega-menu-panel ở đây nữa */
+/* màu */
+.nav{
+  --pill-hover: #f3f4f6;
+  --pill-active-bg: #e8f0fe;
+  --pill-active-text: #0b57d0;
 }
 
-@media (max-width:1024px) {
-  .nav-list {
-    gap: 24px;
-    padding: 12px 20px;
-  }
-
-  .nav-item>button[mat-button] {
-    font-size: 15px;
-  }
-
-  /* Lưới vẫn auto-fit, không ép 2 cột nếu chưa đủ rộng */
-}
-
-@media (max-width:992px) {
-  .desktop-only {
-    display: none;
-  }
-
-  .mobile-only {
-    display: block;
-  }
-
-  
-
-  /* KHÔNG ép 1 cột nữa – để auto-fit tự quyết, nếu muốn 1 cột thì thêm dòng dưới */
-  /* .mega-menu{ grid-template-columns:1fr !important; } */
-}
-
-@media (max-width:480px) {
-  .hamburger {
-    width: 38px;
-    height: 38px;
-  }
-  
-  
-  
+/* Nút menu dạng pill */
+.nav-item .trigger{
+  position: relative;
+  display: inline-flex;         /* để tính theo bề ngang thực */
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;          /* KHÔNG xuống dòng -> pill ngang */
+  padding: 8px 14px;            /* tăng/giảm tùy ý */
+  border-radius: 9999px;
+  color: #111827;
+  background: transparent;      /* nền do ::before vẽ */
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 
-/* Thanh bar mobile luôn bấm được */
-.mobile-bar { position: relative; z-index: 1500; }
 
-/* Container phủ toàn bộ màn hình để drawer có chỗ trượt ra */
+/* Hover/Active/Mở dropdown/Đang ở route */
+.nav-item .trigger:hover::before{ opacity:1; }
+.nav-item .trigger:active{ color: var(--pill-active-text); }
+.nav-item .trigger:active::before{ opacity:1; background: var(--pill-active-bg); }
+
+.nav-item.mega:hover > .trigger,
+.nav-item.mega:focus-within > .trigger,
+.nav-item .trigger.is-active{
+  color: var(--pill-active-text);
+}
+.nav-item.mega:hover > .trigger::before,
+.nav-item.mega:focus-within > .trigger::before,
+.nav-item .trigger.is-active::before{
+  opacity:1;
+  background: var(--pill-active-bg);
+}
+
+/* Nội dung nằm trên nền ::before */
+.nav-item .trigger > *{ position: relative; z-index: 1; }
+
 .drawer-container {
   position: fixed;
   inset: 0;              /* top/right/bottom/left: 0 */
@@ -199,39 +165,3 @@
     pointer-events: auto; /* chỉ khi mở */
   /* KHÔNG chặn click khi ĐÓNG */
 }
-
-
-/* Khi MỞ, Material sẽ thêm class .mat-drawer-opened lên container */
-.drawer-container.mat-drawer-opened {
-  z-index: 2200;        /* nổi lên trên mọi thứ*/
-  pointer-events: auto;  /* cho phép tương tác */
-}
-
-/* Bên trong container vẫn nhận sự kiện khi mở */
-/* .drawer-container .mat-drawer,
-.drawer-container .mat-drawer-content {
-  pointer-events: auto;
-} */
-/* === Mobile-first: mặc định === */
-.desktop-only { display: none; }     /* ẩn menu desktop */
-.mobile-only  { display: flex; }     /* hiện thanh mobile & drawer */
-
-/* Drawer overlay (mobile) – giữ nguyên như bạn đã làm */
-.mobile-bar { position: relative; z-index: 1500; }
-
-
-
-.drawer-container .mat-drawer,
-.drawer-container .mat-drawer-content { pointer-events: auto; }
-
-/* === Desktop (≥992px): bật menu desktop, tắt mobile hoàn toàn === */
-@media (min-width: 992px) {
-  .desktop-only { display: flex !important; }  /* hiện UL desktop */
-  .mobile-only  { display: none !important; }  /* ẩn cả bar + container */
-
-  /* bảo đảm container mobile không còn đè giao diện desktop */
-  .drawer-container { display: none !important; }
-}
-
-
-
