@@ -4,7 +4,12 @@ body {
 }
 
 /* khung ngoài + 2 nút */
-.case-showcase{ display:flex; align-items:center; justify-content:center; gap:14px; }
+.case-showcase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
 
 .case-container {
   display: flex;
@@ -46,8 +51,10 @@ body {
   cursor: pointer;
 }
 
-:root { --cardW: 250px; --gap: 24px; }
-
+:root {
+  --cardW: 250px;
+  --gap: 24px;
+}
 
 * {
   box-sizing: border-box
@@ -71,9 +78,20 @@ body {
 }
 
 /* ảnh */
-.p-media{ height:160px; display:flex; align-items:center; justify-content:center; margin:4px 0 18px; }
-.p-media img{ max-width:120px; max-height:160px; object-fit:contain; filter:drop-shadow(0 6px 10px rgba(0,0,0,.15)); }
+.p-media {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 18px;
+}
 
+.p-media img {
+  max-width: 120px;
+  max-height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .15));
+}
 
 /* text */
 .p-eyebrow {
@@ -138,24 +156,28 @@ body {
   .p-card {
     border-radius: 30px;
   }
+
   .rail {
-  display: flex;
-  gap: 70px;        /* 👈 tăng khoảng cách */
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+    display: flex;
+    gap: 70px;
+    /* 👈 tăng khoảng cách */
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
 }
-}
 
-.display{
-  flex: 0 0 var(--cardW);      /* cố định đúng bề rộng 1 thẻ */
-  scroll-snap-align:start;
-  background:#efefef; border:1px solid #e9e9e9; 
-  padding:24px 20px 28px; height:500px; text-align:center;
-    border: 1px solid #bdbdbd;   /* #e9e9e9 → đậm hơn */
-
-    border-radius: 20px;
-
-
+.display {
+  flex: 0 0 var(--cardW);
+  /* cố định đúng bề rộng 1 thẻ */
+  scroll-snap-align: start;
+  background: #efefef;
+  border: 1px solid #e9e9e9;
+  padding: 24px 20px 28px;
+  height: 500px;
+  text-align: center;
+  border: 1px solid #bdbdbd;
+  /* #e9e9e9 → đậm hơn */
+  border-radius: 20px;
 }
 
 /* căn giữa toàn bộ cụm + khoảng cách 2 nút mũi tên */
@@ -166,39 +188,81 @@ body {
   gap: 14px;
 }
 
-
 /* Quan trọng: viewport KHÓA độ rộng, không cho giãn */
-.viewport{
-  flex: 0 0 auto;              /* ngăn flex giãn 100% */
-  overflow: hidden;            /* che phần ngoài */
+.viewport {
+  flex: 0 0 auto;
+  /* ngăn flex giãn 100% */
+  overflow: hidden;
+  /* che phần ngoài */
   /* width sẽ được gán từ TS = 6*cardW + 5*gap */
 }
 
 /* thanh trượt chứa các thẻ */
-.rail{
-  display:flex;
+.rail {
+  display: flex;
   gap: var(--gap);
-  overflow-x:auto;
-  scroll-behavior:smooth;
-  scroll-snap-type:x mandatory;
-  padding: 0;                  /* đừng thêm padding, sẽ lệch bước */
-  scrollbar-width:none;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  /* đừng thêm padding, sẽ lệch bước */
+  scrollbar-width: none;
 }
-.rail::-webkit-scrollbar{ display:none; }
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
 
 /* nút mũi tên */
-.arrow{ background:#000; color:#fff; border:none; width:40px; height:40px; border-radius:50%; font-size:24px; cursor:pointer; }
-.arrow:disabled{ opacity:.35; cursor:default; }
+.arrow {
+  background: #000;
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+}
 
+.arrow:disabled {
+  opacity: .35;
+  cursor: default;
+}
 
-.case-showcase { display: flex; align-items: center; gap: 16px; }
-.viewport { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.case-showcase {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
 /* trước: gap: 13px; */
 .rail {
   display: flex;
-  gap: 35px;        /* 👈 tăng khoảng cách */
+  gap: 35px;
+  /* 👈 tăng khoảng cách */
   overflow-x: auto;
   scroll-snap-type: x mandatory;
 }
-.rail::-webkit-scrollbar { display: none; }
-.display { flex: 0 0 var(--cardW, 250px); scroll-snap-align: start; }
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.display {
+  flex: 0 0 var(--cardW, 250px);
+  scroll-snap-align: start;
+}
+
+.case-showcase .display{
+  display: flex !important;/* đảm bảo giao diện hiển thị không bị css của component khác đè*/
+  flex-direction: column;   /* xếp dọc: ảnh -> title -> price */
+  align-items: center;      /* căn giữa ngang nếu thích */
+  gap: 8px;                 /* khoảng cách giữa các block */
+}

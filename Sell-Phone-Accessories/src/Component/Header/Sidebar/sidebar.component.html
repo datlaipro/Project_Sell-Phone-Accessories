@@ -22,16 +22,16 @@
     </li>
 
     <li class="nav-item mega">
-      <button type="button" class="trigger">Screen Protection</button>
+      <button type="button" class="trigger" (click)="isOn = false">Screen Protection</button>
       <div class="dropdown" role="menu" aria-label="Screen Protection mega">
-        <div class="mega">
+        <div class="mega" [class.display]=" isOn ">
           <div class="col" *ngFor="let cat of screenProtection">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId()"
+               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -42,16 +42,16 @@
     </li>
 
     <li class="nav-item mega">
-      <button type="button" class="trigger">Power</button>
+      <button type="button" class="trigger" (click)="isOn = false">Power</button>
       <div class="dropdown" role="menu" aria-label="Power mega">
-        <div class="mega">
+        <div class="mega"[class.display]=" isOn ">
           <div class="col" *ngFor="let cat of power">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId()"
+               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -61,36 +61,16 @@
       </div>
     </li>
     <li class="nav-item mega">
-      <button type="button" class="trigger">Accessories</button>
+      <button type="button" class="trigger" (click)="isOn = false">Accessories</button>
       <div class="dropdown" role="menu" aria-label="Power mega">
-        <div class="mega">
+        <div class="mega" [class.display]=" isOn ">
           <div class="col" *ngFor="let cat of power">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId()"
-              [attr.id]="p.id"
-            >
-              {{ p.name }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </li>
-
-    <li class="nav-item mega">
-      <button type="button" class="trigger">Customize</button>
-      <div class="dropdown" role="menu" aria-label="Power mega">
-        <div class="mega">
-          <div class="col" *ngFor="let cat of power">
-            <h4>{{ cat.title }}</h4>
-            <a
-              class="item"
-              *ngFor="let p of cat.product"
-              [routerLink]="['/product']"
-              (click)="layId()"
+               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -101,16 +81,16 @@
     </li>
 
     <li class="nav-item mega">
-      <button type="button" class="trigger">Sale</button>
+      <button type="button" class="trigger" (click)="isOn = false">Customize</button>
       <div class="dropdown" role="menu" aria-label="Power mega">
-        <div class="mega">
+        <div class="mega"[class.display]=" isOn ">
           <div class="col" *ngFor="let cat of power">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId()"
+               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -121,16 +101,36 @@
     </li>
 
     <li class="nav-item mega">
-      <button type="button" class="trigger">Explore</button>
+      <button type="button" class="trigger" (click)="isOn = false">Sale</button>
       <div class="dropdown" role="menu" aria-label="Power mega">
-        <div class="mega">
+        <div class="mega" [class.display]=" isOn ">
           <div class="col" *ngFor="let cat of power">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="layId()"
+               (click)="isOn = !isOn"
+              [attr.id]="p.id"
+            >
+              {{ p.name }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item mega">
+      <button type="button" class="trigger" (click)="isOn = false">Explore</button>
+      <div class="dropdown" role="menu" aria-label="Power mega">
+        <div class="mega"[class.display]=" isOn ">
+          <div class="col" *ngFor="let cat of power">
+            <h4>{{ cat.title }}</h4>
+            <a
+              class="item"
+              *ngFor="let p of cat.product"
+              [routerLink]="['/product']"
+               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >
               {{ p.name }}

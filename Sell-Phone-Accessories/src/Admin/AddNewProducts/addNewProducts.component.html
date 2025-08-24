@@ -1,0 +1,156 @@
+<form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  <h2>Thêm sản phẩm</h2>
+
+  <div class="grid">
+    <div class="field">
+      <label for="name">Tên sản phẩm</label>
+      <input
+        id="name"
+        type="text"
+        placeholder="VD: Ốp lưng MagSafe iPhone 15 Pro Max"
+        formControlName="name"
+      />
+    </div>
+
+    <div class="field">
+      <label for="price">Giá (VND)</label>
+      <input
+        id="price"
+        type="number"
+        min="0"
+        step="1000"
+        placeholder="VD: 399000"
+        formControlName="price"
+      />
+    </div>
+
+    <div class="field">
+      <label for="discountCode">Mã giảm giá</label>
+      <input
+        id="discountCode"
+        type="text"
+        placeholder="VD: SALE10"
+        formControlName="discountCode"
+      />
+    </div>
+
+    <div class="field">
+      <label for="category">Thể loại chính</label>
+      <select id="category" formControlName="category">
+        <option [ngValue]="null" disabled selected>Chọn thể loại…</option>
+        <option *ngFor="let c of categories" [ngValue]="c">{{ c }}</option>
+      </select>
+      <small class="hint">Ô danh sách giống kiểu bạn gửi.</small>
+    </div>
+
+    <div class="field">
+      <label for="subtype">{{
+        form.value.category === "Cases" ||
+        form.value.category === "Screen Protection"
+          ? "Thiết bị / dòng máy"
+          : "Loại con"
+      }}</label>
+      <select
+        id="subtype"
+        formControlName="subtype"
+        [disabled]="!subtypeOptions.length"
+      >
+        <option [ngValue]="null">Chọn…</option>
+        <option *ngFor="let s of subtypeOptions" [ngValue]="s">{{ s }}</option>
+      </select>
+    </div>
+
+    <div class="field" *ngIf="deviceModelOptions.length">
+      <label for="deviceModel">Mẫu thiết bị</label>
+      <select id="deviceModel" formControlName="deviceModel">
+        <option [ngValue]="null">Chọn…</option>
+        <option *ngFor="let m of deviceModelOptions" [ngValue]="m">
+          {{ m }}
+        </option>
+      </select>
+      <small class="hint">Ví dụ: “iPhone 15 Pro Max”.</small>
+    </div>
+
+    <div class="field full" *ngIf="form.value.subtype === 'Other'">
+      <label for="otherDetail">Ghi rõ loại / thiết bị</label>
+      <input
+        id="otherDetail"
+        type="text"
+        placeholder="Nhập cụ thể nếu chọn 'Other'…"
+        formControlName="otherDetail"
+      />
+    </div>
+  </div>
+
+  <div class="field full">
+    <label>Màu sắc</label>
+
+    <div class="palette" role="group" aria-label="Chọn màu">
+      <label class="swatch" *ngFor="let c of defaultColors">
+        <input
+          type="checkbox"
+          [checked]="colorsFA.value.includes(c.hex)"
+          (change)="onColorCheckboxChange(c.hex, $event)"
+        />
+        <span class="dot" [style.--c]="c.hex"></span>
+        <span class="name">{{ c.name }}</span>
+      </label>
+
+      <!-- thêm màu -->
+      <label class="swatch add">
+        <input type="checkbox" tabindex="-1" disabled />
+        <button type="button" class="add-btn" (click)="picker.click()">
+          +
+        </button>
+        <span class="name">Thêm màu…</span>
+        <input
+          #picker
+          type="color"
+          hidden
+          (change)="addCustomColor(picker.value)"
+        />
+      </label>
+
+      <!-- hiển thị màu tùy chọn đã chọn (nếu không nằm trong default list) -->
+      <label
+        class="swatch"
+        *ngFor="let hex of colorsFA.value; trackBy: trackByIndex"
+        [class.hidden]="isDefaultColor(hex)"
+      >
+        <input
+          type="checkbox"
+          checked
+          (change)="
+            toggleColor(hex, $event.target && $any($event.target).checked)
+          "
+        />
+        <span class="dot" [style.--c]="hex"></span>
+        <span class="name">{{ hex }}</span>
+      </label>
+    </div>
+    <small class="hint"
+      >Bạn có thể chọn nhiều màu; “Thêm màu…” để chọn màu bất kỳ.</small
+    >
+  </div>
+
+  <div class="field full">
+    <label for="images">Ảnh sản phẩm</label>
+    <input
+      id="images"
+      type="file"
+      accept="image/*"
+      multiple
+      (change)="onFilesSelected($any($event.target).files)"
+    />
+   <div class="preview-grid" *ngIf="previews.length">
+  <img *ngFor="let src of previews; trackBy: trackByIndex" [src]="src" alt="preview">
+</div>
+
+    <small class="hint">Cho phép chọn nhiều ảnh và xem trước.</small>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="secondary" (click)="reset()">Xóa</button>
+    <button type="submit" class="primary">Lưu sản phẩm</button>
+  </div>
+</form>

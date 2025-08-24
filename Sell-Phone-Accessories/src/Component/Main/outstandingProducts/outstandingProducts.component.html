@@ -7,6 +7,7 @@
 <div #vp class="viewport"
        [style.width.px]="viewportWidth ?? null"
        (scroll)="onScroll()">    <!-- Thanh trượt thực tế -->
+
     <div class="rail"  >
       <div class="display" *ngFor="let p of productsPreview">
         <div class="p-media" [attr.id]="p.id"><img [src]="p.image" alt="" /></div>
