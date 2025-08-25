@@ -1,17 +1,17 @@
 import {
-  BreakpointObserver
-} from "./chunk-QYS2SIT4.js";
-import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
-} from "./chunk-2QEZ2KQS.js";
-import {
-  BidiModule
-} from "./chunk-H3T65ING.js";
+} from "./chunk-VF7CLYMA.js";
 import {
   coerceElement,
   coerceNumberProperty
 } from "./chunk-N6ALCZOG.js";
+import {
+  BidiModule
+} from "./chunk-H3T65ING.js";
+import {
+  BreakpointObserver
+} from "./chunk-QYS2SIT4.js";
 import {
   Platform
 } from "./chunk-53VFVX2N.js";
@@ -77,6 +77,7 @@ function isFakeTouchstartFromScreenReader(event) {
 }
 
 // node_modules/@angular/cdk/fesm2022/keycodes-CpHkExLC.mjs
+var BACKSPACE = 8;
 var TAB = 9;
 var ENTER = 13;
 var SHIFT = 16;
@@ -92,6 +93,7 @@ var LEFT_ARROW = 37;
 var UP_ARROW = 38;
 var RIGHT_ARROW = 39;
 var DOWN_ARROW = 40;
+var DELETE = 46;
 var ZERO = 48;
 var NINE = 57;
 var A = 65;
@@ -2222,6 +2224,19 @@ var FocusKeyManager = class extends ListKeyManager {
   }
 };
 
+// node_modules/@angular/cdk/fesm2022/activedescendant-key-manager-DC3-fwQI.mjs
+var ActiveDescendantKeyManager = class extends ListKeyManager {
+  setActiveItem(index) {
+    if (this.activeItem) {
+      this.activeItem.setInactiveStyles();
+    }
+    super.setActiveItem(index);
+    if (this.activeItem) {
+      this.activeItem.setActiveStyles();
+    }
+  }
+};
+
 // node_modules/@angular/cdk/fesm2022/coercion/private.mjs
 function coerceObservable(data) {
   if (!isObservable(data)) {
@@ -2944,6 +2959,8 @@ var MatCommonModule = class _MatCommonModule {
 export {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
+  BACKSPACE,
+  TAB,
   ENTER,
   ESCAPE,
   SPACE,
@@ -2951,21 +2968,27 @@ export {
   UP_ARROW,
   RIGHT_ARROW,
   DOWN_ARROW,
+  DELETE,
   A,
   _getFocusedElementPierceShadowDom,
   _getEventTarget,
   normalizePassiveListenerOptions,
   FocusMonitor,
+  CdkMonitorFocus,
   _VisuallyHiddenLoader,
   CdkObserveContent,
   ObserversModule,
   InteractivityChecker,
   FocusTrapFactory,
+  LiveAnnouncer,
   A11yModule,
   _IdGenerator,
   hasModifierKey,
+  ActiveDescendantKeyManager,
   FocusKeyManager,
+  addAriaReferencedId,
+  removeAriaReferencedId,
   AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-VF7L2KHC.js.map
+//# sourceMappingURL=chunk-5FN3BD4B.js.map

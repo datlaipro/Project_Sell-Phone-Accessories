@@ -4,7 +4,7 @@ import { CanMatchFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { map, tap,take } from 'rxjs';
 
-export const authGuard: CanMatchFn = () => {
+export const authGuard: CanMatchFn = () => {//chặn khi chưa đăng nhập 
   const auth = inject(AuthService);
   const router = inject(Router);
  return auth.isLoggedIn().pipe(

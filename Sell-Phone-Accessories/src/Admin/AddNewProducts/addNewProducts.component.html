@@ -1,156 +1,286 @@
-<form class="form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2>Thêm sản phẩm</h2>
-
-  <div class="grid">
-    <div class="field">
-      <label for="name">Tên sản phẩm</label>
-      <input
-        id="name"
-        type="text"
-        placeholder="VD: Ốp lưng MagSafe iPhone 15 Pro Max"
-        formControlName="name"
-      />
-    </div>
-
-    <div class="field">
-      <label for="price">Giá (VND)</label>
-      <input
-        id="price"
-        type="number"
-        min="0"
-        step="1000"
-        placeholder="VD: 399000"
-        formControlName="price"
-      />
-    </div>
-
-    <div class="field">
-      <label for="discountCode">Mã giảm giá</label>
-      <input
-        id="discountCode"
-        type="text"
-        placeholder="VD: SALE10"
-        formControlName="discountCode"
-      />
-    </div>
-
-    <div class="field">
-      <label for="category">Thể loại chính</label>
-      <select id="category" formControlName="category">
-        <option [ngValue]="null" disabled selected>Chọn thể loại…</option>
-        <option *ngFor="let c of categories" [ngValue]="c">{{ c }}</option>
-      </select>
-      <small class="hint">Ô danh sách giống kiểu bạn gửi.</small>
-    </div>
-
-    <div class="field">
-      <label for="subtype">{{
-        form.value.category === "Cases" ||
-        form.value.category === "Screen Protection"
-          ? "Thiết bị / dòng máy"
-          : "Loại con"
-      }}</label>
-      <select
-        id="subtype"
-        formControlName="subtype"
-        [disabled]="!subtypeOptions.length"
-      >
-        <option [ngValue]="null">Chọn…</option>
-        <option *ngFor="let s of subtypeOptions" [ngValue]="s">{{ s }}</option>
-      </select>
-    </div>
-
-    <div class="field" *ngIf="deviceModelOptions.length">
-      <label for="deviceModel">Mẫu thiết bị</label>
-      <select id="deviceModel" formControlName="deviceModel">
-        <option [ngValue]="null">Chọn…</option>
-        <option *ngFor="let m of deviceModelOptions" [ngValue]="m">
-          {{ m }}
-        </option>
-      </select>
-      <small class="hint">Ví dụ: “iPhone 15 Pro Max”.</small>
-    </div>
-
-    <div class="field full" *ngIf="form.value.subtype === 'Other'">
-      <label for="otherDetail">Ghi rõ loại / thiết bị</label>
-      <input
-        id="otherDetail"
-        type="text"
-        placeholder="Nhập cụ thể nếu chọn 'Other'…"
-        formControlName="otherDetail"
-      />
-    </div>
+<!-- Top bar -->
+<div class="topbar">
+  <button mat-icon-button aria-label="Back">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <div class="title">
+    <h2>Add New Product</h2>
+    <small>Last update just now</small>
   </div>
-
-  <div class="field full">
-    <label>Màu sắc</label>
-
-    <div class="palette" role="group" aria-label="Chọn màu">
-      <label class="swatch" *ngFor="let c of defaultColors">
-        <input
-          type="checkbox"
-          [checked]="colorsFA.value.includes(c.hex)"
-          (change)="onColorCheckboxChange(c.hex, $event)"
-        />
-        <span class="dot" [style.--c]="c.hex"></span>
-        <span class="name">{{ c.name }}</span>
-      </label>
-
-      <!-- thêm màu -->
-      <label class="swatch add">
-        <input type="checkbox" tabindex="-1" disabled />
-        <button type="button" class="add-btn" (click)="picker.click()">
-          +
-        </button>
-        <span class="name">Thêm màu…</span>
-        <input
-          #picker
-          type="color"
-          hidden
-          (change)="addCustomColor(picker.value)"
-        />
-      </label>
-
-      <!-- hiển thị màu tùy chọn đã chọn (nếu không nằm trong default list) -->
-      <label
-        class="swatch"
-        *ngFor="let hex of colorsFA.value; trackBy: trackByIndex"
-        [class.hidden]="isDefaultColor(hex)"
-      >
-        <input
-          type="checkbox"
-          checked
-          (change)="
-            toggleColor(hex, $event.target && $any($event.target).checked)
-          "
-        />
-        <span class="dot" [style.--c]="hex"></span>
-        <span class="name">{{ hex }}</span>
-      </label>
-    </div>
-    <small class="hint"
-      >Bạn có thể chọn nhiều màu; “Thêm màu…” để chọn màu bất kỳ.</small
-    >
+  <div class="actions">
+    <button mat-stroked-button (click)="saveDraft()">Save Draft</button>
+    <button color="primary" mat-raised-button (click)="publish()">
+      Publish
+    </button>
   </div>
-
-  <div class="field full">
-    <label for="images">Ảnh sản phẩm</label>
-    <input
-      id="images"
-      type="file"
-      accept="image/*"
-      multiple
-      (change)="onFilesSelected($any($event.target).files)"
-    />
-   <div class="preview-grid" *ngIf="previews.length">
-  <img *ngFor="let src of previews; trackBy: trackByIndex" [src]="src" alt="preview">
 </div>
 
-    <small class="hint">Cho phép chọn nhiều ảnh và xem trước.</small>
+<div class="grid">
+  <!-- LEFT COLUMN: Gallery + toggles -->
+  <div class="left-col">
+    <mat-card class="card gallery">
+      <div class="cover" *ngIf="images().length; else emptyState">
+        <img [src]="images()[coverIndex()]?.url" alt="Cover" />
+        <span class="badge">Cover</span>
+      </div>
+      <ng-template #emptyState>
+        <div class="empty">
+          <mat-icon>image</mat-icon>
+          <div>No image yet</div>
+        </div>
+      </ng-template>
+
+      <!-- thumbnails -->
+      <div class="thumbs">
+        <button
+          class="thumb"
+          *ngFor="let img of images(); index as i"
+          (click)="setCover(i)"
+          [class.active]="i === coverIndex()"
+        >
+          <img [src]="img.url" alt="thumb" />
+          <div class="thumb-actions" (click)="$event.stopPropagation()">
+            <button
+              mat-icon-button
+              (click)="removeImage(i)"
+              aria-label="Remove image"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </button>
+
+        <!-- add tile -->
+        <label class="thumb add-tile">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            (change)="onFilesSelected($event)"
+            hidden
+          />
+          <mat-icon>add</mat-icon>
+          <span>Add</span>
+        </label>
+      </div>
+    </mat-card>
+
+    <mat-card class="card">
+      <div class="card-title">Visibility</div>
+      <p class="muted">
+        You can change the visibility of this product for customers
+      </p>
+      <mat-slide-toggle color="primary" [formControl]="form.controls.visible"
+        >Visible</mat-slide-toggle
+      >
+    </mat-card>
+
+    <mat-card class="card">
+      <div class="card-title">Preview</div>
+      <button mat-stroked-button>Preview</button>
+    </mat-card>
   </div>
 
-  <div class="actions">
-    <button type="button" class="secondary" (click)="reset()">Xóa</button>
-    <button type="submit" class="primary">Lưu sản phẩm</button>
+  <!-- MIDDLE COLUMN: Related items (placeholder) -->
+  <div class="mid-col">
+    <mat-card class="card">
+      <div class="card-title">
+        Related Items
+        <span class="spacer"></span>
+        <button mat-icon-button aria-label="Add related item">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+      <mat-list>
+        <mat-list-item>
+          <img matListItemAvatar src="https://via.placeholder.com/48" alt="" />
+          <div matListItemTitle>Find Comfort Body…</div>
+          <div matListItemLine>$28</div>
+          <button mat-icon-button matListItemMeta aria-label="Remove">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>
+          <img matListItemAvatar src="https://via.placeholder.com/48" alt="" />
+          <div matListItemTitle>Find Comfort Gentle…</div>
+          <div matListItemLine>$18</div>
+          <button mat-icon-button matListItemMeta aria-label="Remove">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </mat-card>
   </div>
-</form>
+
+  <!-- RIGHT COLUMN: Product details -->
+  <div class="right-col">
+    <mat-card class="card">
+      <div class="card-title">Product Details</div>
+
+      <!-- ✅ Toàn bộ field nằm trong form -->
+      <form class="details-form" [formGroup]="form" (ngSubmit)="publish()">
+        <mat-tab-group class="seg-tabs">
+          <mat-tab label="General">
+            <div class="form-grid">
+              <!-- Product Name (pill bo tròn) -->
+              <div class="field col-span-2">
+                <label class="field-label" for="inpName"
+                  >Product Name <span class="req">*</span></label
+                >
+                <mat-form-field appearance="outline" class="pill">
+                  <!-- KHÔNG dùng <mat-label> -->
+                  <input
+                    id="inpName"
+                    matInput
+                    placeholder="e.g. Natural Glow Face Moisturizer"
+                    formControlName="name"
+                  />
+                </mat-form-field>
+              </div>
+
+              <!-- Colors (thay cho Status) -->
+              <div class="color-field">
+                <label>Colors</label>
+                <div class="color-palette">
+                  <button
+                    type="button"
+                    class="swatch"
+                    *ngFor="let c of presetColors"
+                    [style.--c]="c"
+                    [class.selected]="isColorSelected(c)"
+                    (click)="toggleColor(c)"
+                  >
+                    <mat-icon *ngIf="isColorSelected(c)">check</mat-icon>
+                  </button>
+                  <label class="swatch add">
+                    <input type="color" (change)="addCustomColor($event)" />
+                    <mat-icon>add</mat-icon>
+                  </label>
+                  <button
+                    *ngFor="let c of selectedColors()"
+                    class="swatch custom"
+                    [style.--c]="c"
+                    [class.selected]="true"
+                    (click)="toggleColor(c)"
+                    [hidden]="presetColors.includes(c)"
+                  >
+                    <mat-icon>check</mat-icon>
+                  </button>
+                </div>
+                <div class="chosen">
+                  <mat-chip *ngFor="let c of selectedColors()" selected>
+                    <span class="dot" [style.background]="c"></span>{{ c }}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <!-- Brand (select) -->
+              <div class="field">
+                <label class="field-label" id="lblBrand"
+                  >Brand <span class="req">*</span></label
+                >
+                <mat-form-field appearance="outline" class="pill">
+                  <mat-select
+                    formControlName="brand"
+                    [attr.aria-labelledby]="'lblBrand'"
+                  >
+                    <!-- ✅ Trigger: hiển thị placeholder khi chưa chọn, và text khi đã chọn -->
+                    <mat-select-trigger>
+                      {{ form.value.brand || "Select the brand name" }}
+                    </mat-select-trigger>
+
+                    <mat-option *ngFor="let b of brands" [value]="b">{{
+                      b
+                    }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- Category (select) -->
+              <div class="field">
+                <label class="field-label" id="lblCategory"
+                  >Category <span class="req">*</span></label
+                >
+                <mat-form-field appearance="outline" class="pill">
+                  <mat-select
+                    formControlName="category"
+                    [attr.aria-labelledby]="'lblCategory'"
+                  >
+                    <mat-option value="skincare">Skincare</mat-option>
+                    <mat-option value="makeup">Makeup</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- Subcategory (select) -->
+              <div class="field">
+                <label class="field-label" id="lblSub">Subcategory</label>
+                <mat-form-field appearance="outline" class="pill">
+                  <mat-select
+                    formControlName="subcategory"
+                    [attr.aria-labelledby]="'lblSub'"
+                  >
+                    <mat-option value="moisturizer">Moisturizer</mat-option>
+                    <mat-option value="serum">Serum</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- Price -->
+              <div class="field">
+                <label class="field-label" for="inpPrice"
+                  >Price <span class="req">*</span></label
+                >
+                <mat-form-field appearance="outline" class="pill">
+                  <input
+                    id="inpPrice"
+                    matInput
+                    placeholder="e.g. 29.99 USD"
+                    formControlName="price"
+                  />
+                </mat-form-field>
+              </div>
+              <!-- Discount: input + % pill cạnh bên -->
+              <div class="field">
+                <label class="field-label" for="inpDiscount">Discount</label>
+                <div class="inline-unit">
+                  <mat-form-field appearance="outline" class="pill">
+                    <input
+                      id="inpDiscount"
+                      matInput
+                      placeholder="e.g. 15"
+                      formControlName="discount"
+                    />
+                  </mat-form-field>
+                  <div class="unit-pill">%</div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="field col-span-2">
+                <label class="field-label" for="inpDesc">Description</label>
+                <mat-form-field appearance="outline">
+                  <textarea
+                    id="inpDesc"
+                    matInput
+                    rows="5"
+                    placeholder="Write a short description highlighting key benefits and features"
+                    formControlName="description"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Advanced">
+            <div class="muted">Advanced settings…</div>
+          </mat-tab>
+        </mat-tab-group>
+      </form>
+    </mat-card>
+  </div>
+</div>

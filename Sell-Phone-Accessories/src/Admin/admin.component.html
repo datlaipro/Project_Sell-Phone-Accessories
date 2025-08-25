@@ -14,18 +14,20 @@
 
     <mat-nav-list class="side-list">
       <div class="section-title">HOME</div>
-      <a mat-list-item class="active" [routerLink]="['/dashboard']">
+      <a mat-list-item class="active" [routerLink]="['dashboard']">
         <mat-icon class="li-ic">home</mat-icon>
         <span>Dashboard</span>
       </a>
 
       <div class="section-title">UI COMPONENTS</div>
       <a mat-list-item
-        ><mat-icon class="li-ic">format_align_left</mat-icon
-        ><span>Form Layout</span></a
+        ><mat-icon class="li-ic">inventory</mat-icon
+        ><span>Product</span></a
       >
       <a mat-list-item
-        ><mat-icon class="li-ic">text_fields</mat-icon><span>Input</span></a
+      [routerLink]="['addProduct']"
+        ><mat-icon class="li-ic">add_box</mat-icon
+        ><span>Add New Product</span></a
       >
       <a mat-list-item
         ><mat-icon class="li-ic">smart_button</mat-icon><span>Button</span></a
@@ -87,6 +89,5 @@
     <!-- Slot nhận nội dung của nhóm Dashboard -->
     <ng-content></ng-content>
     <router-outlet></router-outlet>
-
   </mat-sidenav-content>
 </mat-sidenav-container>
