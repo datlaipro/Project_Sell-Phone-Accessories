@@ -7,6 +7,7 @@ import { adminGuard } from '../Auth/auth.guard';
 import { AuthComponent } from '../LoginAndRegister/LoginAndRegister.component';
 import { ProductFormComponent } from '../Admin/AddNewProducts/addNewProducts.component';
 import { DashboardComponent } from '../Admin/Dashboard/dashboard.component';
+import { Login } from '../Admin/Auth/login.component';
 export const routes: Routes = [
   // Khu vực public (dùng chung Navbar/Sidebar/Footer)
   {
@@ -21,18 +22,18 @@ export const routes: Routes = [
   },
   { path: 'auth', component: AuthComponent },
   // {path:'addProduct',component:ProductFormComponent},
-
+  { path: 'login', component: Login },
   // Khu vực admin (layout riêng, KHÔNG dùng layout public)
   {
     path: 'admin',
     loadComponent: () =>
-      import('../Admin/admin.component').then((m) => m.AdminComponent), // canMatch: [ adminGuard],
+      import('../Admin/admin.component').then((m) => m.AdminComponent),
+    //  canMatch: [ authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-      {path:'dashboard',component:DashboardComponent},
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'addProduct', component: ProductFormComponent },
 
-      // { path: 'products', loadComponent: ... }  // thêm trang admin khác ở đây
     ],
   },
 

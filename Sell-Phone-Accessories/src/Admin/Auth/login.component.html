@@ -1,0 +1,46 @@
+<section class="auth">
+  <button class="back-btn-fixed" mat-stroked-button [routerLink]="['/']">
+    Back To Home
+  </button>
+
+  <div class="auth-card">
+    <header class="card-head">
+      <h1>Log In</h1>
+      <!-- Có thể trỏ sang trang đăng nhập/đăng ký khác -->
+      <a class="head-link" routerLink="/auth/login">Sign In</a>
+    </header>
+
+    <form class="form" [formGroup]="form"  (ngSubmit)="onSubmit()"  novalidate>
+      <div class="field">
+        <label for="email">Your email</label>
+        <input
+          id="email"
+          class="input"
+          type="email"
+          name="email"
+          placeholder="Your email"
+          formControlName="email"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Your password</label>
+        <input
+          id="password"
+          class="input"
+          type="password"
+          name="password"
+          placeholder="Your password"
+          formControlName="password"
+          autocomplete="current-password"
+          [type]="hidePass ? 'password' : 'text'"
+        />
+      </div>
+
+      <button class="btn" type="submit">Log In</button>
+
+      <a class="muted-link" routerLink="/auth/forgot">I forgot my password</a>
+    </form>
+  </div>
+</section>

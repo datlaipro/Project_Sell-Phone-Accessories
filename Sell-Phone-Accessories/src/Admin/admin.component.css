@@ -87,7 +87,14 @@
   border-radius:12px; margin:4px 8px;
 }
 .mat-mdc-list-item:hover{ background:#f3f4f6; }
-.active{ background:#ecfdf5 !important; }
+.active{ background:#a5eecc !important; }
 .li-ic{
   margin-right:12px; background:#eef2ff; color:#6366f1; border-radius:8px; padding:6px;
+}
+
+.back-btn-fixed {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 2000;
 }

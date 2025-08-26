@@ -37,7 +37,11 @@ export class ProductFormComponent {
     name: ['', Validators.required],
     brand: ['', Validators.required],
     category: ['', Validators.required],
-    subcategory: [''],
+      quantity: [1, [
+    Validators.required,
+    Validators.min(1),
+    Validators.pattern(/^\d+$/)  // chỉ cho số nguyên dương
+  ]],
     price: [''],
     discount: [''],
     description: [''],

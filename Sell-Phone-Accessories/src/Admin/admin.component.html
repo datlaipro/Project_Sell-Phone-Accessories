@@ -8,43 +8,49 @@
     [autoFocus]="false"
   >
     <div class="logo">
-      <div class="mark"></div>
-      <div class="brand">SAKAI</div>
+  <button  class="back-btn-fixed" mat-stroked-button [routerLink]="['/']">Back To Home</button>
     </div>
 
     <mat-nav-list class="side-list">
       <div class="section-title">HOME</div>
-      <a mat-list-item class="active" [routerLink]="['dashboard']">
-        <mat-icon class="li-ic">home</mat-icon>
-        <span>Dashboard</span>
+      <a mat-list-item [class.active]="isActive[0]" (click)="activeHover(0)" [routerLink]="['dashboard']">
+        <mat-icon matListItemIcon class="li-ic">home</mat-icon>
+        <span matListItemTitle>Dashboard</span>
       </a>
 
       <div class="section-title">UI COMPONENTS</div>
-      <a mat-list-item
-        ><mat-icon class="li-ic">inventory</mat-icon
-        ><span>Product</span></a
-      >
-      <a mat-list-item
-      [routerLink]="['addProduct']"
-        ><mat-icon class="li-ic">add_box</mat-icon
-        ><span>Add New Product</span></a
-      >
-      <a mat-list-item
-        ><mat-icon class="li-ic">smart_button</mat-icon><span>Button</span></a
-      >
-      <a mat-list-item
-        ><mat-icon class="li-ic">table_chart</mat-icon><span>Table</span></a
-      >
-      <a mat-list-item
-        ><mat-icon class="li-ic">list</mat-icon><span>List</span></a
-      >
-      <a mat-list-item
-        ><mat-icon class="li-ic">account_tree</mat-icon><span>Tree</span></a
-      >
-      <a mat-list-item
-        ><mat-icon class="li-ic">dashboard_customize</mat-icon
-        ><span>Panel</span></a
-      >
+      <a mat-list-item [class.active]="isActive[1]" (click)="activeHover(1)">
+        <mat-icon matListItemIcon class="li-ic">inventory</mat-icon>
+        <span matListItemTitle>Product</span>
+      </a>
+      <a mat-list-item [routerLink]="['addProduct']" [class.active]="isActive[2]" (click)="activeHover(2)">
+        <mat-icon matListItemIcon class="li-ic">add_box</mat-icon>
+        <span matListItemTitle>Add New Product</span>
+      </a>
+      <a mat-list-item [class.active]="isActive[3]" (click)="activeHover(3)">
+        <mat-icon matListItemIcon class="li-ic">smart_button</mat-icon>
+        <span matListItemTitle>Button</span>
+      </a>
+
+      <a mat-list-item [class.active]="isActive[4]" (click)="activeHover(4)">
+        <mat-icon matListItemIcon class="li-ic">table_chart</mat-icon>
+        <span matListItemTitle>Table</span>
+      </a>
+
+      <a mat-list-item [class.active]="isActive[5]" (click)="activeHover(5)">
+        <mat-icon matListItemIcon class="li-ic">list</mat-icon>
+        <span matListItemTitle>List</span>
+      </a>
+
+      <a mat-list-item [class.active]="isActive[6]" (click)="activeHover(6)">
+        <mat-icon matListItemIcon class="li-ic">account_tree</mat-icon>
+        <span matListItemTitle>Tree</span>
+      </a>
+
+      <a mat-list-item [class.active]="isActive[7]" (click)="activeHover(7)">
+        <mat-icon matListItemIcon class="li-ic">dashboard_customize</mat-icon>
+        <span matListItemTitle>Panel</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 

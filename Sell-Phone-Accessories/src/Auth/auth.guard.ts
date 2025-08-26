@@ -10,7 +10,7 @@ export const authGuard: CanMatchFn = () => {//chặn khi chưa đăng nhập
  return auth.isLoggedIn().pipe(
     take(1),
     tap(ok => console.log('[authGuard] isLoggedIn=', ok)),
-    map(ok => ok ? true : router.createUrlTree(['/auth'])),
+    map(ok => ok ? true : router.createUrlTree(['/login'], { queryParams: { redirectUrl: '/admin' } } )),
     tap(result => console.log('[authGuard] decision=', result))
   );};
 

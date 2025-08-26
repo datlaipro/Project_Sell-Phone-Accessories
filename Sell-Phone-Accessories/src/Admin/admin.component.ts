@@ -29,4 +29,18 @@ export class AdminComponent {
     map(r => r.matches),
     shareReplay({ bufferSize: 1, refCount: true }) // hoặc shareReplay(1)
   );
+  
+isActive: boolean[] = Array(8).fill(false);
+
+activeHover(index: number): void {
+  // Cách 1: tạo mảng mới theo điều kiện index
+  this.isActive = this.isActive.map((_, i) => i === index);
+
+  
+}
+
+
+  
+
+
 }
