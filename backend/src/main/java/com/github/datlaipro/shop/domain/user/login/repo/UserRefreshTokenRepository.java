@@ -1,0 +1,13 @@
+package com.github.datlaipro.shop.domain.user.repo;
+
+import com.github.datlaipro.shop.domain.user.entity.UserRefreshTokenEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+public interface UserRefreshTokenRepository extends JpaRepository<UserRefreshTokenEntity, Long> {
+  Optional<UserRefreshTokenEntity> findByJti(String jti);
+  Optional<UserRefreshTokenEntity> findByJtiAndRevokedAtIsNull(String jti);
+  int countByFamilyIdAndRevokedAtIsNullAndExpiresAtAfter(String familyId, LocalDateTime now);
+}
