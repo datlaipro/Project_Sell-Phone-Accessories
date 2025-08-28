@@ -1,5 +1,5 @@
 package com.github.datlaipro.shop.domain.user.dto;
-
+// đối tượng user gồm các thông tin dưới 
 public class AuthRes {
   private Long id;
   private String email;

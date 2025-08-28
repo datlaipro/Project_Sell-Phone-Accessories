@@ -12,43 +12,46 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class UserService {
-    private final UserRepository userRepo;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepo;
+  private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
+  public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    this.userRepo = userRepo;
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  @Transactional
+  public UserRes register(RegisterReq req) {
+    final String email = (req.getEmail() == null ? "" : req.getEmail().trim().toLowerCase());
+    if (email.isEmpty()) {
+      throw new IllegalArgumentException("Email không được để trống");
+    }
+    if (userRepo.existsByEmailIgnoreCase(email)) {
+      throw new EmailAlreadyUsedException(email);
     }
 
-    @Transactional
-    public UserRes register(RegisterReq req) {//kiểm tra nếu trùng email đăng kí thì ném lỗi 
-        if (userRepo.existsByEmail(req.getEmail())) {
-            throw new EmailAlreadyUsedException(req.getEmail());
-        }
+    String name    = StringUtils.hasText(req.getName()) ? req.getName().trim() : null;
+    String avatar  = StringUtils.hasText(req.getAvatar()) ? req.getAvatar().trim() : null;
+    String address = StringUtils.hasText(req.getAddress()) ? req.getAddress().trim() : null;
 
-        // Chuẩn hoá: empty string -> null
-        String name    = StringUtils.hasText(req.getName()) ? req.getName().trim() : null;
-        String avatar  = StringUtils.hasText(req.getAvatar()) ? req.getAvatar().trim() : null;
-        String address = StringUtils.hasText(req.getAddress()) ? req.getAddress().trim() : null;
+    UserEntity user = new UserEntity();
+    user.setName(name);
+    user.setEmail(email); // 👈 đã chuẩn hoá
+    user.setPasswordHash(passwordEncoder.encode(req.getPassword()));
+    user.setAvatar(avatar);
+    user.setAddress(address);
+    user.setRole("user");
 
-        // KHÔNG dùng builder() vì UserEntity không có Lombok @Builder
-        UserEntity user = new UserEntity();// thực hiện truy vấn vào db 
-        user.setName(name);
-        user.setEmail(req.getEmail().trim());
-        user.setPasswordHash(passwordEncoder.encode(req.getPassword()));
-        user.setAvatar(avatar);      // có thể null
-        user.setAddress(address);    // có thể null
-        user.setRole("user");        // khớp enum DB ('user','admin_proxy')
-
-        user = userRepo.save(user);
-
-        return new UserRes(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getAvatar(),
-                user.getAddress(),
-                user.getRole()
-        );
+    try {
+      user = userRepo.save(user);
+    } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+      // Phòng trường hợp 2 request song song cùng email
+      throw new EmailAlreadyUsedException(email);
     }
+
+    return new UserRes(
+      user.getId(), user.getName(), user.getEmail(),
+      user.getAvatar(), user.getAddress(), user.getRole()
+    );
+  }
 }

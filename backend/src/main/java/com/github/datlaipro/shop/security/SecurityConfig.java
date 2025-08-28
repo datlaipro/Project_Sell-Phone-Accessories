@@ -21,20 +21,36 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
-  @Value("${app.jwt.secret}") private String secret;
-  @Value("${app.jwt.issuer}") private String issuer;
+  @Value("${app.jwt.secret}")
+  private String secret;
+  @Value("${app.jwt.issuer}")
+  private String issuer;
 
-  @Value("${app.cookie.domain}") private String cookieDomain;
-  @Value("${app.cookie.secure:true}") private boolean cookieSecure;
-  @Value("${app.cookie.same-site:Lax}") private String sameSite;
+  @Value("${app.cookie.domain}")
+  private String cookieDomain;
+  @Value("${app.cookie.secure:true}")
+  private boolean cookieSecure;
+  @Value("${app.cookie.same-site:Lax}")
+  private String sameSite;
 
   // (tùy chọn) cấu hình origin FE qua properties
   @Value("${app.cors.allowed-origin:http://localhost:4200}")
   private String allowedOrigin;
 
-  @Bean public BCryptPasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-  @Bean public JwtService jwtService() { return new JwtService(secret, issuer); }
-  @Bean public CookieUtil cookieUtil() { return new CookieUtil(cookieDomain, cookieSecure, sameSite); }
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public JwtService jwtService() {
+    return new JwtService(secret, issuer);
+  }
+
+  @Bean
+  public CookieUtil cookieUtil() {
+    return new CookieUtil(cookieDomain, cookieSecure, sameSite);
+  }
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
@@ -51,16 +67,29 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService, UserRepository userRepo) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService, UserRepository userRepo)
+      throws Exception {
     http.csrf(csrf -> csrf.disable());
     http.cors(Customizer.withDefaults());
     http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(auth -> auth
-        .requestMatchers("/auth/**").permitAll()
+        // Public
+        .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
+        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+        .requestMatchers(HttpMethod.GET, "/auth/ping").permitAll()
+
+        // Phải đăng nhập
+        .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+        .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+
+        // Các route khác
+        .requestMatchers("/error").permitAll()
+
         .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
-        .anyRequest().authenticated()
-    );
+        .anyRequest().authenticated());
+    // http.exceptionHandling(e -> e
+    //     .authenticationEntryPoint((req, res, ex) -> res.sendError(401)));
 
     http.addFilterBefore(new JwtAuthenticationFilter(jwtService, userRepo),
         UsernamePasswordAuthenticationFilter.class);

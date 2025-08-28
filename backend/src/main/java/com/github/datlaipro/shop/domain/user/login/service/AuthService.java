@@ -18,9 +18,15 @@ import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+// imports:
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// trong class AuthService:
 
 @Service
 public class AuthService {
+private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     private final UserRepository userRepo;
     private final UserRefreshTokenRepository rtRepo;
@@ -98,11 +104,18 @@ public class AuthService {
 
     @Transactional
     public Tokens login(LoginReq req, HttpServletRequest httpReq) {
-        UserEntity u = userRepo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Email hoặc mật khẩu không đúng"));
-        if (!encoder.matches(req.getPassword(), u.getPasswordHash())) {
-            throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
-        }
+    final String email = Optional.ofNullable(req.getEmail()).orElse("").trim().toLowerCase();
+    final String pass  = Optional.ofNullable(req.getPassword()).orElse("");
+
+    // gọi repo 1 lần, rồi log kết quả có tìm thấy không
+    var ou = userRepo.findByEmailIgnoreCase(email);
+    log.debug("login email={}, passLen={}, found={}", email, pass.length(), ou.isPresent());
+
+    var u = ou.orElseThrow(() -> new BadCredentialsException("Email hoặc mật khẩu không đúng"));
+    if (!encoder.matches(pass, u.getPasswordHash())) {
+        log.debug("login failed: password mismatch for email={}", email);
+        throw new BadCredentialsException("Email hoặc mật khẩu không đúng");
+    }
 
         String access = createAccessToken(u);
         String familyId = uuid();

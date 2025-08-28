@@ -3,8 +3,13 @@ package com.github.datlaipro.shop.domain.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonAlias;   // 👈 thêm dòng này
+
 // định nghĩa validate dữ liệu 
 public class RegisterReq {
+  
+  @NotBlank
+  @JsonAlias({ "fullname", "full_name", "fullName" })
   @Size(max = 255)
   private String name;
 

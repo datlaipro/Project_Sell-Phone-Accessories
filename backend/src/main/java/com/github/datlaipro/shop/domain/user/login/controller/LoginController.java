@@ -73,9 +73,9 @@ public class LoginController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<AuthRes> me(@AuthenticationPrincipal Object principal) {
+  public ResponseEntity<AuthRes> me(@AuthenticationPrincipal AuthRes principal) {
     if (principal == null) return ResponseEntity.status(401).build();
-    Long userId = (Long) principal;
-    return ResponseEntity.ok(new AuthRes(userId, null, null, null));
+
+    return ResponseEntity.ok(principal);
   }
 }

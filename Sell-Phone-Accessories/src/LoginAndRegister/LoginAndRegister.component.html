@@ -1,8 +1,7 @@
-  
-
-
 <div class="auth-shell">
-  <button  class="back-btn-fixed" mat-stroked-button [routerLink]="['/']">Back To Home</button>
+  <button class="back-btn-fixed" mat-stroked-button [routerLink]="['/']">
+    Back To Home
+  </button>
 
   <mat-card class="auth-card">
     <h1 class="brand">SAKAI</h1>
@@ -11,6 +10,7 @@
       class="mode-toggle"
       name="mode"
       [value]="mode"
+      [disabled]="loading"
       (change)="switchMode($event.value)"
       aria-label="Chọn chế độ"
     >
@@ -20,91 +20,153 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
       <!-- Họ tên: chỉ hiển thị khi Đăng ký -->
-      <div *ngIf="mode === 'register'" class="row">
-        <mat-form-field appearance="outline" class="w100">
-          <mat-label>Họ tên</mat-label>
-          <input matInput formControlName="fullName" autocomplete="name" />
-          <mat-error *ngIf="form.controls.fullName.touched && form.controls.fullName.hasError('required')">
-            Bắt buộc
-          </mat-error>
-          <mat-error *ngIf="form.controls.fullName.touched && form.controls.fullName.hasError('minlength')">
-            Tối thiểu 2 ký tự
-          </mat-error>
-        </mat-form-field>
-      </div>
+      <fieldset [disabled]="loading">
+        <div *ngIf="mode === 'register'" class="row">
+          <mat-form-field appearance="outline" class="w100">
+            <mat-label>Họ tên</mat-label>
+            <input matInput formControlName="fullName" autocomplete="name" />
+            <mat-error
+              *ngIf="
+                form.controls.fullName.touched &&
+                form.controls.fullName.hasError('required')
+              "
+            >
+              Bắt buộc
+            </mat-error>
+            <mat-error
+              *ngIf="
+                form.controls.fullName.touched &&
+                form.controls.fullName.hasError('minlength')
+              "
+            >
+              Tối thiểu 2 ký tự
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-      <!-- Email -->
-      <div class="row">
-        <mat-form-field appearance="outline" class="w100">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" autocomplete="email" />
-          <mat-icon matSuffix>mail</mat-icon>
-          <mat-error *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
-            Bắt buộc
-          </mat-error>
-          <mat-error *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
-            Email không hợp lệ
-          </mat-error>
-        </mat-form-field>
-      </div>
+        <!-- Email -->
+        <div class="row">
+          <mat-form-field appearance="outline" class="w100">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+            />
+            <mat-icon matSuffix>mail</mat-icon>
+            <mat-error
+              *ngIf="
+                form.controls.email.touched &&
+                form.controls.email.hasError('required')
+              "
+            >
+              Bắt buộc
+            </mat-error>
+            <mat-error
+              *ngIf="
+                form.controls.email.touched &&
+                form.controls.email.hasError('email')
+              "
+            >
+              Email không hợp lệ
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-      <!-- Mật khẩu -->
-      <div class="row">
-        <mat-form-field appearance="outline" class="w100">
-          <mat-label>Mật khẩu</mat-label>
-          <input
-            matInput
-            [type]="hidePass ? 'password' : 'text'"
-            formControlName="password"
-            autocomplete="current-password"
-          />
-          <button type="button" mat-icon-button matSuffix (click)="hidePass = !hidePass" aria-label="Hiện/ẩn mật khẩu">
-            <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
+        <!-- Mật khẩu -->
+        <div class="row">
+          <mat-form-field appearance="outline" class="w100">
+            <mat-label>Mật khẩu</mat-label>
+            <input
+              matInput
+              [type]="hidePass ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hidePass = !hidePass"
+              aria-label="Hiện/ẩn mật khẩu"
+            >
+              <mat-icon>{{
+                hidePass ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-error
+              *ngIf="
+                form.controls.password.touched &&
+                form.controls.password.hasError('required')
+              "
+            >
+              Bắt buộc
+            </mat-error>
+            <mat-error
+              *ngIf="
+                form.controls.password.touched &&
+                form.controls.password.hasError('minlength')
+              "
+            >
+              Tối thiểu 6 ký tự
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Nhập lại mật khẩu: chỉ Đăng ký -->
+        <div *ngIf="mode === 'register'" class="row">
+          <mat-form-field appearance="outline" class="w100">
+            <mat-label>Nhập lại mật khẩu</mat-label>
+            <input
+              matInput
+              [type]="hideConfirm ? 'password' : 'text'"
+              formControlName="confirmPassword"
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hideConfirm = !hideConfirm"
+              aria-label="Hiện/ẩn mật khẩu"
+            >
+              <mat-icon>{{
+                hideConfirm ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+            <mat-error
+              *ngIf="
+                form.controls.confirmPassword.touched &&
+                form.controls.confirmPassword.hasError('required')
+              "
+            >
+              Bắt buộc
+            </mat-error>
+            <mat-error *ngIf="errorPasswordMismatch">
+              Mật khẩu không khớp
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Đồng ý điều khoản: chỉ Đăng ký -->
+        <mat-checkbox
+          *ngIf="mode === 'register'"
+          formControlName="agree"
+          class="mt8"
+        >
+          Tôi đồng ý với điều khoản sử dụng
+        </mat-checkbox>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit">
+            {{ mode === "login" ? "Đăng nhập" : "Tạo tài khoản" }}
           </button>
-          <mat-error *ngIf="form.controls.password.touched && form.controls.password.hasError('required')">
-            Bắt buộc
-          </mat-error>
-          <mat-error *ngIf="form.controls.password.touched && form.controls.password.hasError('minlength')">
-            Tối thiểu 6 ký tự
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Nhập lại mật khẩu: chỉ Đăng ký -->
-      <div *ngIf="mode === 'register'" class="row">
-        <mat-form-field appearance="outline" class="w100">
-          <mat-label>Nhập lại mật khẩu</mat-label>
-          <input
-            matInput
-            [type]="hideConfirm ? 'password' : 'text'"
-            formControlName="confirmPassword"
-            autocomplete="new-password"
-          />
-          <button type="button" mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" aria-label="Hiện/ẩn mật khẩu">
-            <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <button mat-stroked-button type="button" *ngIf="mode === 'login'">
+            Quên mật khẩu?
           </button>
-          <mat-error *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')">
-            Bắt buộc
-          </mat-error>
-          <mat-error *ngIf="errorPasswordMismatch">
-            Mật khẩu không khớp
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- Đồng ý điều khoản: chỉ Đăng ký -->
-      <mat-checkbox *ngIf="mode === 'register'" formControlName="agree" class="mt8">
-        Tôi đồng ý với điều khoản sử dụng
-      </mat-checkbox>
-
-      <div class="actions">
-        <button mat-flat-button color="primary" type="submit">
-          {{ mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản' }}
-        </button>
-        <button mat-stroked-button type="button" *ngIf="mode === 'login'">
-          Quên mật khẩu?
-        </button>
-      </div>
+        </div>
+      </fieldset>
     </form>
   </mat-card>
 </div>
