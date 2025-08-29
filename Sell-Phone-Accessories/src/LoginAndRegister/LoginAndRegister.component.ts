@@ -163,7 +163,7 @@ export class AuthComponent {
             this.loading = false;
 
             // ✅ Điều hướng sau khi login
-            this.router.navigate(['/dashboard']); // đổi route nếu bạn muốn
+            this.router.navigate(['/']); // đổi route nếu bạn muốn
           },
           error: (err: HttpErrorResponse) => {
             this.loading = false;
@@ -175,13 +175,15 @@ export class AuthComponent {
       const payload = { fullName, email, password };
       console.log(payload);
       this.http
-        .post(`${this.apiBase}/auth/register`, payload, {
+        .post<Res>(`${this.apiBase}/auth/register`, payload, {
           withCredentials: true, // 👈 nếu backend set cookie (ít gặp khi register)
         })
         .subscribe({
-          next: (res) => {
-            console.log('REGISTER ok:', res);
+          next: (user) => {
             this.loading = false;
+            this.router.navigate(['/']); // đổi route nếu bạn muốn
+            this.auth.setUser(user);
+
             // TODO: điều hướng / thông báo
           },
           error: (err: HttpErrorResponse) => {

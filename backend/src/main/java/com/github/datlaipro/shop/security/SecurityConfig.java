@@ -74,9 +74,10 @@ public class SecurityConfig {
     http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(auth -> auth
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
         // Public
-        .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
-        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/auth/refresh").permitAll()
         .requestMatchers(HttpMethod.GET, "/auth/ping").permitAll()
 
         // Phải đăng nhập
@@ -89,7 +90,7 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
         .anyRequest().authenticated());
     // http.exceptionHandling(e -> e
-    //     .authenticationEntryPoint((req, res, ex) -> res.sendError(401)));
+    // .authenticationEntryPoint((req, res, ex) -> res.sendError(401)));
 
     http.addFilterBefore(new JwtAuthenticationFilter(jwtService, userRepo),
         UsernamePasswordAuthenticationFilter.class);

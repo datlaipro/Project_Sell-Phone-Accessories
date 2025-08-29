@@ -1,12 +1,100 @@
-<mat-toolbar class="nav" color="transparent">
+<mat-toolbar class="topbar" color="transparent">
   <!-- Left: Sign In + Heart -->
-  <div class="left">
-    <button mat-button class="signin"  [routerLink]="[(auth.currentUser$ | async) ? '/' : '/auth']">  {{ (auth.currentUser$ | async)?.name ?? 'Sign In' }}
-</button>
+  <!-- Left: Account + Heart -->
+  <div class="left account" (keydown.escape)="isAccountOpen = false">
+    <!-- Heart -->
+   
+
+    <!-- Login / Account icon - MOBILE ONLY -->
+    <ng-container *ngIf="auth.currentUser$ | async as user; else loginIcon">
+      <!-- ĐÃ ĐĂNG NHẬP: bấm để toggle menu tài khoản -->
+      <button
+        mat-icon-button
+        class="login-btn mobile-only"
+        aria-label="Account"
+        type="button"
+        (click)="isAccountOpen = !isAccountOpen"
+      >
+        <mat-icon>person</mat-icon>
+      </button>
+    </ng-container>
+
+    <!-- CHƯA ĐĂNG NHẬP: bấm để đi tới /auth -->
+    <ng-template #loginIcon>
+      <button
+        mat-icon-button
+        class="login-btn mobile-only"
+        aria-label="Sign in"
+        [routerLink]="['/auth']"
+      >
+        <mat-icon>login</mat-icon>
+      </button>
+    </ng-template>
+
+    <!-- Đang đăng nhập -->
+    <ng-container *ngIf="auth.currentUser$ | async as user; else signInBtn">
+      <button
+        mat-button
+        class="signin"
+        type="button"
+        (click)="isAccountOpen = !isAccountOpen"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="isAccountOpen"
+      >
+        Hi, {{ user.name }}
+        <mat-icon class="chev" [class.open]="isAccountOpen"
+          >expand_more</mat-icon
+        >
+      </button>
+
+      <!-- Dropdown -->
+      <div class="acct-dropdown" *ngIf="isAccountOpen">
+        <a
+          class="item"
+          [routerLink]="['/account']"
+          (click)="isAccountOpen = false"
+          >My Account</a
+        >
+        <a
+          class="item"
+          [routerLink]="['/orders']"
+          (click)="isAccountOpen = false"
+          >Order History</a
+        >
+        <a
+          class="item"
+          [routerLink]="['/wishlist']"
+          (click)="isAccountOpen = false"
+          >Wishlist</a
+        >
+        <button
+          class="item"
+          type="button"
+          (click)="isAccountOpen = false; onLogout()"
+        >
+          Logout
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Chưa đăng nhập -->
+    <ng-template #signInBtn>
+      <button mat-button class="signin" [routerLink]="['/auth']">
+        Sign In
+      </button>
+    </ng-template>
+
     <button mat-icon-button aria-label="Wishlist">
       <mat-icon>favorite_border</mat-icon>
     </button>
   </div>
+
+  <!-- Backdrop để click ra ngoài sẽ đóng -->
+  <div
+    class="backdrop"
+    *ngIf="isAccountOpen"
+    (click)="isAccountOpen = false"
+  ></div>
 
   <!-- Center: Logo -->
   <div class="logo" aria-label="OtterBox" [routerLink]="['/']">OTTERBOX</div>
@@ -32,7 +120,7 @@
         </button>
       </mat-form-field>
       <!-- ẩn nút submit thật (Enter vẫn submit được) -->
-      <button type="submit" style="display:none"></button>
+      <button type="submit" style="display: none"></button>
     </form>
 
     <button
