@@ -1,4 +1,4 @@
-package com.github.datlaipro.shop.domain.admin.entity;
+package com.github.datlaipro.shop.domain.admin.register.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;

@@ -1,4 +1,6 @@
-package com.github.datlaipro.shop.domain.admin.dto;
+package com.github.datlaipro.shop.domain.admin.register.dto;
+
+import jakarta.validation.constraints.Email; // 👈 THÊM DÒNG NÀY
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,8 +25,7 @@ public class RegisterReqAdmin {
     @Size(max = 255)
     private String avatar;
 
-
-
+    
 
     public String getName() {
         return name;
@@ -58,4 +59,5 @@ public class RegisterReqAdmin {
         this.avatar = avatar;
     }
 
+   
 }

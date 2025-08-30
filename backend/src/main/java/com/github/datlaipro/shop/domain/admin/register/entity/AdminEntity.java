@@ -1,4 +1,4 @@
-package com.github.datlaipro.shop.domain.admin.entity;
+package com.github.datlaipro.shop.domain.admin.register.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -57,14 +57,6 @@ public class AdminEntity {
   @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<AdminAuditLogEntity> auditLogs = new HashSet<>();
 
-  // ===== Enums =====
-  public enum Role {
-    superadmin, manager, editor, viewer
-  }
-
-  public enum Status {
-    active, suspended
-  }
 
   // Getters/Setters ...
   // ===== Enums =====

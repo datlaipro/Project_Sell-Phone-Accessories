@@ -1,4 +1,4 @@
-package com.github.datlaipro.shop.domain.admin.entity;
+package com.github.datlaipro.shop.domain.admin.login.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -106,10 +106,18 @@ public class AdminRefreshTokenEntity {
     public void setIp(String ip) {
         this.ip = ip;
     }
+    
 
     public String getUserAgent() {
         return userAgent;
     }
+    public AdminEntity getUser() {// trả về đối tượng user 
+    return admin;
+  }
+
+     public void setUser(UserEntity user) {
+    this.user = user;
+  }
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
