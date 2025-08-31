@@ -10,12 +10,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
-import { RouterLink } from '@angular/router';
+import { RouterLink ,Router } from '@angular/router';
+import { AccountMenuComponent } from './Account/accountMenu.component';
+import { AuthAdminService } from '../service/auth.admin.service';
+
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [
     CommonModule,
+    AccountMenuComponent,
     MatSidenavModule, MatToolbarModule, MatIconModule, MatButtonModule,
     MatListModule, MatBadgeModule, MatTooltipModule,RouterOutlet,RouterLink
   ],
@@ -24,12 +28,15 @@ import { RouterLink } from '@angular/router';
 })
 export class AdminComponent {
   private bo = inject(BreakpointObserver);
+  private auth = inject(AuthAdminService);
+  constructor( private router: Router) {}
 
   isHandset$ = this.bo.observe(Breakpoints.Handset).pipe(
     map(r => r.matches),
     shareReplay({ bufferSize: 1, refCount: true }) // hoặc shareReplay(1)
   );
-  
+    currentUser$ = this.auth.currentUser$; // hoặc this.auth.currentUser()
+
 isActive: boolean[] = Array(8).fill(false);
 
 activeHover(index: number): void {
@@ -39,7 +46,12 @@ activeHover(index: number): void {
   
 }
 
-
+onLogout() {
+    // tuỳ service của bạn, ví dụ:
+   this.auth.logout().subscribe(() => {
+      this.router.navigateByUrl('/'); // hoặc '/login'
+    });
+  }
   
 
 

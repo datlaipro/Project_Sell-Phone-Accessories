@@ -39,8 +39,8 @@ public class LoginAdminController {
                                        HttpServletResponse httpRes) {
     var t = auth.login(req, httpReq);// 
 
-    ResponseCookie c1 = cookies.build("ACCESS_TOKEN", t.accessToken, Duration.ofMinutes(accessMinutes));// gắn  accessToken vào cookie
-    ResponseCookie c2 = cookies.build("REFRESH_TOKEN", t.refreshToken, Duration.ofDays(refreshDays));
+    ResponseCookie c1 = cookies.build("ADMIN_ACCESS_TOKEN", t.accessToken, Duration.ofMinutes(accessMinutes));// gắn  accessToken vào cookie
+    ResponseCookie c2 = cookies.build("ADMIN_REFRESH_TOKEN", t.refreshToken, Duration.ofDays(refreshDays));
     httpRes.addHeader("Set-Cookie", c1.toString());
     httpRes.addHeader("Set-Cookie", c2.toString());
 
@@ -50,11 +50,11 @@ public class LoginAdminController {
   @PostMapping("/refresh")
   public ResponseEntity<LoginAdminRes> refresh(HttpServletRequest httpReq,
                                          HttpServletResponse httpRes,
-                                         @CookieValue(name="REFRESH_TOKEN", required=false) String refreshCookie) {
+                                         @CookieValue(name="ADMIN_REFRESH_TOKEN", required=false) String refreshCookie) {
     var t = auth.refresh(refreshCookie, httpReq);
 
-    ResponseCookie c1 = cookies.build("ACCESS_TOKEN", t.accessToken, Duration.ofMinutes(accessMinutes));
-    ResponseCookie c2 = cookies.build("REFRESH_TOKEN", t.refreshToken, Duration.ofDays(refreshDays));
+    ResponseCookie c1 = cookies.build("ADMIN_ACCESS_TOKEN", t.accessToken, Duration.ofMinutes(accessMinutes));
+    ResponseCookie c2 = cookies.build("ADMIN_REFRESH_TOKEN", t.refreshToken, Duration.ofDays(refreshDays));
     httpRes.addHeader("Set-Cookie", c1.toString());
     httpRes.addHeader("Set-Cookie", c2.toString());
 
@@ -62,11 +62,11 @@ public class LoginAdminController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<Void> logout(@CookieValue(name="REFRESH_TOKEN", required=false) String refreshCookie,
+  public ResponseEntity<Void> logout(@CookieValue(name="ADMIN_REFRESH_TOKEN", required=false) String refreshCookie,
                                      HttpServletResponse httpRes) {
     auth.logout(refreshCookie);
-    httpRes.addHeader("Set-Cookie", cookies.clear("ACCESS_TOKEN").toString());
-    httpRes.addHeader("Set-Cookie", cookies.clear("REFRESH_TOKEN").toString());
+    httpRes.addHeader("Set-Cookie", cookies.clear("ADMIN_ACCESS_TOKEN").toString());
+    httpRes.addHeader("Set-Cookie", cookies.clear("ADMIN_REFRESH_TOKEN").toString());
     return ResponseEntity.noContent().build();
   }
 

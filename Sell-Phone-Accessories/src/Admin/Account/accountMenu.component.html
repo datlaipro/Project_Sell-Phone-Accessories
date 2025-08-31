@@ -1,0 +1,95 @@
+<!-- Nút avatar làm "origin" cho overlay -->
+<button
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  class="avatar-btn"
+  (click)="$event.stopPropagation(); toggle()"
+  [attr.aria-expanded]="open"
+  aria-haspopup="menu"
+>
+  <img [src]="avatar" alt="avatar" />
+</button>
+
+<!-- Panel menu gắn bằng Connected Overlay -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="open"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  [cdkConnectedOverlayBackdropClass]="'transparent-backdrop'"
+  (backdropClick)="close()"
+>
+  <!-- ép nền đặc + xoá mọi background-image ngay tại chỗ -->
+  <div class="acct-menu" role="menu"
+       [style.background]="'#fff'"
+       [style.backgroundImage]="'none'"
+       [style.border]="'1px solid #e5e7eb'"
+       [style.borderRadius.px]="14"
+       [style.boxShadow]="'0 10px 30px rgba(0,0,0,.12)'"
+       (click)="$event.stopPropagation()">
+
+    <!-- caret cũng phải nền đặc -->
+    <div class="caret"
+         [style.background]="'#fff'"
+         [style.borderLeft]="'1px solid #e5e7eb'"
+         [style.borderTop]="'1px solid #e5e7eb'"></div>
+
+    <div class="menu-header">
+      <img class="hdr-avatar" [src]="avatar" alt="" />
+      <div class="hdr-meta">
+        <div class="name">{{ name }}</div>
+        <div class="email">{{ email }}</div>
+      </div>
+      <button class="hdr-more" aria-label="more">▾</button>
+    </div>
+
+    <hr />
+
+    <button class="item" role="menuitem">
+      <span class="i">👤</span><span class="label">Profile</span
+      ><span class="kbd">P</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">⚙️</span><span class="label">Settings</span
+      ><span class="kbd">S</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🔔</span><span class="label">Notification Settings</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🧩</span><span class="label">App Center</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">📥</span><span class="label">Import Projects</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🏢</span><span class="label">New Workplace</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🔗</span><span class="label">Connect Workplace</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">⬇️</span><span class="label">Download Apps</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🎁</span><span class="label">Referrals</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">⌨️</span><span class="label">Keyboard Shortcuts</span
+      ><span class="kbd">⌘ K</span>
+    </button>
+
+    <hr />
+
+    <button class="item" role="menuitem">
+      <span class="i">❓</span><span class="label">Help</span>
+    </button>
+    <button class="item" role="menuitem">
+      <span class="i">🗑️</span><span class="label">Trash</span>
+    </button>
+    <button class="item danger" role="menuitem" (click)="onSignOut()">
+      <span class="i">↩️</span><span class="label">Sign Out</span>
+    </button>
+  </div>
+</ng-template>

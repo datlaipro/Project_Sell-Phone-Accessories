@@ -1,4 +1,5 @@
 package com.github.datlaipro.shop.domain.admin.login.entity;
+import com.github.datlaipro.shop.domain.admin.register.entity.AdminEntity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -115,9 +116,8 @@ public class AdminRefreshTokenEntity {
     return admin;
   }
 
-     public void setUser(UserEntity user) {
-    this.user = user;
-  }
+public boolean isRevoked() { return revokedAt != null; }
+
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;

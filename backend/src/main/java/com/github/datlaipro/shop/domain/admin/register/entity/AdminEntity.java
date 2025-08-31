@@ -1,5 +1,6 @@
 package com.github.datlaipro.shop.domain.admin.register.entity;
-
+import com.github.datlaipro.shop.domain.admin.login.entity.AdminRefreshTokenEntity;
+import com.github.datlaipro.shop.domain.admin.register.entity.AdminAuditLogEntity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;

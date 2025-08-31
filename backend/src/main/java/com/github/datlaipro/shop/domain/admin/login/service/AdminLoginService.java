@@ -5,6 +5,7 @@ import com.github.datlaipro.shop.domain.admin.login.dto.LoginAdminReq;
 import com.github.datlaipro.shop.domain.admin.register.entity.AdminEntity;
 import com.github.datlaipro.shop.domain.admin.login.entity.AdminRefreshTokenEntity;
 import com.github.datlaipro.shop.domain.admin.login.repo.AdminRefreshTokenRepository;
+import com.github.datlaipro.shop.domain.admin.register.repo.AdminRepository;
 import com.github.datlaipro.shop.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,7 @@ public class AdminLoginService {
         long exp = LocalDateTime.now().plusMinutes(accessMinutes).toEpochSecond(ZoneOffset.UTC);
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", u.getEmail());
-        claims.put("role", u.getRole());
+        claims.put("role", u.getRole().name());
         return jwt.createToken(String.valueOf(u.getId()), claims, exp);
         // subject = userId
     }
@@ -85,7 +86,7 @@ public class AdminLoginService {
 
         // store hashed token
         AdminRefreshTokenEntity e = new AdminRefreshTokenEntity();
-        e.setUser(u);
+        e.setAdmin(u);
         e.setJti(jti);
         e.setFamilyId(familyId);
         e.setTokenHash(sha256(token));
@@ -102,7 +103,7 @@ public class AdminLoginService {
     // ===== Public APIs =====
 
     @Transactional
-    public Tokens login(LoginReq req, HttpServletRequest httpReq) {
+    public Tokens login(LoginAdminReq req, HttpServletRequest httpReq) {
         final String email = Optional.ofNullable(req.getEmail()).orElse("").trim().toLowerCase();
         final String pass = Optional.ofNullable(req.getPassword()).orElse("");
 
@@ -124,7 +125,7 @@ public class AdminLoginService {
                 httpReq.getRemoteAddr(),
                 Optional.ofNullable(httpReq.getHeader("User-Agent")).orElse(""));
 
-        return new Tokens(access, refresh, new AuthRes(u.getId(), u.getEmail(), u.getName(), u.getRole()));
+        return new Tokens(access, refresh, new LoginAdminRes(u.getId(), u.getEmail(), u.getName(), u.getRole().name()));
     }
 
     @Transactional
@@ -161,7 +162,7 @@ public class AdminLoginService {
         }
 
         // rotate
-        AdminEntity u = row.getUser();// lấy ra đối tượng admin có kiểu dữ liệu là adminEntity
+        AdminEntity u = row.getAdmin();// lấy ra đối tượng admin có kiểu dữ liệu là adminEntity
         String newAccess = createAccessToken(u);
         String newRefresh = createRefreshTokenAndStore(
                 u, fid,
@@ -182,7 +183,7 @@ public class AdminLoginService {
         rtRepo.save(row);
 
         return new Tokens(newAccess, newRefresh,
-                new AuthRes(u.getId(), u.getEmail(), u.getName(), u.getRole()));
+                new LoginAdminRes(u.getId(), u.getEmail(), u.getName(), u.getRole().name()));
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package com.github.datlaipro.shop.config;
 
 import com.github.datlaipro.shop.domain.user.repo.UserRepository;
+import com.github.datlaipro.shop.domain.admin.register.repo.AdminRepository;
 import com.github.datlaipro.shop.security.CookieUtil;
 import com.github.datlaipro.shop.security.JwtAuthenticationFilter;
 import com.github.datlaipro.shop.security.JwtService;
@@ -74,7 +75,7 @@ public class SecurityConfig {
   // ===== ADMIN CHAIN =====
   @Bean
   @Order(1)
-  public SecurityFilterChain adminChain(HttpSecurity http, JwtService jwtService, AdminRefreshTokenRepository adminRepo)
+  public SecurityFilterChain adminChain(HttpSecurity http, JwtService jwtService, AdminRepository adminRepo)
       throws Exception {
     http.securityMatcher("/admin/**");
     http.csrf(csrf -> csrf.disable());

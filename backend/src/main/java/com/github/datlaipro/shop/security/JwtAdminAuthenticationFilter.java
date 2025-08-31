@@ -5,6 +5,7 @@ package com.github.datlaipro.shop.security;
 import com.github.datlaipro.shop.domain.admin.login.dto.LoginAdminRes;
 import com.github.datlaipro.shop.domain.admin.register.entity.AdminEntity;
 import com.github.datlaipro.shop.domain.admin.login.repo.AdminRefreshTokenRepository;
+import com.github.datlaipro.shop.domain.admin.register.repo.AdminRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
@@ -45,7 +46,7 @@ public class JwtAdminAuthenticationFilter extends OncePerRequestFilter {
                 Long adminId = Long.valueOf(jws.getBody().getSubject());
 
                 adminRepo.findById(adminId).ifPresent(a -> {
-                    var principal = new LoginAdminRes(a.getId(), a.getEmail(), a.getName(), a.getRole());
+                    var principal = new LoginAdminRes(a.getId(), a.getEmail(), a.getName(), a.getRole().name());
                     var authority = new SimpleGrantedAuthority("ROLE_ADMIN_" + a.getRole().name().toUpperCase());
                     var auth = new UsernamePasswordAuthenticationToken(principal, null,
                             Collections.singletonList(authority));
