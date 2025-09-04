@@ -23,7 +23,6 @@
 .topbar .actions{ display:flex; gap:8px }
 
 /* Simple buttons */
-
 .btn-outline{
   height:36px; padding:0 14px; border:1px solid var(--line); background:#fff; border-radius:10px; cursor:pointer;
 }
@@ -203,7 +202,6 @@
   position: absolute;
   opacity: 0;
   pointer-events: none;
-
 }
 
 .seg-tabs{
@@ -213,7 +211,7 @@
   margin-bottom: 16px;
 }
 .seg-tabs label{
-  grid-row: 1;                 /* luôn ở hàng 1 */
+  grid-row: 1;
   min-width: 0;
   height: 42px;
   display: grid;
@@ -225,28 +223,23 @@
   background: #f7f8fb;
   border: 1px solid var(--line);
 }
-#tab-general:checked + label{ background:#fff; box-shadow:0 1px 2px rgba(15,23,42,.06), 0 6px 16px rgba(15,23,42,.04); color:#111827; }
-#tab-advanced:checked + label{ background:#fff; box-shadow:0 1px 2px rgba(15,23,42,.06), 0 6px 16px rgba(15,23,42,.04); color:#111827; }
 
-/* panels hiển thị theo radio đã check */
-/* Panel chiếm trọn 2 cột ở hàng dưới */
-.seg-tabs .tab-panels{
-  grid-column: 1 / -1;         /* span cả 2 cột */
-}
+/* Panel chiếm trọn 2 cột */
+.seg-tabs .tab-panels{ grid-column: 1 / -1; }
 
-/* Trạng thái tab đang chọn */
+/* Trạng thái tab đang chọn (gộp không lặp) */
 #tab-general:checked + label,
 #tab-advanced:checked + label{
-  background: #fff;
-  border-color: #e5e7eb;
-  color: #111827;
-  box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 6px 16px rgba(15,23,42,.04);
+  background:#fff;
+  border-color:#e5e7eb;
+  color:#111827;
+  box-shadow:0 1px 2px rgba(15,23,42,.06), 0 6px 16px rgba(15,23,42,.04);
 }
 
 /* Ẩn/hiện panel theo radio đã check */
-.seg-tabs .tab-panels .panel{ display: none; }
-#tab-general:checked ~ .tab-panels [data-for="tab-general"]{ display: block; }
-#tab-advanced:checked ~ .tab-panels [data-for="tab-advanced"]{ display: block; }
+.seg-tabs .tab-panels .panel{ display:none; }
+#tab-general:checked ~ .tab-panels [data-for="tab-general"]{ display:block; }
+#tab-advanced:checked ~ .tab-panels [data-for="tab-advanced"]{ display:block; }
 
 /* =================== RESPONSIVE ENHANCEMENTS =================== */
 @media (max-width:900px){
@@ -264,3 +257,24 @@
   .unit-pill{ min-width:50px; }
 }
 
+/* Thanh hành động ở đáy form */
+.form-actions{
+  position: sticky;     /* bám đáy card khi cuộn */
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(to top, #fff 85%, rgba(255,255,255,.75));
+  backdrop-filter: blur(4px);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  z-index: 5; /* nổi trên input */
+}
+
+/* (tùy chọn) mobile nhỏ hơn */
+@media (max-width:700px){
+  .form-actions{ padding:10px; }
+}

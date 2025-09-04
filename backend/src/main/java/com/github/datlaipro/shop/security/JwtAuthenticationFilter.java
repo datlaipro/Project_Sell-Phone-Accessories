@@ -38,13 +38,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       try {
         Jws<Claims> jws = jwtService.parse(token);
         String userId = jws.getBody().getSubject();
-        Optional<UserEntity> ou = userRepo.findById(Long.valueOf(userId));
+        Optional<UserEntity> ou = userRepo.findById(Long.valueOf(userId));// tìm user theo id
 
         if (ou.isPresent()) {
           UserEntity u = ou.get();
-                    String roleStr = (u.getRole() == null) ? "USER" : u.getRole().toString(); // nếu là enum -> toString()/name()
+          String roleStr = (u.getRole() == null) ? "USER" : u.getRole().toString(); // nếu là enum -> toString()/name()
 
-          AuthRes principal = new AuthRes(u.getId(), u.getEmail(), u.getName(),roleStr);// nhận dữ liệu từ class authRes
+          AuthRes principal = new AuthRes(u.getId(), u.getEmail(), u.getName(), roleStr);// nhận dữ liệu từ class
+                                                                                         // authRes
 
           var auth = new UsernamePasswordAuthenticationToken(// quyết định trả về cái gì cho api auth/me
               principal, null,

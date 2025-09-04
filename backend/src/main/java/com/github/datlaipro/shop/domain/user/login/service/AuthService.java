@@ -203,12 +203,12 @@ private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     public static class Tokens {
         public final String accessToken;
         public final String refreshToken;
-        public final AuthRes user;
+        public final AuthRes user;// kiểu trả về cho client
 
         public Tokens(String a, String r, AuthRes u) {
             this.accessToken = a;
             this.refreshToken = r;
-            this.user = u;
+            this.user = u;//
         }
     }
 }

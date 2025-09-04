@@ -90,7 +90,7 @@ public class SecurityConfig {
 
         // Phải đăng nhập
         .requestMatchers(HttpMethod.GET, "/admin/me").authenticated()
-        .requestMatchers(HttpMethod.POST, "/admin/logout").authenticated()
+        .requestMatchers(HttpMethod.POST, "/admin/logout", "/admin/addProduct").authenticated()
 
         // Các route khác
         .requestMatchers("/error").permitAll()

@@ -1,16 +1,4 @@
 <!-- Top bar -->
-<div class="topbar">
-
-
-  <div class="actions">
-    <button type="button" class="btn-outline" (click)="saveDraft()">
-      Save Draft
-    </button>
-    <button type="button" class="btn-primary" (click)="publish()">
-      Publish
-    </button>
-  </div>
-</div>
 
 <div class="grid">
   <!-- LEFT COLUMN: Gallery + toggles -->
@@ -52,6 +40,7 @@
         <!-- add tile -->
         <label class="thumb add-tile">
           <input
+            #fileInp
             type="file"
             accept="image/*"
             multiple
@@ -83,35 +72,84 @@
   </div>
 
   <!-- MIDDLE COLUMN: Related items -->
+  <!-- MIDDLE COLUMN: Technical Specs -->
   <div class="mid-col">
     <div class="card">
       <div class="card-title">
-        <span>Related Items</span>
-        <span class="spacer"></span>
-        <button type="button" class="icon-btn" aria-label="Add related item">
-          ＋
-        </button>
+        <span>Technical Specs</span>
       </div>
 
-      <ul class="rel-list">
-        <li class="rel-item">
-          <img src="https://via.placeholder.com/48" alt="" />
-          <div class="rel-meta">
-            <div class="rel-title">Find Comfort Body…</div>
-            <div class="rel-price">$28</div>
+      <div class="form-grid">
+        <!-- Features (textarea) -->
+        <div class="field col-span-2">
+          <label class="field-label" for="specFeatures">Features</label>
+          <div class="pill pill-textarea">
+            <textarea
+              id="specFeatures"
+              #specInput
+              data-key="Features"
+              rows="3"
+              placeholder="Example: Shock-absorbing corners, raised edges, MagSafe compatible…"
+            ></textarea>
           </div>
-          <button type="button" class="icon-btn">🗑️</button>
-        </li>
+        </div>
 
-        <li class="rel-item">
-          <img src="https://via.placeholder.com/48" alt="" />
-          <div class="rel-meta">
-            <div class="rel-title">Find Comfort Gentle…</div>
-            <div class="rel-price">$18</div>
+        <!-- Compatibility -->
+        <div class="field col-span-2">
+          <label class="field-label" for="specCompat">Compatibility</label>
+          <div class="pill">
+            <input
+              id="specCompat"
+              type="text"
+              #specInput
+              data-key="Compatibility"
+              placeholder="Example: iPhone 15 / 15 Pro / 15 Plus"
+            />
           </div>
-          <button type="button" class="icon-btn">🗑️</button>
-        </li>
-      </ul>
+        </div>
+
+        <!-- Dimensions -->
+        <div class="field">
+          <label class="field-label" for="specDim">Dimensions</label>
+          <div class="pill">
+            <input
+              id="specDim"
+              type="text"
+              #specInput
+              data-key="Dimensions"
+              placeholder="Example: 151 x 76 x 12 mm"
+            />
+          </div>
+        </div>
+
+        <!-- Weight -->
+        <div class="field">
+          <label class="field-label" for="specWeight">Weight</label>
+          <div class="pill">
+            <input
+              id="specWeight"
+              type="text"
+              #specInput
+              data-key="Weight"
+              placeholder="Example: 38 g"
+            />
+          </div>
+        </div>
+
+        <!-- Materials -->
+        <div class="field col-span-2">
+          <label class="field-label" for="specMat">Materials</label>
+          <div class="pill">
+            <input
+              id="specMat"
+              type="text"
+              #specInput
+              data-key="Materials"
+              placeholder="Example: Polycarbonate, TPU, Silicone"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -135,9 +173,7 @@
               <div class="form-grid">
                 <!-- Product Name -->
                 <div class="field col-span-2">
-                  <label class="field-label" for="inpName"
-                    >Product Name </label
-                  >
+                  <label class="field-label" for="inpName">Product Name </label>
                   <div class="pill">
                     <input
                       id="inpName"
@@ -189,9 +225,7 @@
 
                 <!-- Brand -->
                 <div class="field">
-                  <label class="field-label" for="selBrand"
-                    >Brand </label
-                  >
+                  <label class="field-label" for="selBrand">Brand </label>
                   <div class="pill">
                     <select id="selBrand" formControlName="brand">
                       <option
@@ -210,9 +244,7 @@
 
                 <!-- Category -->
                 <div class="field">
-                  <label class="field-label" for="selCategory"
-                    >Category </label
-                  >
+                  <label class="field-label" for="selCategory">Category </label>
                   <div class="pill">
                     <select id="selCategory" formControlName="category">
                       <option
@@ -222,8 +254,15 @@
                       >
                         Select main category
                       </option>
-                      <option [ngValue]="'skincare'">Skincare</option>
-                      <option [ngValue]="'makeup'">Makeup</option>
+                      <option [ngValue]="'Cases'">Cases</option>
+                      <option [ngValue]="'Screen Protection'">
+                        Screen Protection
+                      </option>
+                      <option [ngValue]="'Power'">Power</option>
+                      <option [ngValue]="'Accessories'">Accessories</option>
+                      <option [ngValue]="'Customize'">Customize</option>
+                      <option [ngValue]="'Sale'">Sale</option>
+                      <option [ngValue]="'Explore'">Explore</option>
                     </select>
                   </div>
                 </div>
@@ -246,9 +285,7 @@
 
                 <!-- Price -->
                 <div class="field">
-                  <label class="field-label" for="inpPrice"
-                    >Price </label
-                  >
+                  <label class="field-label" for="inpPrice">Price </label>
                   <div class="pill">
                     <input
                       id="inpPrice"
@@ -295,6 +332,13 @@
               <div class="muted">Advanced settings…</div>
             </section>
           </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-outline" (click)="saveDraft()">
+            Save Draft
+          </button>
+          <!-- dùng submit để kích hoạt (ngSubmit) của form -->
+          <button type="submit" class="btn-primary">Publish</button>
         </div>
       </form>
     </div>

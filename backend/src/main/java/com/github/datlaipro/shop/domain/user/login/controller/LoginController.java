@@ -46,7 +46,7 @@ public class LoginController {
     httpRes.addHeader("Set-Cookie", c1.toString());
     httpRes.addHeader("Set-Cookie", c2.toString());
 
-    return ResponseEntity.ok(t.user);
+    return ResponseEntity.ok(t.user);// trả về dữ liệu t.user có kiểu của class AuthRes cho client
   }
 
   @PostMapping("/refresh")
