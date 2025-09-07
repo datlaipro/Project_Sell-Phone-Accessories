@@ -86,7 +86,8 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
         // Public
-        .requestMatchers(HttpMethod.POST, "/admin/register", "/admin/login", "/admin/refresh").permitAll()
+        .requestMatchers(HttpMethod.POST, "/admin/register", "/admin/login", "/admin/refresh")
+        .permitAll()
 
         // Phải đăng nhập
         .requestMatchers(HttpMethod.GET, "/admin/me").authenticated()
@@ -109,7 +110,8 @@ public class SecurityConfig {
     return http.build();
   }
 
-  // ===== USER CHAIN (giữ nguyên comment & logic gốc, bỏ match admin ra khỏi đây) =====
+  // ===== USER CHAIN (giữ nguyên comment & logic gốc, bỏ match admin ra khỏi đây)
+  // =====
   @Bean
   @Order(2)
   public SecurityFilterChain userChain(HttpSecurity http, JwtService jwtService, UserRepository userRepo)
@@ -122,8 +124,14 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
         // Public
+        .requestMatchers(HttpMethod.GET,
+            "/api/products", // 👈 thêm dòng này
+            "/api/products/**" // 👈 và nếu có các sub-path
+        ).permitAll()
         .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/auth/refresh").permitAll()
         .requestMatchers(HttpMethod.GET, "/auth/ping").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/product").permitAll() // nếu còn dùng endpoint số ít
+        .requestMatchers(HttpMethod.POST, "/api/products/search").permitAll() // nếu search là POST
 
         // Phải đăng nhập
         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -8,7 +8,32 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { environment } from '../../../environments/environment.development';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ProductList } from '../../../service/ProductList.service';
+interface ProductReq {
+  name?: string;
+  category?: string; // map từ title
+}
 
+interface ProductRes {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  rate: number;
+  color: string;
+  quantity: number;
+  brand: string;
+  imageUrl: string;
+}
+type Page<T> = {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number; // page index
+  size: number;
+};
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -30,6 +55,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class SidebarComponent {
   expanded: 'cases' | null = null;
+  apiBase = environment.apiUrl;
+  private http = inject(HttpClient);
+  bus = inject(ProductList);
 
   products = [
     {
@@ -183,18 +211,22 @@ export class SidebarComponent {
 
   public state = false;
   layId() {
-   if (this.state==false) {
-     this.state = true;
-   }else {
-    this.state=false
-   }
-      
-    
+    if (this.state == false) {
+      this.state = true;
+    } else {
+      this.state = false;
+    }
+  }
+
+  isOn = false;
+  toggle() {
+    this.isOn = !this.isOn;
+  }
+
+  getInformation(name: string, title: string) {
+    const body: ProductReq = { name, category: title }; // <- title => category
+  this.bus.set({ category: title, model: name });
+
    
   }
-  
-isOn = false;
-toggle() { this.isOn = !this.isOn; }
-
 }
-

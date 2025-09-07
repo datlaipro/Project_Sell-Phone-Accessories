@@ -9,10 +9,13 @@ public class ProductSpecEntity {
     @EmbeddedId
     private ProductSpecId id;
 
-    @Column(name = "val", nullable = false, length = 500)
+    @Column(name = "val", nullable = false, columnDefinition = "TEXT")
     private String val;
 
-    public ProductSpecEntity() {}
+   
+
+    public ProductSpecEntity() {
+    }
 
     public ProductSpecEntity(ProductSpecId id, String val) {
         this.id = id;
@@ -43,7 +46,8 @@ public class ProductSpecEntity {
     }
 
     public void setProductId(Long productId) {
-        if (this.id == null) this.id = new ProductSpecId();
+        if (this.id == null)
+            this.id = new ProductSpecId();
         this.id.setProductId(productId);
     }
 
@@ -53,7 +57,8 @@ public class ProductSpecEntity {
     }
 
     public void setAttr(String attr) {
-        if (this.id == null) this.id = new ProductSpecId();
+        if (this.id == null)
+            this.id = new ProductSpecId();
         this.id.setAttr(attr);
     }
 }

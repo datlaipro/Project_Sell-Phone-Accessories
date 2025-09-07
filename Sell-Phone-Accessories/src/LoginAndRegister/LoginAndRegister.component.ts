@@ -64,7 +64,6 @@ export class AuthComponent {
   apiBase = environment.apiUrl;
   loading = false;
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   // 👇 inject HttpClient trực tiếp
   private http = inject(HttpClient);
 
@@ -144,7 +143,6 @@ export class AuthComponent {
         email: email.trim().toLowerCase(),
         password: password,
       };
-      console.log(payload, this.apiBase);
       this.http
         .post<Res>(`${this.apiBase}/auth/login`, payload, {
           withCredentials: true, // gửi/nhận cookie

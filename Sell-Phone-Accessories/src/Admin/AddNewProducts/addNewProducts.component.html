@@ -185,40 +185,61 @@
                 </div>
 
                 <!-- Colors -->
+                <!-- Colors -->
                 <div class="color-field">
                   <label>Colors</label>
+
+                  <!-- BẢNG MÀU (grid) -->
                   <div class="color-palette">
+                    <!-- Preset theo tên -->
                     <button
                       type="button"
                       class="swatch"
                       *ngFor="let c of presetColors"
-                      [style.--c]="c"
+                      [style.background]="colorHex(c)"
                       [class.selected]="isColorSelected(c)"
                       (click)="toggleColor(c)"
+                      [attr.aria-label]="c"
                     >
                       <span *ngIf="isColorSelected(c)">✓</span>
                     </button>
 
-                    <label class="swatch add">
-                      <input type="color" (change)="addCustomColor($event)" />
-                      ＋
-                    </label>
-
+                    <!-- Swatch cho màu custom (không trùng preset) -->
                     <button
                       type="button"
                       class="swatch custom"
                       *ngFor="let c of selectedColors()"
-                      [style.--c]="c"
-                      [class.selected]="true"
+                      [style.background]="colorHex(c)"
+                      class="selected"
                       (click)="toggleColor(c)"
                       [hidden]="presetColors.includes(c)"
+                      [attr.aria-label]="c"
                     >
                       ✓
                     </button>
                   </div>
+
+                  <!-- Ô NHẬP NẰM DƯỚI BẢNG MÀU -->
+                  <div class="color-add">
+                    <input
+                      #colorName
+                      type="text"
+                      placeholder="Type a color name (e.g. navy)"
+                      (keyup.enter)="addColorByRef(colorName)"
+                    />
+                    <button
+                      type="button"
+                      class="add-btn"
+                      (click)="addColorByRef(colorName)"
+                    >
+                      ＋
+                    </button>
+                  </div>
+
                   <div class="chosen">
                     <span class="chip" *ngFor="let c of selectedColors()">
-                      <span class="dot" [style.background]="c"></span>{{ c }}
+                      <span class="dot" [style.background]="colorHex(c)"></span
+                      >{{ c }}
                     </span>
                   </div>
                 </div>

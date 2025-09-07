@@ -6,6 +6,8 @@ import com.github.datlaipro.shop.domain.addNewProduct.entity.AddNewProductEntity
 import com.github.datlaipro.shop.domain.addNewProduct.entity.ProductImageEntity;
 import com.github.datlaipro.shop.domain.addNewProduct.repo.AddNewProductRepository;
 import com.github.datlaipro.shop.domain.addNewProduct.repo.CategoryRepository;
+import com.github.datlaipro.shop.domain.product.entity.DeviceModelEntity;
+import com.github.datlaipro.shop.domain.product.repo.DeviceModelRepository;
 import com.github.datlaipro.shop.domain.addNewProduct.repo.ProductImageRepository;
 import com.github.datlaipro.shop.domain.admin.login.dto.LoginAdminRes;
 import com.github.datlaipro.shop.domain.productspec.entity.ProductSpecEntity;
@@ -27,16 +29,19 @@ public class AddNewProductService {
   private final CategoryRepository categoryRepo;
   private final ProductImageRepository imageRepo;
   private final ProductSpecRepository productSpecRepo; // 👈 NEW
+  private final DeviceModelRepository deviceModelRepo;
   private final CloudflareR2Service r2;
 
   public AddNewProductService(AddNewProductRepository productRepo,
       CategoryRepository categoryRepo,
       ProductImageRepository imageRepo,
       ProductSpecRepository productSpecRepo, // 👈 NEW
+      DeviceModelRepository deviceModelRepo,
       CloudflareR2Service r2) {
     this.productRepo = productRepo;
     this.categoryRepo = categoryRepo;
     this.imageRepo = imageRepo;
+    this.deviceModelRepo = deviceModelRepo;
     this.productSpecRepo = productSpecRepo; // 👈 NEW
     this.r2 = r2;
   }
@@ -58,18 +63,14 @@ public class AddNewProductService {
         .filter(s -> !s.isEmpty())
         .orElseThrow(() -> new IllegalArgumentException("Thiếu category"));
 
-    var category = categoryRepo.findByNameIgnoreCase(catName)
+    var category = categoryRepo.findByNameIgnoreCase(catName)//
         .orElseThrow(() -> new IllegalArgumentException("Category không tồn tại: " + catName));
 
     // 1.1) (NEW) Chuẩn hoá product type (nếu FE gửi)
-   
-
-    
 
     // 2) Lưu product
     var p = new AddNewProductEntity();
     p.setName(req.getName());
-    p.setDescription(req.getDescription());
     p.setPrice(req.getPrice());
     p.setDiscount(Optional.ofNullable(req.getDiscount()).orElse(BigDecimal.ZERO));
     p.setRate(req.getRate() == null ? new BigDecimal("0.00") : req.getRate()); // tránh NULL cho cột NOT NULL
@@ -80,7 +81,6 @@ public class AddNewProductService {
     p.setIsActive(true);
 
     // (NEW) gán productTypeId nếu có
- 
 
     if (admin != null && admin.getId() != null) {
       p.setCreatedByAdminId(admin.getId());
@@ -88,6 +88,27 @@ public class AddNewProductService {
     }
 
     var saved = productRepo.save(p);
+
+    List<String> slugs = Optional.ofNullable(req.getModelSlugs())
+        .orElse(Collections.emptyList());
+
+    // nếu cần bỏ khoảng trắng + lowercase:
+    List<String> slugsLower = new ArrayList<>();
+    for (String s : slugs) {
+      if (s != null) {
+        String t = s.trim().toLowerCase();
+        if (!t.isEmpty())
+          slugsLower.add(t);
+      }
+    }
+
+    // 👉 Quan trọng: ghi rõ kiểu List<DeviceModelEntity>
+    List<DeviceModelEntity> models = deviceModelRepo.findBySlugInIgnoreCase(slugsLower);
+
+    for (DeviceModelEntity m : models) {
+      // gọi method link ở repo phù hợp (xem Bước 2)
+      productRepo.linkDevice(saved.getId(), m.getId());// lưu vào bảng liên kết product_device_fit
+    }
 
     // 3) Upload ảnh lên R2 (nếu có), rồi lưu vào product_images
     List<String> urls = new ArrayList<>();
@@ -123,19 +144,30 @@ public class AddNewProductService {
     }
 
     // 4) (NEW) Lưu specs mềm dẻo vào product_specs
-    Map<String, String> specs = Optional.ofNullable(req.getSpecs()).orElse(Collections.emptyMap());
+    Map<String, String> specs = new LinkedHashMap<>(// khởi tạo LinkedHashMap để giữ thứ tự nhập
+        Optional.ofNullable(req.getSpecs()).orElse(Collections.emptyMap()));
+
+    // Cầu nối: nếu FE vẫn gửi description riêng, dồn vào specs với key
+    // "Description"
+    String desc = Optional.ofNullable(req.getDescription())
+        .map(String::trim).filter(s -> !s.isEmpty()).orElse(null);
+    if (desc != null) {
+      specs.put("Description", desc);
+    }
+
     if (!specs.isEmpty()) {
-      for (Entry<String, String> e : specs.entrySet()) {
-        String attr = sanitizeAttr(e.getKey());
-        String val = sanitizeVal(e.getValue());
+      for (Entry<String, String> e : specs.entrySet()) {// Lặp qua từng cặp attr → val trong Map<String, String>.
+        String attr = normalizeAttr(e.getKey()); // Chuẩn hoá tên thuộc tính (ví dụ gom “description”, “Description”,
+                                                 // “DESCRIPTION” về cùng một dạng “Description”, cắt khoảng trắng, giới
+                                                 // hạn độ dài, v.v.) để tránh trùng/loạn key.
+        String val = sanitizeVal(e.getValue()); // ↓ cập nhật bỏ cắt 500
         if (attr == null || val == null)
           continue;
 
         var pk = new ProductSpecId(saved.getId(), attr);
         var specEntity = new ProductSpecEntity(pk, val);
-        productSpecRepo.save(specEntity);
+        productSpecRepo.save(specEntity); // upsert theo PK kép (product_id, attr)
       }
-      // nếu muốn đảm bảo không trùng key (PK kép đã đảm bảo); không cần xoá trước
     }
 
     // 5) Trả DTO
@@ -146,7 +178,6 @@ public class AddNewProductService {
     var res = new AddNewProductRes();
     res.setId(e.getId());
     res.setName(e.getName());
-    res.setDescription(e.getDescription());
     res.setPrice(e.getPrice());
     res.setRate(e.getRate());
     res.setColor(e.getColor());
@@ -180,9 +211,18 @@ public class AddNewProductService {
     if (raw == null)
       return null;
     String s = raw.trim();
+    return s.isEmpty() ? null : s; // KHÔNG cắt độ dài ở đây
+  }
+
+  private String normalizeAttr(String raw) {
+    if (raw == null)
+      return null;
+    String s = raw.trim();
     if (s.isEmpty())
       return null;
-    // khớp @Column(length=500) bạn đã định nghĩa cho val
-    return s.length() > 500 ? s.substring(0, 500) : s;
+    if (s.equalsIgnoreCase("description"))
+      return "Description"; // thống nhất
+    return s.length() > 100 ? s.substring(0, 100) : s; // giữ giới hạn attr
   }
+
 }

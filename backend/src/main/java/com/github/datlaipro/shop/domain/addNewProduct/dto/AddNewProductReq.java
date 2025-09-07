@@ -3,6 +3,7 @@ package com.github.datlaipro.shop.domain.addNewProduct.dto;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.List;
 public class AddNewProductReq {
 
   @NotBlank
@@ -29,7 +30,7 @@ public class AddNewProductReq {
   private BigDecimal discount;
   @Min(0)
   private Integer coverIndex;
-
+  private List<String> modelSlugs;
   @NotNull
   @DecimalMin(value = "0.00")
   private BigDecimal price;
@@ -67,6 +68,13 @@ public class AddNewProductReq {
     this.coverIndex = coverIndex;
   }
 
+  public List<String> getModelSlugs() {
+    return modelSlugs;
+  }
+  public void setModelSlugs(List<String> modelSlugs) {
+    this.modelSlugs = modelSlugs;
+  }
+
   public Integer getQuantity() {
     return quantity;
   }
@@ -102,10 +110,6 @@ public class AddNewProductReq {
   public BigDecimal getPrice() {
     return price;
   }
-
-
-
- 
 
   public java.util.Map<String, String> getSpecs() {
     return specs;

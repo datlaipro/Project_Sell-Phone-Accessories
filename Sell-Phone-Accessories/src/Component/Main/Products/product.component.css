@@ -27,6 +27,7 @@
 
 .product .container {
   width: min(1200px, 100% - 48px);
+  height: 100%;
   margin-inline: auto
 }
 
@@ -174,13 +175,14 @@
   padding: 16px 16px 18px;
   box-shadow: var(--shadow);
   position: relative;
+  cursor: pointer;
 }
 
 .product .card__media {
   background: #f1f5f9;
   border-radius: 16px;
   overflow: hidden;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,7 +191,9 @@
 .product .card__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover
+  object-fit: cover;
+    aspect-ratio: 3/4;
+
 }
 
 .product .badge {

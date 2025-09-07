@@ -17,9 +17,7 @@ public class AddNewProductEntity {
   @Column(nullable = false, length = 255)
   private String name;
 
-  @Lob
-  @Column(nullable = false, columnDefinition = "TEXT")
-  private String description;
+
 
   @Column(nullable = false, precision = 12, scale = 2)
   private BigDecimal price;
@@ -87,13 +85,8 @@ public class AddNewProductEntity {
     this.name = name;
   }
 
-  public String getDescription() {
-    return description;
-  }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+
 
   public BigDecimal getPrice() {
     return price;

@@ -174,12 +174,12 @@
         </label>
       </div>
 
-      <div class="product-grid">
+      <div class="product-grid" *ngIf="items() as list">
         <!-- CARD 1 -->
-        <article class="card" *ngFor="let p of products">
+        <article class="card" *ngFor="let p of list">
           <span class="badge">TOP SELLER</span>
           <div class="card__media">
-            <img [src]="p.img" alt="Defender Series" />
+            <img [src]="p.coverImageUrl" alt="Defender Series" />
           </div>
           <h3 class="card__title">{{ p.name }}<br />Defender Series</h3>
           <div class="price">{{ p.price }}</div>

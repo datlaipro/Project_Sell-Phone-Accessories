@@ -278,3 +278,35 @@
 @media (max-width:700px){
   .form-actions{ padding:10px; }
 }
+
+
+.color-field { display: grid; gap: 10px; }
+
+.color-palette{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28px, 28px));
+  gap: 10px;
+  align-items: center;
+}
+
+.swatch{
+  width: 28px; height: 28px; border-radius: 8px; border: 1px solid #e5e7eb;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.swatch.selected{ outline: 2px solid #111827; }
+
+.color-add{
+  display: flex; gap: 8px; align-items: center; /* đặt hàng nhập dưới grid */
+}
+.color-add input{
+  flex: 1;
+  height: 32px; padding: 0 10px; border: 1px solid #e5e7eb; border-radius: 8px;
+}
+.color-add .add-btn{
+  width: 36px; height: 32px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff;
+  cursor: pointer;
+}
+
+.chosen { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 999px; }
+.dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }

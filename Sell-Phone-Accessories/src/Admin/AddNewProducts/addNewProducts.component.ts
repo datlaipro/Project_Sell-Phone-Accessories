@@ -27,7 +27,17 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { environment } from '../../environments/environment.development';
 type ImgItem = { file?: File; url: string };
-
+const COLOR_PRESETS: Record<string, string> = {
+  black: '#000000',
+  white: '#ffffff',
+  red: '#ff4d4f',
+  orange: '#faad14',
+  green: '#52c41a',
+  blue: '#1677ff',
+  purple: '#722ed1',
+  pink: '#ff6b6b',
+  amber: '#f59e0b',
+};
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -80,17 +90,10 @@ export class ProductFormComponent {
   coverIndex = signal(0);
 
   // color state
-  presetColors = [
-    '#000000',
-    '#ffffff',
-    '#ff4d4f',
-    '#faad14',
-    '#52c41a',
-    '#1677ff',
-    '#722ed1',
-    '#ff6b6b',
-    '#f59e0b',
-  ];
+  presetColors = Object.keys(COLOR_PRESETS); // ['black','white','red',...]
+  colorHex(name: string) {
+    return COLOR_PRESETS[name.toLowerCase()] ?? '#d1d5db'; // fallback xám
+  }
   selectedColors = signal<string[]>([]);
   brands = [
     'Samsung',
@@ -191,25 +194,26 @@ export class ProductFormComponent {
   }
 
   // ===== Colors =====
-  toggleColor(hex: string) {
+  toggleColor(name: string) {
+    const key = name.toLowerCase().trim();
+    if (!key) return;
     const set = new Set(this.selectedColors());
-    if (set.has(hex)) set.delete(hex);
-    else set.add(hex);
+    set.has(key) ? set.delete(key) : set.add(key);
     this.selectedColors.set([...set]);
   }
 
   addCustomColor(ev: Event) {
     const input = ev.target as HTMLInputElement;
-    const val = input.value;
-    if (val) {
-      const set = new Set(this.selectedColors());
-      set.add(val);
-      this.selectedColors.set([...set]);
-    }
+    const val = (input.value || '').toLowerCase().trim();
+    if (!val) return;
+    const set = new Set(this.selectedColors());
+    set.add(val);
+    this.selectedColors.set([...set]);
+    input.value = '';
   }
 
-  isColorSelected(hex: string) {
-    return this.selectedColors().includes(hex);
+  isColorSelected(name: string) {
+    return this.selectedColors().includes(name.toLowerCase());
   }
 
   // ===== Submit demo =====
@@ -307,4 +311,13 @@ export class ProductFormComponent {
         error: (err) => console.error('Publish failed', err),
       });
   }
+  addColorByRef(input: HTMLInputElement) {
+  const val = (input.value || '').toLowerCase().trim();
+  if (!val) return;
+  const set = new Set(this.selectedColors());
+  set.add(val);
+  this.selectedColors.set([...set]);
+  input.value = '';
+}
+
 }
