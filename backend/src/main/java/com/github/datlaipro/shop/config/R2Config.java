@@ -16,7 +16,7 @@ public class R2Config {
 
   @Value("${r2.access-key-id}")     private String accessKey;
   @Value("${r2.secret-access-key}") private String secretKey;
-  @Value("${r2.endpoint}")          private String endpoint;
+  @Value("${r2.endpoint}")          private String endpoint;   // https://<account>.r2.cloudflarestorage.com
   @Value("${r2.region:auto}")       private String region;
 
   @Bean

@@ -52,9 +52,10 @@ body {
 }
 
 :root {
-  --cardW: 250px;
-  --gap: 24px;
-}
+  --cardW: 300px;
+ --gap: 35px;
+--pad: 16px; }
+ 
 
 * {
   box-sizing: border-box
@@ -155,6 +156,7 @@ body {
 @media (max-width:992px) {
   .p-card {
     border-radius: 30px;
+    
   }
 
   .rail {
@@ -245,7 +247,7 @@ body {
 /* trước: gap: 13px; */
 .rail {
   display: flex;
-  gap: 35px;
+  gap: 70px;
   /* 👈 tăng khoảng cách */
   overflow-x: auto;
   scroll-snap-type: x mandatory;

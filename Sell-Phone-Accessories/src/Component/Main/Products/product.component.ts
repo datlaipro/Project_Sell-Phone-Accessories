@@ -5,6 +5,9 @@ import {
   effect,
   signal,
 } from '@angular/core';
+import { map, catchError, finalize, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { inject } from '@angular/core';
@@ -65,81 +68,9 @@ export class Products {
   loading = signal(false);
   error = signal<string | null>(null);
   items = signal<Product[] | null>(null);
-  products = [
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: 'https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwc2cd3cbe/productimages/dis/cases-screen-protection/defender-pro-ipha23/defender-pro-ipha23-black-2.png?sw=400&sh=400',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-    {
-      id: 1,
-      name: 'iPad Air 11-inch (M3) and iPad Air 11-inch (M2) CaseDefender Series',
-      price: '79.99$',
-      rate: '4.2',
-      img: '',
-      Thickness: '3',
-      DropRating: '3',
-    },
-  ];
-
+  
+route = inject(ActivatedRoute);
+qp = toSignal(this.route.queryParamMap, { initialValue: new Map() as any });
   filtersOpen = false;
 
   // Đóng panel khi phóng to lên desktop
@@ -154,14 +85,40 @@ export class Products {
     this.filtersOpen = false;
   }
 
-  constructor() {
-    // Khi Component A set payload -> effect chạy và gọi API
-    effect(() => {
-      const p = this.bus.payload();
-      if (!p) return;
+constructor() {
+  effect(() => {
+    // Ưu tiên bus nếu có (đi từ trang trước)
+    const p = this.bus.payload();
+    if (p?.category && p?.model) {
       this.fetch(p.category, p.model);
-    });
-  }
+      return;
+    }
+    
+
+    // Reload/đi thẳng: lấy từ URL
+    const q = this.qp();
+    const category = q.get('category');
+    const model = q.get('model');
+
+    if (category && model) {
+      this.fetch(category, model);
+      return;
+    }
+
+    // (tuỳ chọn) Fallback từ localStorage
+    const cached = localStorage.getItem('productFilters');
+    if (cached) {
+      const { category: c, model: m } = JSON.parse(cached);
+      if (c && m) this.fetch(c, m);
+    }
+  }, { allowSignalWrites: true });
+}
+
+// Khi nhận được payload mới, nhớ lưu để reload lần sau vẫn có
+saveFilters(category: string, model: string) {
+  this.bus.payload.set({ category, model });// lưu vào bus để lần sau khỏi phải đọc URL
+  localStorage.setItem('productFilters', JSON.stringify({ category, model }));
+}
 
   // (tuỳ chọn) Nếu model bạn cần dạng slug (iphone-16-pro-max), dùng hàm này
   private slugify(s: string) {
@@ -176,35 +133,29 @@ export class Products {
   }
 
   private fetch(category: string, model: string) {
-    this.loading.set(true);
-    this.error.set(null);
+  this.loading.set(true);
+  this.error.set(null);
 
-    // Nếu BE nhận slug, bật dòng dưới:
-    // const modelParam = this.slugify(model);
-    const modelParam = model; // hoặc dùng slugify(model) tuỳ BE
+  const params = new HttpParams().set('category', category).set('model', model);
 
-    const params = new HttpParams()
-      .set('category', category) // vd: Cases
-      .set('model', modelParam); // vd: iphone-16-pro-max
+  this.http.get<any>(`${this.apiBase}/api/products`, { params })
+    .pipe(
+      map((res: any) => {
+        if (Array.isArray(res)) return res;                // BE trả thẳng mảng
+        if (Array.isArray(res?.content)) return res.content; // Spring Page
+        if (Array.isArray(res?.data)) return res.data;       // wrapper data
+        if (Array.isArray(res?.items)) return res.items;     // wrapper items
+        // nếu lỡ trả về object key->product:
+        if (res && typeof res === 'object') return Object.values(res);
+        return [];
+      }),
+      catchError(err => {
+        this.error.set(err?.error?.message || 'Load sản phẩm thất bại');
+        return of([] as Product[]);
+      }),
+      finalize(() => this.loading.set(false))
+    )
+    .subscribe(list => this.items.set(list));
+}
 
-    this.http
-      .get<Product[]>(`${this.apiBase}/api/products`, {
-        params,
-      })
-      .subscribe({
-        next: (res) => {
-          this.items.set(res);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set(err?.error?.message || 'Load sản phẩm thất bại');
-          this.loading.set(false);
-        },
-      });
-  }
-
-  ngOnDestroy() {
-    // tuỳ chọn: xoá state khi rời trang
-    this.bus.clear();
-  }
 }

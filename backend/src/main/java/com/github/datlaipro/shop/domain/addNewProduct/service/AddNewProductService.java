@@ -17,9 +17,16 @@ import com.github.datlaipro.shop.storage.CloudflareR2Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.util.*;
+
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
 
 @Service
@@ -44,6 +51,42 @@ public class AddNewProductService {
     this.deviceModelRepo = deviceModelRepo;
     this.productSpecRepo = productSpecRepo; // 👈 NEW
     this.r2 = r2;
+  }
+
+  private static String slugify(String input) {
+    if (input == null)
+      return null;
+    String n = Normalizer.normalize(input, Normalizer.Form.NFD);
+    String noAccents = n.replaceAll("\\p{M}+", "");
+    String lower = noAccents.toLowerCase(Locale.ROOT);
+    String cleaned = lower.replaceAll("[^a-z0-9\\s_-]", "");
+    String hyphen = cleaned.trim().replaceAll("[\\s_]+", "-");
+    return hyphen.replaceAll("-{2,}", "-");
+  }
+
+  private static Optional<String> getCaseInsensitive(Map<String, String> m, String key) {
+    if (m == null || m.isEmpty() || key == null)
+      return Optional.empty();
+    for (var e : m.entrySet()) {
+      if (e.getKey() != null && e.getKey().trim().equalsIgnoreCase(key)) {
+        return Optional.ofNullable(e.getValue());
+      }
+    }
+    return Optional.empty();
+  }
+
+  private static List<String> compatibilityToSlugs(String compat) {
+    if (compat == null || compat.isBlank())
+      return List.of();
+    return Arrays.stream(compat.split("[,;|]"))
+        .map(String::trim)
+        .filter(s -> !s.isEmpty())
+        .flatMap(s -> Stream.of(s.toLowerCase(Locale.ROOT), slugify(s)))
+        .filter(Objects::nonNull)
+        .map(String::trim)
+        .filter(s -> !s.isEmpty())
+        .distinct()
+        .toList();
   }
 
   // ===== API cũ (không có file) vẫn chạy bình thường =====
@@ -87,27 +130,22 @@ public class AddNewProductService {
       p.setUpdatedByAdminId(admin.getId()); // lần tạo đầu tiên: updated = created
     }
 
-    var saved = productRepo.save(p);
+    var saved = productRepo.saveAndFlush(p); // 👈// đối tượng product
 
-    List<String> slugs = Optional.ofNullable(req.getModelSlugs())
-        .orElse(Collections.emptyList());
+    // Compatibility
 
     // nếu cần bỏ khoảng trắng + lowercase:
-    List<String> slugsLower = new ArrayList<>();
-    for (String s : slugs) {
-      if (s != null) {
-        String t = s.trim().toLowerCase();
-        if (!t.isEmpty())
-          slugsLower.add(t);
-      }
-    }
 
+    String compat = getCaseInsensitive(req.getSpecs(), "Compatibility").orElse(null);
+        
+List<String> slugsLower = compatibilityToSlugs(compat);
     // 👉 Quan trọng: ghi rõ kiểu List<DeviceModelEntity>
-    List<DeviceModelEntity> models = deviceModelRepo.findBySlugInIgnoreCase(slugsLower);
+    List<DeviceModelEntity> models = deviceModelRepo.findAllBySlugInLower(slugsLower);
+    System.out.println("slugsLower=" + slugsLower + ", models.size=" + models.size());
 
     for (DeviceModelEntity m : models) {
-      // gọi method link ở repo phù hợp (xem Bước 2)
-      productRepo.linkDevice(saved.getId(), m.getId());// lưu vào bảng liên kết product_device_fit
+      productRepo.linkDevice(saved, m);
+
     }
 
     // 3) Upload ảnh lên R2 (nếu có), rồi lưu vào product_images

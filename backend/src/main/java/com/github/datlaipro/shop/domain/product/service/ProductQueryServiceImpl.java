@@ -50,7 +50,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ProductRes> search(SearchProductReq req) {
+  public Page<ProductRes> search(SearchProductReq req) {// trả về ảnh đại diện cho mỗi product
     Page<ProductEntity> page = searchEntities(req);
 
     // ---- LẤY COVER THEO LÔ (TRÁNH N+1) ----
@@ -83,7 +83,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ProductEntity> searchEntities(SearchProductReq req) {
+  public Page<ProductEntity> searchEntities(SearchProductReq req) {// hàm tìm kiếm chính
     if (req == null) throw new IllegalArgumentException("Request must not be null");
     if (req.getCategory() == null || req.getCategory().isBlank())
       throw new IllegalArgumentException("Category is required");

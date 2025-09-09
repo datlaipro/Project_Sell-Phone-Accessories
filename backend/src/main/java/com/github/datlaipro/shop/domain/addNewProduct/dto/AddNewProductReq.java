@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.List;
+
 public class AddNewProductReq {
 
   @NotBlank
@@ -34,6 +35,7 @@ public class AddNewProductReq {
   @NotNull
   @DecimalMin(value = "0.00")
   private BigDecimal price;
+
 
   // 👇 Cho phép null; nếu có giá trị thì phải ≥ 0.00
   @DecimalMin(value = "0.00")
@@ -71,6 +73,8 @@ public class AddNewProductReq {
   public List<String> getModelSlugs() {
     return modelSlugs;
   }
+
+
   public void setModelSlugs(List<String> modelSlugs) {
     this.modelSlugs = modelSlugs;
   }

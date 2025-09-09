@@ -109,7 +109,7 @@ export class ProductFormComponent {
   // form
 
   @ViewChild('fileInp') fileInp?: ElementRef<HTMLInputElement>;
-  @ViewChildren('specInput') specInputs!: QueryList<
+  @ViewChildren('specInput') specInputs!: QueryList<// lấy ra value của input
     ElementRef<HTMLInputElement | HTMLTextAreaElement>
   >;
 

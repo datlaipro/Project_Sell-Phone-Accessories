@@ -13,6 +13,7 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
+               [queryParams]="{ category: 'Cases', model: p.name }"
               (click)="isOn = !isOn; getInformation(p.name, 'Cases')"
               [attr.id]="p.id"
             >
@@ -35,6 +36,7 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
+               [queryParams]="{ category: 'Screen Protection', model: p.name }"
               (click)="isOn = !isOn; getInformation(p.name, 'Screen Protection')"
               [attr.id]="p.id"
             >
@@ -57,6 +59,7 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
+                [queryParams]="{ category: 'Power', model: p.name }"
               (click)="isOn = !isOn"
               [attr.id]="p.id"
             >

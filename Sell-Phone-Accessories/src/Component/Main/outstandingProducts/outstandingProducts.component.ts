@@ -95,7 +95,7 @@ export class BannerProductList {
 
  @ViewChild('vp', { static: true }) vp!: ElementRef<HTMLDivElement>;
 
-readonly visible = 6;
+readonly visible = 5;
 viewportWidth: number | null = null;   // ⭐ bắt đầu = null để không sinh width:0
 
 private cardW = 250;

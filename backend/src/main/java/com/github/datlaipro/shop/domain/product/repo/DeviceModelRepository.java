@@ -12,7 +12,7 @@ public interface DeviceModelRepository extends JpaRepository<DeviceModelEntity, 
     select m from DeviceModelEntity m
     where lower(m.slug) in :slugs
   """)
-  List<DeviceModelEntity> findBySlugInIgnoreCase(@Param("slugs") Collection<String> slugs);
+  List<DeviceModelEntity> findAllBySlugInLower(@Param("slugs") List<String> slugs);
 
     Optional<DeviceModelEntity> findBySlugIgnoreCase(String slug);
 
