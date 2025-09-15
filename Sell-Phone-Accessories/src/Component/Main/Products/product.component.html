@@ -176,7 +176,11 @@
 
       <div class="product-grid" *ngIf="items() as list">
         <!-- CARD 1 -->
-        <article class="card" *ngFor="let p of list">
+        <article
+          class="card"
+          *ngFor="let p of list"
+          (click)="goToProductDetail(p.id)"
+        >
           <span class="badge">TOP SELLER</span>
           <div class="card__media">
             <img [src]="p.coverImageUrl" alt="Defender Series" />
@@ -202,7 +206,7 @@
       </div>
     </section>
   </main>
-<div class="filters-backdrop" (click)="filtersOpen = false"></div>
+  <div class="filters-backdrop" (click)="filtersOpen = false"></div>
 
   <!-- WHY SECTION -->
   <section class="why">

@@ -1,0 +1,255 @@
+<!-- Product Detail Layout -->
+<div class="product-detail">
+  <!-- ========== LEFT: MEDIA GRID (giống ảnh bên trái) ========== -->
+  <aside class="media-column">
+    <div class="media-grid">
+      <!-- mỗi .tile là một “thẻ ảnh” vuông/portrait, click để phóng to -->
+      <button class="tile" aria-label="Open image 1">
+        <img
+          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
+          alt="Case front view"
+        />
+      </button>
+      <button class="tile" aria-label="Open image 2">
+        <img
+          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
+          alt="Case back view"
+        />
+      </button>
+      <button class="tile" aria-label="Open image 3">
+        <img
+          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
+          alt="Case stack view"
+        />
+      </button>
+      <button class="tile" aria-label="Open image 4">
+        <img
+          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
+          alt="Case angle view"
+        />
+      </button>
+      <!-- có thể thêm ảnh nữa nếu cần -->
+    </div>
+  </aside>
+
+  <!-- ========== RIGHT: INFO (giống ảnh mẫu) ========== -->
+  <section class="info-column">
+    <h1 class="pd-title">Defender Series Pro</h1>
+
+    <!-- rating + links -->
+    <div class="meta-row">
+      <div class="stars" aria-label="0.0 stars">
+        <span class="s s-off">★</span><span class="s s-off">★</span>
+        <span class="s s-off">★</span><span class="s s-off">★</span>
+        <span class="s s-off">★</span>
+      </div>
+      <a class="meta-link" href="javascript:void(0)">Reviews</a>
+      <span class="dot">•</span>
+      <a class="meta-link" href="javascript:void(0)">Product Details</a>
+    </div>
+
+    <!-- price + promo -->
+    <div class="pd-price">$79.99</div>
+    <p class="promo">
+      Buy a phone case, get <b>30% Off Power, Screen, & Accessories!</b>
+      <a href="javascript:void(0)">(See Details)</a>
+    </p>
+
+    <!-- color + availability -->
+    <div class="attr-line">
+      <span class="label">Color Name:</span>
+      <span class="value">Black</span>
+      <a class="meta-link" href="javascript:void(0)">Shop Color</a>
+    </div>
+
+    <div class="attr-line">
+      <label class="label" for="availability">Availability</label>
+      <select id="availability" class="select small">
+        <option>In Stock</option>
+        <option>Out of Stock</option>
+      </select>
+      <span class="sku">SKU 77-99248</span>
+    </div>
+
+    <!-- qty + add to cart -->
+    <!-- qty + add to cart -->
+    <div class="qty-add-row">
+      <div class="qty">
+        <button class="qty-btn" (click)="adjustQty(-1)">−</button>
+        <input
+          class="qty-input"
+          [value]="qty"
+          inputmode="numeric"
+          (input)="onQtyManualChange($any($event.target).value)"
+        />
+        <button class="qty-btn" (click)="adjustQty(1)">+</button>
+      </div>
+
+      <button class="btn-cart" (click)="addToCart()">ADD TO CART</button>
+    </div>
+
+    <!-- === Buy Now section (đặt DƯỚI qty-add-row) === -->
+    <div class="hr-title"><span>Buy Now</span></div>
+    <div class="buy-now-row">
+      <button class="btn-buy" (click)="buyNow()">Buy Now</button>
+    </div>
+
+    <!-- buy now -->
+
+    <!-- service badges -->
+    <div class="service-badges">
+      <div class="badge">
+        <span class="ico check">✓</span>
+        <span>Supported by hassle-free customer service</span>
+      </div>
+      <div class="badge">
+        <span class="ico shield">🛡</span>
+        <span>Backed by our limited warranty, no registration required</span>
+      </div>
+    </div>
+
+    <!-- add accessories -->
+    <div class="upsell">
+      <h3 class="upsell-title">Add Accessories</h3>
+      <ul class="upsell-list">
+        <li class="upsell-item">
+          <div class="u-left">
+            <img src="https://via.placeholder.co/60x60" alt="" />
+            <div class="u-meta">
+              <div class="u-name">Galaxy S25 FE Holster</div>
+              <div class="u-price">$19.99</div>
+            </div>
+          </div>
+          <button class="u-add">+ ADD</button>
+        </li>
+
+        <li class="upsell-item">
+          <div class="u-left">
+            <img src="https://via.placeholder.co/60x60" alt="" />
+            <div class="u-meta">
+              <div class="u-name">USB-C Wall Charger · 30W</div>
+              <div class="u-price">$34.95</div>
+            </div>
+          </div>
+          <button class="u-add">+ ADD</button>
+        </li>
+
+        <li class="upsell-item">
+          <div class="u-left">
+            <img src="https://via.placeholder.co/60x60" alt="" />
+            <div class="u-meta">
+              <div class="u-name">OtterSpot Wireless Charging System</div>
+              <div class="u-price strike">$64.95</div>
+              <div class="u-price sale">$38.46</div>
+            </div>
+          </div>
+          <button class="u-add">+ ADD</button>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>
+<!-- ===== Tabs header ===== -->
+<section class="pd-tabs">
+  <div class="tabs-row">
+    <a class="tab-link active" href="#pd-details">Product Details</a>
+    <a class="tab-link" href="javascript:void(0)">Frequently Asked Questions</a>
+    <a class="tab-link" href="javascript:void(0)">Reviews</a>
+  </div>
+</section>
+
+<!-- ===== Product Details body ===== -->
+<section id="pd-details" class="pd-section">
+  <div class="pd-cols">
+    <!-- LEFT -->
+    <div class="pd-col-left">
+      <h2 class="pd-h2">Description</h2>
+      <p class="pd-desc">
+        For intense drop defenses, go with Defender Series Pro, our toughest MagSafe compatible
+        iPhone 17 Pro Max case yet. It’s equipped with corners that absorb shock, grippy
+        texturing, MagSafe compatibility and a built-in Camera Control button.
+      </p>
+
+      <h3 class="pd-h3">Features</h3>
+      <ul class="pd-features">
+        <li>Tri-layer defense keeps your phone stable and secure against bumps and drops</li>
+        <li>Raised edges protect camera + screen</li>
+        <li>Port covers block dust and dirt</li>
+        <li>Textured all over for peak grip</li>
+        <li>Built-in anchors let you connect phone straps and charms</li>
+        <li>Built-in magnets work flawlessly with MagSafe accessories</li>
+        <li>Integrated Camera Control button for seamless interaction — swipe, click, capture fast</li>
+        <li>Free holster available (post purchase) — clips to belts or bags and doubles as a hands-free kickstand</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="pd-col-right">
+      <dl class="pd-specs">
+        <div class="spec-row">
+          <dt>Compatibility</dt>
+          <dd>
+            <ul class="bullets"><li>iPhone 17 Pro Max</li></ul>
+          </dd>
+        </div>
+
+        <div class="spec-row">
+          <dt>Drop Rate</dt>
+          <dd>
+            <div class="drop-scale" aria-label="Drop rating scale">
+              <span class="min">1x</span>
+              <div class="bars">
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+                <span class="bar filled"></span>
+              </div>
+              <span class="max">7x</span>
+              <span class="info" title="Drop Rating info">i</span>
+            </div>
+            <ul class="bullets">
+              <li>7X tested to military drop standard (810G-516.6)</li>
+            </ul>
+          </dd>
+        </div>
+
+        <div class="spec-row">
+          <dt>Dimensions</dt>
+          <dd>
+            <ul class="bullets">
+              <li>6.90 in × 3.57 in × 0.66 in / 175.16 mm × 90.80 mm × 16.73 mm</li>
+            </ul>
+          </dd>
+        </div>
+
+        <div class="spec-row">
+          <dt>Weight</dt>
+          <dd><ul class="bullets"><li>0.15 lbs | 69.02 g</li></ul></dd>
+        </div>
+
+        <div class="spec-row">
+          <dt>Materials</dt>
+          <dd>
+            <ul class="bullets">
+              <li>Polycarbonate Layer</li>
+              <li>Thermoplastic Elastomer slipcover</li>
+              <li>Polycarbonate holster</li>
+              <li>Magnets</li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="pd-warning">
+        <span class="ico" aria-hidden="true">⚠</span>
+        <span>
+          <strong>WARNING:</strong> Reproductive Harm —
+          <a href="https://www.P65Warnings.ca.gov" target="_blank" rel="noopener">www.P65Warnings.ca.gov</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

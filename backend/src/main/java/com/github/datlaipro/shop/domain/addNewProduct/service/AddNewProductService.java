@@ -137,8 +137,8 @@ public class AddNewProductService {
     // nếu cần bỏ khoảng trắng + lowercase:
 
     String compat = getCaseInsensitive(req.getSpecs(), "Compatibility").orElse(null);
-        
-List<String> slugsLower = compatibilityToSlugs(compat);
+
+    List<String> slugsLower = compatibilityToSlugs(compat);
     // 👉 Quan trọng: ghi rõ kiểu List<DeviceModelEntity>
     List<DeviceModelEntity> models = deviceModelRepo.findAllBySlugInLower(slugsLower);
     System.out.println("slugsLower=" + slugsLower + ", models.size=" + models.size());

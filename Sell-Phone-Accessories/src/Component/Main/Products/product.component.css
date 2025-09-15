@@ -61,6 +61,9 @@
   top: 80px;
   align-self: start;
   background: transparent;
+   overflow-y: auto; /* Cho phép cuộn dọc */
+  padding-right: 10px; /* Khoảng cách phải cho phần cuộn */
+   height: 100vh; /* Chiều cao 100% của màn hình */
 }
 
 .product .filters__header {
@@ -95,6 +98,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 .product .filter-title::-webkit-details-marker {
@@ -389,7 +393,8 @@
   }
 
   .product .filters {
-    position: static
+    position: static;
+     height: auto; /* Chiều cao tự động trên mobile */
   }
 
   .product .product-grid {
@@ -457,6 +462,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  
 }
 
 .product .filter-title::-webkit-details-marker {
@@ -502,6 +508,7 @@
   /* <-- QUAN TRỌNG */
   background: var(--c);
   /* --c nhận từ style trên span */
+  cursor: pointer;
 
   width: 34px;
   height: 34px;
@@ -657,6 +664,7 @@
     border: 0;
     font-weight: 700;
     border-radius: 999px;
+    cursor: pointer;
   }
 
   /* Khi xuống mobile, mặc định sidebar rời flow và ẩn ra ngoài màn hình bên trái */
