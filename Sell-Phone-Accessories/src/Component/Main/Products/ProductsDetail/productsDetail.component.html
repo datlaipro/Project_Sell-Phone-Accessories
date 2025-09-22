@@ -1,47 +1,42 @@
-<!-- Product Detail Layout -->
-<div class="product-detail">
-  <!-- ========== LEFT: MEDIA GRID (giống ảnh bên trái) ========== -->
+<!-- Loading & Error -->
+<div *ngIf="loading">Đang tải...</div>
+<div *ngIf="error && !loading" class="error">{{ error }}</div>
+
+<!-- MAIN: chỉ render khi đã có dữ liệu -->
+<div *ngIf="product as p" class="product-detail">
+  <!-- ========== LEFT: MEDIA GRID ========== -->
   <aside class="media-column">
+    <!-- ảnh preview lớn -->
+    <div class="main-preview" *ngIf="activeImageUrl">
+      <img [src]="activeImageUrl" [alt]="p.name" />
+    </div>
+
+    <!-- lưới 4 ảnh phụ (đã chuẩn hoá trong TS) -->
     <div class="media-grid">
-      <!-- mỗi .tile là một “thẻ ảnh” vuông/portrait, click để phóng to -->
-      <button class="tile" aria-label="Open image 1">
-        <img
-          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
-          alt="Case front view"
-        />
+      <button
+        class="tile"
+        *ngFor="let img of p.mediaImages; let i = index"
+        [attr.aria-label]="'Open image ' + (i + 1)"
+        (click)="selectImage(img.url)"
+      >
+        <img [src]="img.url" [alt]="p.name + ' - image ' + (i + 1)" />
       </button>
-      <button class="tile" aria-label="Open image 2">
-        <img
-          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
-          alt="Case back view"
-        />
-      </button>
-      <button class="tile" aria-label="Open image 3">
-        <img
-          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
-          alt="Case stack view"
-        />
-      </button>
-      <button class="tile" aria-label="Open image 4">
-        <img
-          src="https://www.otterbox.com/dw/image/v2/BGMS_PRD/on/demandware.static/-/Sites-masterCatalog/default/dwe53b13fc/productimages/dis/cases-screen-protection/defender-pro-xt-iphd25/defender-pro-xt-iphd25-dark-side-2.png?sw=800&sh=800"
-          alt="Case angle view"
-        />
-      </button>
-      <!-- có thể thêm ảnh nữa nếu cần -->
     </div>
   </aside>
 
-  <!-- ========== RIGHT: INFO (giống ảnh mẫu) ========== -->
+  <!-- ========== RIGHT: INFO ========== -->
   <section class="info-column">
-    <h1 class="pd-title">Defender Series Pro</h1>
+    <h1 class="pd-title">{{ p.name }}</h1>
 
     <!-- rating + links -->
     <div class="meta-row">
-      <div class="stars" aria-label="0.0 stars">
-        <span class="s s-off">★</span><span class="s s-off">★</span>
-        <span class="s s-off">★</span><span class="s s-off">★</span>
-        <span class="s s-off">★</span>
+      <div
+        class="stars"
+        [attr.aria-label]="(p.rate ?? 0).toFixed(1) + ' stars'"
+      >
+        <ng-container *ngFor="let s of starsArray(); let i = index">
+          <span class="s" [class.s-on]="s === 1">★</span>
+        </ng-container>
       </div>
       <a class="meta-link" href="javascript:void(0)">Reviews</a>
       <span class="dot">•</span>
@@ -49,29 +44,33 @@
     </div>
 
     <!-- price + promo -->
-    <div class="pd-price">$79.99</div>
-    <p class="promo">
-      Buy a phone case, get <b>30% Off Power, Screen, & Accessories!</b>
+    <div class="pd-price">
+      {{ priceFormatted(p.finalPrice) }}
+      <span class="strike" *ngIf="p.finalPrice < p.price">
+        {{ priceFormatted(p.price) }}
+      </span>
+    </div>
+    <p class="promo" *ngIf="(p.discount ?? 0) > 0">
+      Deal: <b>{{ p.discount }}% off</b>
       <a href="javascript:void(0)">(See Details)</a>
     </p>
 
     <!-- color + availability -->
     <div class="attr-line">
       <span class="label">Color Name:</span>
-      <span class="value">Black</span>
+      <span class="value">{{ p.colorName ?? "—" }}</span>
       <a class="meta-link" href="javascript:void(0)">Shop Color</a>
     </div>
 
     <div class="attr-line">
       <label class="label" for="availability">Availability</label>
-      <select id="availability" class="select small">
+      <select id="availability" class="select small" [value]="p.availability">
         <option>In Stock</option>
         <option>Out of Stock</option>
       </select>
-      <span class="sku">SKU 77-99248</span>
+      <span class="sku">{{ p.sku }}</span>
     </div>
 
-    <!-- qty + add to cart -->
     <!-- qty + add to cart -->
     <div class="qty-add-row">
       <div class="qty">
@@ -85,16 +84,26 @@
         <button class="qty-btn" (click)="adjustQty(1)">+</button>
       </div>
 
-      <button class="btn-cart" (click)="addToCart()">ADD TO CART</button>
+      <button
+        class="btn-cart"
+        [disabled]="p.availability !== 'In Stock'"
+        (click)="addToCart()"
+      >
+        ADD TO CART
+      </button>
     </div>
 
-    <!-- === Buy Now section (đặt DƯỚI qty-add-row) === -->
+    <!-- === Buy Now section === -->
     <div class="hr-title"><span>Buy Now</span></div>
     <div class="buy-now-row">
-      <button class="btn-buy" (click)="buyNow()">Buy Now</button>
+      <button
+        class="btn-buy"
+        [disabled]="p.availability !== 'In Stock'"
+        (click)="buyNow()"
+      >
+        Buy Now
+      </button>
     </div>
-
-    <!-- buy now -->
 
     <!-- service badges -->
     <div class="service-badges">
@@ -108,7 +117,7 @@
       </div>
     </div>
 
-    <!-- add accessories -->
+    <!-- add accessories (demo) -->
     <div class="upsell">
       <h3 class="upsell-title">Add Accessories</h3>
       <ul class="upsell-list">
@@ -149,8 +158,9 @@
     </div>
   </section>
 </div>
+
 <!-- ===== Tabs header ===== -->
-<section class="pd-tabs">
+<section *ngIf="product as p" class="pd-tabs">
   <div class="tabs-row">
     <a class="tab-link active" href="#pd-details">Product Details</a>
     <a class="tab-link" href="javascript:void(0)">Frequently Asked Questions</a>
@@ -159,95 +169,74 @@
 </section>
 
 <!-- ===== Product Details body ===== -->
-<section id="pd-details" class="pd-section">
+<section *ngIf="product as p" id="pd-details" class="pd-section">
   <div class="pd-cols">
     <!-- LEFT -->
     <div class="pd-col-left">
       <h2 class="pd-h2">Description</h2>
-      <p class="pd-desc">
-        For intense drop defenses, go with Defender Series Pro, our toughest MagSafe compatible
-        iPhone 17 Pro Max case yet. It’s equipped with corners that absorb shock, grippy
-        texturing, MagSafe compatibility and a built-in Camera Control button.
-      </p>
+      <p class="pd-desc">{{ p.description ?? "" }}</p>
 
       <h3 class="pd-h3">Features</h3>
       <ul class="pd-features">
-        <li>Tri-layer defense keeps your phone stable and secure against bumps and drops</li>
+        <!-- demo features; có thể bind từ API nếu backend có -->
         <li>Raised edges protect camera + screen</li>
-        <li>Port covers block dust and dirt</li>
         <li>Textured all over for peak grip</li>
-        <li>Built-in anchors let you connect phone straps and charms</li>
-        <li>Built-in magnets work flawlessly with MagSafe accessories</li>
-        <li>Integrated Camera Control button for seamless interaction — swipe, click, capture fast</li>
-        <li>Free holster available (post purchase) — clips to belts or bags and doubles as a hands-free kickstand</li>
+        <li>Built-in magnets work with MagSafe accessories</li>
       </ul>
     </div>
 
     <!-- RIGHT -->
     <div class="pd-col-right">
       <dl class="pd-specs">
-        <div class="spec-row">
-          <dt>Compatibility</dt>
+        <div class="spec-row" *ngIf="p.categoryName">
+          <dt>Category</dt>
           <dd>
-            <ul class="bullets"><li>iPhone 17 Pro Max</li></ul>
-          </dd>
-        </div>
-
-        <div class="spec-row">
-          <dt>Drop Rate</dt>
-          <dd>
-            <div class="drop-scale" aria-label="Drop rating scale">
-              <span class="min">1x</span>
-              <div class="bars">
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-                <span class="bar filled"></span>
-              </div>
-              <span class="max">7x</span>
-              <span class="info" title="Drop Rating info">i</span>
-            </div>
             <ul class="bullets">
-              <li>7X tested to military drop standard (810G-516.6)</li>
+              <li>{{ p.categoryName ?? "—" }}</li>
             </ul>
           </dd>
         </div>
 
-        <div class="spec-row">
-          <dt>Dimensions</dt>
+        <div class="spec-row" *ngIf="p.brand">
+          <dt>Brand</dt>
           <dd>
             <ul class="bullets">
-              <li>6.90 in × 3.57 in × 0.66 in / 175.16 mm × 90.80 mm × 16.73 mm</li>
+              <li>{{ p.brand ?? "—" }}</li>
             </ul>
           </dd>
         </div>
 
-        <div class="spec-row">
+        <div
+          class="spec-row"
+          *ngIf="p.quantity !== null && p.quantity !== undefined"
+        >
+          <dt>Stock</dt>
+          <dd>
+            <ul class="bullets">
+              <li>{{ p.quantity }}</li>
+            </ul>
+          </dd>
+        </div>
+
+        <!-- ví dụ chỗ để mở rộng thêm specs khác trong tương lai -->
+        <!--
+        <div class="spec-row" *ngIf="p.weight">
           <dt>Weight</dt>
-          <dd><ul class="bullets"><li>0.15 lbs | 69.02 g</li></ul></dd>
+          <dd><ul class="bullets"><li>{{ p.weight }}</li></ul></dd>
         </div>
-
-        <div class="spec-row">
-          <dt>Materials</dt>
-          <dd>
-            <ul class="bullets">
-              <li>Polycarbonate Layer</li>
-              <li>Thermoplastic Elastomer slipcover</li>
-              <li>Polycarbonate holster</li>
-              <li>Magnets</li>
-            </ul>
-          </dd>
-        </div>
+        -->
       </dl>
 
       <div class="pd-warning">
         <span class="ico" aria-hidden="true">⚠</span>
         <span>
           <strong>WARNING:</strong> Reproductive Harm —
-          <a href="https://www.P65Warnings.ca.gov" target="_blank" rel="noopener">www.P65Warnings.ca.gov</a>
+          <a
+            href="https://www.P65Warnings.ca.gov"
+            target="_blank"
+            rel="noopener"
+            >www.P65Warnings.ca.gov</a
+          >
         </span>
       </div>
     </div>
