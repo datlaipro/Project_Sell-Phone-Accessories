@@ -22,4 +22,8 @@ export interface ProductDetailDto {
 
   rate: number | null;        // 0..5 (tuỳ backend)
   quantity: number | null;    // tồn kho
+  compatibility?: string[] | string;
+  dimensions?: string;       // ví dụ: "150 x 75 x 10 mm" hoặc "6.1 in"
+  weight?: string | number;  // ví dụ: "38 g" hoặc 38
+  materials?: string[] | string;
 }

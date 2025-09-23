@@ -73,7 +73,7 @@ body{ color:var(--ink); background:var(--bg); font:16px/1.5 system-ui, Segoe UI,
 
 /* Tiêu đề & meta */
 .pd-title{
-  font-size:44px; font-weight:800; letter-spacing:-0.02em;
+  font-size:30px; font-weight:500; letter-spacing:-0.02em;
   line-height:1.1; margin:0 0 16px;
 }
 .meta-row{
@@ -82,7 +82,7 @@ body{ color:var(--ink); background:var(--bg); font:16px/1.5 system-ui, Segoe UI,
   margin:0 0 16px;
 }
 .meta-row .stars .s{ font-size:16px; color:#d1d5db; line-height:1; }
-.meta-row .meta-link{ color:#111827; text-decoration:underline; font-weight:600; }
+.meta-row .meta-link{ color:#111827; text-decoration:underline; font-weight:500; }
 .dot{ color:#d1d5db; }
 
 /* Giá & ưu đãi */
@@ -171,12 +171,12 @@ body{ color:var(--ink); background:var(--bg); font:16px/1.5 system-ui, Segoe UI,
 }
 .tab-link{
   justify-self:center; white-space:nowrap;
-  font-size:36px; font-weight:800; color:#111; text-decoration:none;
+  font-size:36px; font-weight:500; color:#111; text-decoration:none;
   padding:12px 8px; position:relative;
 }
 .tab-link.active::after{
   content:""; position:absolute; left:20%; right:20%; bottom:-1px;
-  height:4px; background:#111; border-radius:3px;
+   background:#111; border-radius:3px;
 }
 /* đẩy hai tab ngoài ra mép một chút */
 .tabs-row .tab-link:first-child{ justify-self:start; margin-left:calc(var(--tabs-edge-push) * -1); }

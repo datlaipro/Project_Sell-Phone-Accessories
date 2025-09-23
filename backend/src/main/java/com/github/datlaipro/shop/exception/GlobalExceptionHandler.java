@@ -35,6 +35,8 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+
+import com.github.datlaipro.shop.security.TokenReuseException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -269,4 +271,13 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(Map.of("message", "Internal error"));
   }
+  // GlobalExceptionHandler.java
+@ExceptionHandler(TokenReuseException.class)
+public ResponseEntity<Map<String, Object>> handleTokenReuse(TokenReuseException ex) {
+  Map<String, Object> body = new HashMap<>();
+  body.put("code", "token_reuse");
+  body.put("message", ex.getMessage()); // "Detected token reuse. Please login again."
+  return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body); // 401
+}
+
 }

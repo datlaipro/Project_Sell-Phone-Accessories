@@ -188,43 +188,49 @@
     <!-- RIGHT -->
     <div class="pd-col-right">
       <dl class="pd-specs">
-        <div class="spec-row" *ngIf="p.categoryName">
-          <dt>Category</dt>
+        <!-- Compatibility -->
+        <div class="spec-row" *ngIf="toArray(p.compatibility).length">
+          <dt>Compatibility</dt>
           <dd>
             <ul class="bullets">
-              <li>{{ p.categoryName ?? "—" }}</li>
+              <li *ngFor="let c of toArray(p.compatibility)">{{ c }}</li>
             </ul>
           </dd>
         </div>
 
-        <div class="spec-row" *ngIf="p.brand">
-          <dt>Brand</dt>
+        <!-- Dimensions -->
+        <div class="spec-row" *ngIf="p.dimensions">
+          <dt>Dimensions</dt>
           <dd>
             <ul class="bullets">
-              <li>{{ p.brand ?? "—" }}</li>
+              <li>{{ p.dimensions }}</li>
             </ul>
           </dd>
         </div>
 
+        <!-- Weight -->
         <div
           class="spec-row"
-          *ngIf="p.quantity !== null && p.quantity !== undefined"
+          *ngIf="p.weight !== null && p.weight !== undefined"
         >
-          <dt>Stock</dt>
+          <dt>Weight</dt>
           <dd>
             <ul class="bullets">
-              <li>{{ p.quantity }}</li>
+              <li>{{ p.weight }}</li>
             </ul>
           </dd>
         </div>
 
-        <!-- ví dụ chỗ để mở rộng thêm specs khác trong tương lai -->
-        <!--
-        <div class="spec-row" *ngIf="p.weight">
-          <dt>Weight</dt>
-          <dd><ul class="bullets"><li>{{ p.weight }}</li></ul></dd>
-        </div>
-        -->
+        <!-- Materials -->
+      <div class="spec-row" *ngIf="toArray(p.materials).length">
+  <dt>Materials</dt>
+  <dd>
+    <ul class="bullets">
+      <li *ngFor="let m of toArray(p.materials)">{{ m }}</li>
+    </ul>
+  </dd>
+</div>
+
       </dl>
 
       <div class="pd-warning">
