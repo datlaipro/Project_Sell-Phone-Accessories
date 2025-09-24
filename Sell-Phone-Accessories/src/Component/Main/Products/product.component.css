@@ -500,7 +500,7 @@
 .product .swatch-item input {
   position: absolute;
   opacity: 0;
-  pointer-events: none
+  /* pointer-events: none */
 }
 
 .product .swatch-item .dot {

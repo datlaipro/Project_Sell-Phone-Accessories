@@ -1,9 +1,11 @@
+import { filter } from 'rxjs/operators';
 import {
   Component,
   ViewEncapsulation,
   HostListener,
   effect,
   signal,
+  computed,
 } from '@angular/core';
 import { map, catchError, finalize, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -67,11 +69,64 @@ export class Products {
   http = inject(HttpClient);
   loading = signal(false);
   error = signal<string | null>(null);
-  items = signal<Product[] | null>(null);
-
-  route = inject(ActivatedRoute);// 
+  allItems = signal<Product[]>([]); // dữ liệu gốc
+  selectedColor = signal<string | null>(null); // trạng thái lọc màu sắc
+  route = inject(ActivatedRoute); //
   qp = toSignal(this.route.queryParamMap, { initialValue: new Map() as any });
   filtersOpen = false;
+  selectedPriceRange = signal<{ min: number | null; max: number | null }>({
+    // trạng thái lọc giá
+    min: null,
+    max: null,
+  });
+  sortKey = signal<'best' | 'price-asc' | 'price-desc' | 'rating' | 'newest'>(
+    'best'
+  );
+
+  onSortChange(v: string) {
+    this.sortKey.set(v as any);
+  }
+
+  items = computed<Product[]>(() => {
+    //computed là derived signal trong Angular: một state chỉ-đọc được tính ra từ các signal khác và tự cập nhật khi các signal phụ thuộc đổi.
+    // danh sách hiển thị
+    const list = this.allItems();
+    const c = this.selectedColor();
+    const { min, max } = this.selectedPriceRange();
+
+    // 1) Lọc theo màu (nếu có)
+    let out = c
+      ? list.filter((p) => (p.color ?? '').toLowerCase() === c.toLowerCase())
+      : list;
+
+    // 2) Lọc theo giá (nếu có)
+    const lo = min ?? -Infinity; // nếu min=null -> không cắt đáy
+    const hi = max ?? Infinity; // nếu max=null -> không cắt trần
+
+    out = out.filter((p) => p.price >= lo && p.price <= hi);
+    // sắp xếp theo sortKey
+    const key = this.sortKey();
+    const arr = [...out]; // tránh mutate
+    switch (key) {
+      case 'price-asc':
+        arr.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        arr.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        arr.sort((a, b) => b.rate - a.rate);
+        break;
+      case 'newest':
+        arr.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+        break;
+      case 'best':
+      default:
+        // để nguyên hoặc bạn tự định nghĩa
+        break;
+    }
+    return arr;
+  });
 
   // Đóng panel khi phóng to lên desktop
   @HostListener('window:resize')
@@ -85,32 +140,35 @@ export class Products {
     this.filtersOpen = false;
   }
 
-   constructor(private router: Router) {
-    effect(() => {
-      // Ưu tiên bus nếu có (đi từ trang trước)
-      const p = this.bus.payload();
-      if (p?.category && p?.model) {
-        this.fetch(p.category, p.model);
-        return;
-      }
+  constructor(private router: Router) {
+    effect(
+      () => {
+        // Ưu tiên bus nếu có (đi từ trang trước)
+        const p = this.bus.payload();
+        if (p?.category && p?.model) {
+          this.fetch(p.category, p.model);
+          return;
+        }
 
-      // Reload/đi thẳng: lấy từ URL
-      const q = this.qp();
-      const category = q.get('category');
-      const model = q.get('model');
+        // Reload/đi thẳng: lấy từ URL
+        const q = this.qp();
+        const category = q.get('category');
+        const model = q.get('model');
 
-      if (category && model) {
-        this.fetch(category, model);
-        return;
-      }
+        if (category && model) {
+          this.fetch(category, model);
+          return;
+        }
 
-      // (tuỳ chọn) Fallback từ localStorage
-      const cached = localStorage.getItem('productFilters');
-      if (cached) {
-        const { category: c, model: m } = JSON.parse(cached);
-        if (c && m) this.fetch(c, m);
-      }
-    }, { allowSignalWrites: true });
+        // (tuỳ chọn) Fallback từ localStorage
+        const cached = localStorage.getItem('productFilters');
+        if (cached) {
+          const { category: c, model: m } = JSON.parse(cached);
+          if (c && m) this.fetch(c, m);
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   // Không cần constructor nữa
@@ -159,12 +217,20 @@ export class Products {
         }),
         finalize(() => this.loading.set(false))
       )
-      .subscribe((list) => this.items.set(list));
+      .subscribe((list: Product[]) => this.allItems.set(list));
+    // luw danh sách sản phẩm lấy được từ api rồi gán vào items
   }
 
-  goToProductDetail(productId: number) {// thực hiện điều hướng 
-   
+  goToProductDetail(productId: number) {
+    // thực hiện điều hướng
+
     // Điều hướng đến productDetail, ví dụ truyền tham số sản phẩm
     this.router.navigate(['/product/productDetail', productId]);
+  }
+  filterColor(color: string | null) {
+    this.selectedColor.set(color); // null = bỏ lọc
+  }
+  filterPrice(range: { min: number | null; max: number | null }) {
+    this.selectedPriceRange.set({ min: range.min, max: range.max });
   }
 }

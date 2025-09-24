@@ -36,13 +36,13 @@
         <summary class="filter-title">Color</summary>
 
         <div class="swatch-grid">
-          <label class="swatch-item">
-            <input type="checkbox" checked />
+          <label class="swatch-item" (click)="filterColor('Black')">
+            <input type="checkbox" />
             <span class="dot" style="--c: #202329"></span>
             <div class="swatch-name">Black <em>(20)</em></div>
           </label>
 
-          <label class="swatch-item">
+          <label class="swatch-item" (click)="filterColor('Blue')">
             <input type="checkbox" />
             <span class="dot" style="--c: #197b8f"></span>
             <div class="swatch-name">Blue <em>(19)</em></div>
@@ -66,16 +66,22 @@
             <div class="swatch-name">Camo <em>(3)</em></div>
           </label>
 
-          <label class="swatch-item">
+          <label class="swatch-item" (click)="filterColor(null)">
             <input type="checkbox" />
             <span class="dot" style="--c: #fff"></span>
             <div class="swatch-name">Clear <em>(22)</em></div>
           </label>
 
-          <label class="swatch-item">
+          <label class="swatch-item" (click)="filterColor('Green')">
             <input type="checkbox" />
             <span class="dot" style="--c: #2f8c47"></span>
             <div class="swatch-name">Green <em>(9)</em></div>
+          </label>
+
+          <label class="swatch-item" (click)="filterColor('Pink')">
+            <input type="checkbox" />
+            <span class="dot" style="--c: #c73b7a"></span>
+            <div class="swatch-name">Pink <em>(9)</em></div>
           </label>
         </div>
 
@@ -132,18 +138,41 @@
       <details class="filter-group">
         <summary class="filter-title">Price</summary>
         <div class="radio-list">
-          <label class="radio2"
-            ><input type="radio" name="price" /> <span>$0 – $20</span></label
-          >
-          <label class="radio2"
-            ><input type="radio" name="price" /> <span>$20 – $40</span></label
-          >
-          <label class="radio2"
-            ><input type="radio" name="price" /> <span>$40 – $60</span></label
-          >
-          <label class="radio2"
-            ><input type="radio" name="price" /> <span>$60 – $80</span></label
-          >
+          <label class="radio2">
+            <input
+              type="radio"
+              name="price"
+              (change)="filterPrice({ min: 0, max: 20 })"
+            />
+            <span>$0 – $20</span>
+          </label>
+
+          <label class="radio2">
+            <input
+              type="radio"
+              name="price"
+              (change)="filterPrice({ min: 20, max: 40 })"
+            />
+            <span>$20 – $40</span>
+          </label>
+
+          <label class="radio2">
+            <input
+              type="radio"
+              name="price"
+              (change)="filterPrice({ min: 40, max: 60 })"
+            />
+            <span>$40 – $60</span>
+          </label>
+
+          <label class="radio2">
+            <input
+              type="radio"
+              name="price"
+              (change)="filterPrice({ min: 60, max: 80 })"
+            />
+            <span>$60 – $80</span>
+          </label>
         </div>
       </details>
     </aside>
@@ -164,12 +193,15 @@
         </div>
         <label class="sort">
           <span>SORT BY:</span>
-          <select>
-            <option>Best Selling</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Rating</option>
-            <option>Newest</option>
+          <select
+            [value]="sortKey()"
+            (change)="onSortChange($any($event.target).value)"
+          >
+            <option value="best">Best Selling</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Rating</option>
+            <option value="newest">Newest</option>
           </select>
         </label>
       </div>
