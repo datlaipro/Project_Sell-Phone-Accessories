@@ -2,11 +2,14 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDetailService } from './product-detail.service';
 import { ProductDetailDto, ProductImageDto } from './product-detail.model';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 @Component({
   standalone: true,
   selector: 'product-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: './productsDetail.component.html',
   styleUrls: ['./productsDetail.component.css'],
 })
@@ -27,6 +30,13 @@ export class ProductsDetail implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.fetch(id);
+    const raw = localStorage.getItem(this.wishKey);
+    if (raw) {
+      try {
+        const arr: number[] = JSON.parse(raw);
+        this.wished = new Set(arr);
+      } catch {}
+    }
   }
   private fetch(id: number): void {
     this.loading = true;
@@ -234,5 +244,26 @@ export class ProductsDetail implements OnInit {
       .split(/[,\n]/)
       .map((s) => s.trim())
       .filter(Boolean);
+  }
+
+  // xử lí chức năng thêm sản phẩm vào wishlist
+  private wishKey = 'wishlist_ids';
+  wished = new Set<number>();
+
+  isWished(id: number): boolean {
+    return this.wished.has(id);
+  }
+
+  toggleWish(id: number): void {
+    if (this.wished.has(id)) {
+      this.wished.delete(id);
+    } else {
+      this.wished.add(id);
+    }
+    localStorage.setItem(this.wishKey, JSON.stringify(Array.from(this.wished)));
+
+    // TODO: nếu có API:
+    // (this.isWished(id) ? this.wishlistService.add(id) : this.wishlistService.remove(id))
+    //   .subscribe();
   }
 }

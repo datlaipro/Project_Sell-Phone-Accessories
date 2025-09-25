@@ -1,0 +1,78 @@
+<div class="wishlist">
+  <nav class="breadcrumb">
+    <a href="#">Home</a>
+    <span>&rsaquo;</span>
+    <a href="#">My Account</a>
+    <span>&rsaquo;</span>
+    <strong>Wishlist</strong>
+  </nav>
+
+  <h1 class="page-title">Wishlist</h1>
+
+  <!-- Toggle ẩn/hiện toàn bộ (dùng template ref #allToggle) -->
+  <label class="toggle-public">
+    <input type="checkbox" #allToggle [checked]="allHidden" (change)="toggleAllHidden(allToggle.checked)" />
+    <span class="check"></span>
+    <span>Hide from Public</span>
+  </label>
+
+  <!-- DANH SÁCH ITEM -->
+  <section class="wl-item" *ngFor="let item of items; trackBy: trackById">
+    <button class="item-remove" aria-label="Remove item" (click)="removeItem(item.id)">&times;</button>
+
+    <div class="item-media">
+      <img [src]="item.imageUrl" [alt]="item.title" />
+    </div>
+
+    <div class="item-main">
+      <a class="item-edit" href="#">Edit</a>
+      <h3 class="item-title">{{ item.title }}</h3>
+      <div class="item-series">{{ item.series }}</div>
+
+      <ul class="item-meta">
+        <li><span>Color Name:</span> {{ item.colorName }}</li>
+        <li><span>Status:</span> {{ item.status }}</li>
+        <li><span>SKU:</span> {{ item.sku }}</li>
+      </ul>
+    </div>
+
+    <div class="item-price">
+      <div class="each">Each</div>
+      <div class="price">
+        <span class="price-old" *ngIf="item.priceOld">{{ item.priceOld | currency:'USD' }}</span>
+        <span class="price-now">{{ item.priceNow | currency:'USD' }}</span>
+      </div>
+    </div>
+
+    <div class="item-qty">
+      <label class="qty-label">Quantity</label>
+
+      <div class="qty-stepper" role="group" aria-label="Quantity stepper">
+        <button class="stepper-btn" aria-label="Decrease" (click)="decQty(item)">−</button>
+
+        <!-- Dùng #qtyInput để lấy .value, tránh cast trong template -->
+        <input
+          class="stepper-input"
+          #qtyInput
+          type="number"
+          [value]="item.qty"
+          min="1"
+          inputmode="numeric"
+          aria-label="Quantity value"
+          (input)="onQtyInput(item, qtyInput.value)"
+          (keydown)="($event.key === 'e' || $event.key === '+' || $event.key === '-') && $event.preventDefault()"
+        />
+
+        <button class="stepper-btn" aria-label="Increase" (click)="incQty(item)">+</button>
+      </div>
+
+      <button class="btn add-to-cart" (click)="addToCart(item)">ADD TO CART</button>
+
+      <label class="toggle-public item-toggle">
+        <input type="checkbox" #itemToggle [checked]="item.hidePublic" (change)="toggleItemHidden(item, itemToggle.checked)" />
+        <span class="check"></span>
+        <span>Hide from Public</span>
+      </label>
+    </div>
+  </section>
+</div>

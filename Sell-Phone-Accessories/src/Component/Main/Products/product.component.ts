@@ -1,4 +1,3 @@
-import { filter } from 'rxjs/operators';
 import {
   Component,
   ViewEncapsulation,
@@ -12,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { inject } from '@angular/core';
 import { ProductList } from '../../../service/ProductList.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -52,6 +52,7 @@ type Product = {
     CommonModule,
     NgFor,
     RouterLink,
+    MatTooltipModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
@@ -233,4 +234,36 @@ export class Products {
   filterPrice(range: { min: number | null; max: number | null }) {
     this.selectedPriceRange.set({ min: range.min, max: range.max });
   }
+
+  // ========= Wishlist state =========
+private wishKey = 'wishlist_ids';
+wished = new Set<number>();
+
+ngOnInit() {
+  const raw = localStorage.getItem(this.wishKey);
+  if (raw) {
+    try {
+      const arr: number[] = JSON.parse(raw);
+      this.wished = new Set(arr);
+    } catch {}
+  }
+}
+
+isWished(id: number): boolean {
+  return this.wished.has(id);
+}
+
+toggleWish(id: number): void {
+  if (this.wished.has(id)) {
+    this.wished.delete(id);
+  } else {
+    this.wished.add(id);
+  }
+  localStorage.setItem(this.wishKey, JSON.stringify(Array.from(this.wished)));
+
+  // TODO: nếu có API:
+  // (this.isWished(id) ? this.wishlistService.add(id) : this.wishlistService.remove(id))
+  //   .subscribe();
+}
+
 }

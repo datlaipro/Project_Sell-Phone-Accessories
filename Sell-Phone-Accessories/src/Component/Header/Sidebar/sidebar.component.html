@@ -1,11 +1,13 @@
 <nav class="nav" role="navigation" aria-label="Main">
-  <!-- ===== DESKTOP (≥992px): menu ngang + MatMenu ===== -->
+  <!-- ===== DESKTOP (≥992px) ===== -->
   <ul class="nav-list desktop-only">
+    <!-- Cases -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Cases
       </button>
       <div class="dropdown" role="menu" aria-label="Cases mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ class.display Ở ĐÂY -->
         <div class="mega" [class.display]="isOn">
           <div class="col" *ngFor="let cat of products">
             <h4>{{ cat.title }}</h4>
@@ -13,8 +15,8 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-               [queryParams]="{ category: 'Cases', model: p.name }"
-              (click)="isOn = !isOn; getInformation(p.name, 'Cases')"
+              [queryParams]="{ category: 'Cases', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Cases')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -24,11 +26,13 @@
       </div>
     </li>
 
+    <!-- Screen Protection -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Screen Protection
       </button>
       <div class="dropdown" role="menu" aria-label="Screen Protection mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
           <div class="col" *ngFor="let cat of screenProtection">
             <h4>{{ cat.title }}</h4>
@@ -36,8 +40,8 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-               [queryParams]="{ category: 'Screen Protection', model: p.name }"
-              (click)="isOn = !isOn; getInformation(p.name, 'Screen Protection')"
+              [queryParams]="{ category: 'Screen Protection', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Screen Protection')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -47,11 +51,13 @@
       </div>
     </li>
 
+    <!-- Power -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Power
       </button>
       <div class="dropdown" role="menu" aria-label="Power mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
           <div class="col" *ngFor="let cat of power">
             <h4>{{ cat.title }}</h4>
@@ -59,8 +65,8 @@
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-                [queryParams]="{ category: 'Power', model: p.name }"
-              (click)="isOn = !isOn"
+              [queryParams]="{ category: 'Power', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Power')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -69,19 +75,23 @@
         </div>
       </div>
     </li>
+
+    <!-- Accessories -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Accessories
       </button>
-      <div class="dropdown" role="menu" aria-label="Power mega">
+      <div class="dropdown" role="menu" aria-label="Accessories mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
-          <div class="col" *ngFor="let cat of power">
+          <div class="col" *ngFor="let cat of accessories">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="isOn = !isOn"
+              [queryParams]="{ category: 'Accessories', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Accessories')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -91,19 +101,22 @@
       </div>
     </li>
 
+    <!-- Customize -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Customize
       </button>
-      <div class="dropdown" role="menu" aria-label="Power mega">
+      <div class="dropdown" role="menu" aria-label="Customize mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
-          <div class="col" *ngFor="let cat of power">
+          <div class="col" *ngFor="let cat of customize">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="isOn = !isOn"
+              [queryParams]="{ category: 'Customize', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Customize')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -113,17 +126,22 @@
       </div>
     </li>
 
+    <!-- Sale -->
     <li class="nav-item mega">
-      <button type="button" class="trigger" (click)="isOn = false">Sale</button>
-      <div class="dropdown" role="menu" aria-label="Power mega">
+      <button type="button" class="trigger" (click)="isOn = false">
+        Sale
+      </button>
+      <div class="dropdown" role="menu" aria-label="Sale mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
-          <div class="col" *ngFor="let cat of power">
+          <div class="col" *ngFor="let cat of sale">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="isOn = !isOn"
+              [queryParams]="{ category: 'Sale', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Sale')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -133,19 +151,22 @@
       </div>
     </li>
 
+    <!-- Explore -->
     <li class="nav-item mega">
       <button type="button" class="trigger" (click)="isOn = false">
         Explore
       </button>
-      <div class="dropdown" role="menu" aria-label="Power mega">
+      <div class="dropdown" role="menu" aria-label="Explore mega">
+        <!-- GIỮ NGUYÊN VỊ TRÍ -->
         <div class="mega" [class.display]="isOn">
-          <div class="col" *ngFor="let cat of power">
+          <div class="col" *ngFor="let cat of explore">
             <h4>{{ cat.title }}</h4>
             <a
               class="item"
               *ngFor="let p of cat.product"
               [routerLink]="['/product']"
-              (click)="isOn = !isOn"
+              [queryParams]="{ category: 'Explore', model: p.name }"
+              (click)="isOn = !isOn; selectAndGo(p.name, 'Explore')"
               [attr.id]="p.id"
             >
               {{ p.name }}
@@ -156,7 +177,7 @@
     </li>
   </ul>
 
-  <!-- ===== MOBILE (<992px): hamburger + drawer trượt từ trái ===== -->
+  <!-- ===== MOBILE (<992px): giữ nguyên như trước (đã dùng selectAndGo + queryParams) ===== -->
   <div class="mobile-only mobile-bar">
     <button
       mat-icon-button
@@ -172,12 +193,7 @@
     <a class="logo" routerLink="/">BRAND</a>
   </div>
 
-  <mat-sidenav-container
-    class="mobile-only"
-    [class.drawer-container]="drawer?.opened"
-    [hasBackdrop]="true"
-  >
-    <!-- exportAs để template var đúng là MatSidenav -->
+  <mat-sidenav-container class="mobile-only" [class.drawer-container]="drawer?.opened" [hasBackdrop]="true">
     <mat-sidenav
       #drawer="matSidenav"
       id="mobile-drawer"
@@ -188,24 +204,17 @@
     >
       <div class="drawer-head">
         <span class="logo">Menu</span>
-        <button
-          mat-icon-button
-          type="button"
-          (click)="drawer.close()"
-          aria-label="Đóng menu"
-        >
+        <button mat-icon-button type="button" (click)="drawer.close()" aria-label="Đóng menu">
           <mat-icon>close</mat-icon>
         </button>
       </div>
 
       <mat-nav-list>
-        <!-- Cases: mở rộng ra danh sách -->
-        <mat-expansion-panel
-          class="exp"
+        <!-- Cases -->
+        <mat-expansion-panel class="exp"
           [expanded]="expanded === 'cases'"
           (opened)="expanded = 'cases'"
-          (closed)="expanded = null"
-        >
+          (closed)="expanded = null">
           <mat-expansion-panel-header>
             <mat-panel-title>Cases</mat-panel-title>
           </mat-expansion-panel-header>
@@ -217,7 +226,8 @@
                 mat-list-item
                 *ngFor="let p of cat.product"
                 [routerLink]="['/product']"
-                (click)="layId(); drawer.close()"
+                [queryParams]="{ category: 'Cases', model: p.name }"
+                (click)="selectAndGo(p.name, 'Cases'); drawer.close()"
               >
                 {{ p.name }}
               </a>
@@ -225,37 +235,155 @@
           </div>
         </mat-expansion-panel>
 
-        <!-- Các mục còn lại -->
-        <a
-          mat-list-item
-          [routerLink]="['/screen-protection']"
-          (click)="drawer.close()"
-          >Screen Protection</a
-        >
-        <a mat-list-item [routerLink]="['/wearables']" (click)="drawer.close()"
-          >Wearables</a
-        >
-        <a mat-list-item [routerLink]="['/the-drop']" (click)="drawer.close()"
-          >The Drop</a
-        >
-        <a mat-list-item [routerLink]="['/power']" (click)="drawer.close()"
-          >Power</a
-        >
-        <a
-          mat-list-item
-          [routerLink]="['/accessories']"
-          (click)="drawer.close()"
-          >Accessories</a
-        >
-        <a mat-list-item [routerLink]="['/customize']" (click)="drawer.close()"
-          >Customize</a
-        >
-        <a mat-list-item [routerLink]="['/sale']" (click)="drawer.close()"
-          >Sale</a
-        >
-        <a mat-list-item [routerLink]="['/explore']" (click)="drawer.close()"
-          >Explore</a
-        >
+        <!-- Screen Protection -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'screen-protection'"
+          (opened)="expanded = 'screen-protection'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Screen Protection</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of screenProtection">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Screen Protection', model: p.name }"
+                (click)="selectAndGo(p.name, 'Screen Protection'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Power -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'power'"
+          (opened)="expanded = 'power'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Power</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of power">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Power', model: p.name }"
+                (click)="selectAndGo(p.name, 'Power'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Accessories -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'accessories'"
+          (opened)="expanded = 'accessories'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Accessories</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of accessories">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Accessories', model: p.name }"
+                (click)="selectAndGo(p.name, 'Accessories'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Customize -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'customize'"
+          (opened)="expanded = 'customize'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Customize</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of customize">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Customize', model: p.name }"
+                (click)="selectAndGo(p.name, 'Customize'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Sale -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'sale'"
+          (opened)="expanded = 'sale'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Sale</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of sale">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Sale', model: p.name }"
+                (click)="selectAndGo(p.name, 'Sale'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Explore -->
+        <mat-expansion-panel class="exp"
+          [expanded]="expanded === 'explore'"
+          (opened)="expanded = 'explore'"
+          (closed)="expanded = null">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Explore</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="exp-cols">
+            <div class="exp-col" *ngFor="let cat of explore">
+              <h4>{{ cat.title }}</h4>
+              <a
+                mat-list-item
+                *ngFor="let p of cat.product"
+                [routerLink]="['/product']"
+                [queryParams]="{ category: 'Explore', model: p.name }"
+                (click)="selectAndGo(p.name, 'Explore'); drawer.close()"
+              >
+                {{ p.name }}
+              </a>
+            </div>
+          </div>
+        </mat-expansion-panel>
       </mat-nav-list>
     </mat-sidenav>
   </mat-sidenav-container>

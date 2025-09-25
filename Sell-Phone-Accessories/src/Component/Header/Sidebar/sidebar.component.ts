@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation, OnInit, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -8,32 +8,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { environment } from '../../../environments/environment.development';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ProductList } from '../../../service/ProductList.service';
-interface ProductReq {
-  name?: string;
-  category?: string; // map từ title
-}
 
-interface ProductRes {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  rate: number;
-  color: string;
-  quantity: number;
-  brand: string;
-  imageUrl: string;
-}
-type Page<T> = {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number; // page index
-  size: number;
-};
+import { environment } from '../../../environments/environment.development';
+import { HttpClient } from '@angular/common/http';
+import { ProductList } from '../../../service/ProductList.service';
+
+interface SimpleItem { id: number; name: string; }
+interface Group { title: string; product: SimpleItem[]; }
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -49,17 +31,24 @@ type Page<T> = {
     MatExpansionModule,
   ],
   encapsulation: ViewEncapsulation.None,
-
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent {
-  expanded: 'cases' | null = null;
   apiBase = environment.apiUrl;
   private http = inject(HttpClient);
+  private router = inject(Router);
   bus = inject(ProductList);
 
-  products = [
+  // Trạng thái mở panel mobile
+  expanded: 'cases' | 'screen-protection' | 'power' | 'accessories' | 'customize' | 'sale' | 'explore' | null = null;
+
+  // Trạng thái dropdown desktop
+  isOn = false;
+  toggle() { this.isOn = !this.isOn; }
+
+  // ====== DỮ LIỆU MENU ======
+  products: Group[] = [
     {
       title: 'Apple iPhone',
       product: [
@@ -72,16 +61,16 @@ export class SidebarComponent {
     {
       title: 'Apple iPad',
       product: [
-        { id: 5, name: 'iPad (A16)' },
-        { id: 6, name: 'iPad Air 11" (M3)' },
-        { id: 7, name: 'iPad Air 13" (M3)' },
-        { id: 8, name: 'iPad mini (A17 Pro)' },
+        { id: 5,  name: 'iPad (A16)' },
+        { id: 6,  name: 'iPad Air 11" (M3)' },
+        { id: 7,  name: 'iPad Air 13" (M3)' },
+        { id: 8,  name: 'iPad mini (A17 Pro)' },
       ],
     },
     {
       title: 'Samsung',
       product: [
-        { id: 9, name: 'Galaxy S25 Ultra' },
+        { id: 9,  name: 'Galaxy S25 Ultra' },
         { id: 10, name: 'Galaxy S25' },
         { id: 11, name: 'Galaxy S25+' },
         { id: 12, name: 'Galaxy S25 Edge' },
@@ -89,73 +78,19 @@ export class SidebarComponent {
     },
   ];
 
-  power = [
-    {
-      title: 'MagSafe',
-      product: [
-        { id: 1, name: 'Wireless Chargers' },
-        { id: 2, name: 'Charging Mounts' },
-        { id: 3, name: 'Charger Stands' },
-        { id: 4, name: 'Shop All' },
-      ],
-    },
-    {
-      title: 'Wireless Charging',
-      product: [
-        { id: 5, name: 'MagSafe' },
-        { id: 6, name: 'Qi Wireless Charging' },
-        { id: 7, name: 'Shop All' },
-      ],
-    },
-    {
-      title: 'Power Banks',
-      product: [
-        { id: 8, name: 'Wireless Power Banks' },
-        { id: 9, name: 'Mobile Charging Kits' },
-        { id: 10, name: 'Shop All' },
-      ],
-    },
-    {
-      title: 'Cables',
-      product: [
-        { id: 11, name: 'USB-C to USB-C' },
-        { id: 12, name: 'Lightning to USB-C' },
-        { id: 13, name: 'Lightning to USB-A' },
-        { id: 14, name: 'Micro-USB to USB-A' },
-        { id: 15, name: 'Shop All' },
-      ],
-    },
-    {
-      title: 'Wall Charging',
-      product: [
-        { id: 16, name: 'Wall Chargers' },
-        { id: 17, name: 'Wall Charging Kits' },
-        { id: 18, name: 'Shop All' },
-      ],
-    },
-    {
-      title: 'Car Charging',
-      product: [
-        { id: 19, name: 'Car Chargers' },
-        { id: 20, name: 'Car Charging Kits' },
-        { id: 21, name: 'Shop All' },
-      ],
-    },
-  ];
-
-  screenProtection = [
+  screenProtection: Group[] = [
     {
       title: 'Apple iPhone',
       product: [
-        { id: 1, name: 'iPhone 16 Pro Max' },
-        { id: 2, name: 'iPhone 16 Pro' },
-        { id: 3, name: 'iPhone 16' },
-        { id: 4, name: 'iPhone 16 Plus' },
-        { id: 5, name: 'iPhone 16e' },
-        { id: 6, name: 'iPhone 15 Pro Max' },
-        { id: 7, name: 'iPhone 15 Pro' },
-        { id: 8, name: 'iPhone 15' },
-        { id: 9, name: 'iPhone 15 Plus' },
+        { id: 1,  name: 'iPhone 16 Pro Max' },
+        { id: 2,  name: 'iPhone 16 Pro' },
+        { id: 3,  name: 'iPhone 16' },
+        { id: 4,  name: 'iPhone 16 Plus' },
+        { id: 5,  name: 'iPhone 16e' },
+        { id: 6,  name: 'iPhone 15 Pro Max' },
+        { id: 7,  name: 'iPhone 15 Pro' },
+        { id: 8,  name: 'iPhone 15' },
+        { id: 9,  name: 'iPhone 15 Plus' },
         { id: 10, name: 'iPhone 14 Pro Max' },
         { id: 11, name: 'iPhone 14 Pro' },
         { id: 12, name: 'iPhone 14' },
@@ -209,24 +144,78 @@ export class SidebarComponent {
     },
   ];
 
-  public state = false;
-  layId() {
-    if (this.state == false) {
-      this.state = true;
-    } else {
-      this.state = false;
-    }
-  }
+  power: Group[] = [
+    {
+      title: 'MagSafe',
+      product: [
+        { id: 1, name: 'Wireless Chargers' },
+        { id: 2, name: 'Charging Mounts' },
+        { id: 3, name: 'Charger Stands' },
+        { id: 4, name: 'Shop All' },
+      ],
+    },
+    {
+      title: 'Wireless Charging',
+      product: [
+        { id: 5, name: 'MagSafe' },
+        { id: 6, name: 'Qi Wireless Charging' },
+        { id: 7, name: 'Shop All' },
+      ],
+    },
+    {
+      title: 'Power Banks',
+      product: [
+        { id: 8, name: 'Wireless Power Banks' },
+        { id: 9, name: 'Mobile Charging Kits' },
+        { id: 10, name: 'Shop All' },
+      ],
+    },
+    {
+      title: 'Cables',
+      product: [
+        { id: 11, name: 'USB-C to USB-C' },
+        { id: 12, name: 'Lightning to USB-C' },
+        { id: 13, name: 'Lightning to USB-A' },
+        { id: 14, name: 'Micro-USB to USB-A' },
+        { id: 15, name: 'Shop All' },
+      ],
+    },
+    {
+      title: 'Wall Charging',
+      product: [
+        { id: 16, name: 'Wall Chargers' },
+        { id: 17, name: 'Wall Charging Kits' },
+        { id: 18, name: 'Shop All' },
+      ],
+    },
+    {
+      title: 'Car Charging',
+      product: [
+        { id: 19, name: 'Car Chargers' },
+        { id: 20, name: 'Car Charging Kits' },
+        { id: 21, name: 'Shop All' },
+      ],
+    },
+  ];
 
-  isOn = false;
-  toggle() {
-    this.isOn = !this.isOn;
-  }
+  // Tái sử dụng "power" làm dữ liệu mẫu cho Accessories/Customize/Sale/Explore (giống cách bạn đang dùng)
+  accessories: Group[] = this.power;
+  customize: Group[] = this.power;
+  sale: Group[] = this.power;
+  explore: Group[] = this.power;
 
-  getInformation(name: string, title: string) {
-    const body: ProductReq = { name, category: title }; // <- title => category
-  this.bus.set({ category: title, model: name });
+  /** Điều hướng thống nhất (desktop + mobile) */
+  selectAndGo(model: string, category: string) {
+    // Lưu để trang /product có thể fetch kể cả khi refresh
+    this.bus.payload.set({ category, model });
+    localStorage.setItem('productFilters', JSON.stringify({ category, model }));
 
-   
+    // Điều hướng
+    this.router.navigate(['/product'], {
+      queryParams: { category, model },
+    });
+
+    // Đóng mọi dropdown desktop
+    this.isOn = false;
   }
 }

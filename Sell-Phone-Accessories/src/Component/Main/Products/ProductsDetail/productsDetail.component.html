@@ -2,16 +2,45 @@
 <div *ngIf="loading">Đang tải...</div>
 <div *ngIf="error && !loading" class="error">{{ error }}</div>
 
-<!-- MAIN: chỉ render khi đã có dữ liệu -->
+<!-- MAIN -->
 <div *ngIf="product as p" class="product-detail">
-  <!-- ========== LEFT: MEDIA GRID ========== -->
+  <!-- Wishlist giữ nguyên kiểu MUI trên desktop; mobile sẽ chỉ là icon nhờ CSS -->
+  <button
+    mat-icon-button
+    class="wish-btn only-desktop"
+    type="button"
+    [color]="isWished(p.id) ? 'warn' : undefined"
+    [attr.aria-pressed]="isWished"
+    [matTooltip]="isWished(p.id) ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích'"
+    (click)="toggleWish(p.id)"
+    aria-label="Wishlist"
+  >
+    <mat-icon [ngClass]="isWished(p.id) ? 'on' : 'off'">{{
+      isWished(p.id) ? "favorite" : "favorite_border"
+    }}</mat-icon>
+  </button>
+
+  <!-- ========== LEFT: GALLERY ========== -->
   <aside class="media-column">
     <!-- ảnh preview lớn -->
     <div class="main-preview" *ngIf="activeImageUrl">
       <img [src]="activeImageUrl" [alt]="p.name" />
+
+      <!-- nút wishlist MOBILE (overlay trên ảnh) -->
+      <button
+        class="wish-btn wish-btn--mobile only-mobile"
+        type="button"
+        [attr.aria-pressed]="isWished"
+        (click)="toggleWish(p.id)"
+        aria-label="Wishlist"
+      >
+        <mat-icon [ngClass]="isWished(p.id) ? 'on' : 'off'">
+          {{ isWished(p.id) ? "favorite" : "favorite_border" }}
+        </mat-icon>
+      </button>
     </div>
 
-    <!-- lưới 4 ảnh phụ (đã chuẩn hoá trong TS) -->
+    <!-- ảnh phụ -->
     <div class="media-grid">
       <button
         class="tile"
@@ -28,7 +57,6 @@
   <section class="info-column">
     <h1 class="pd-title">{{ p.name }}</h1>
 
-    <!-- rating + links -->
     <div class="meta-row">
       <div
         class="stars"
@@ -159,8 +187,8 @@
   </section>
 </div>
 
-<!-- ===== Tabs header ===== -->
-<section *ngIf="product as p" class="pd-tabs">
+<!-- ===== Desktop Tabs (giữ nguyên, CHỈ desktop) ===== -->
+<section *ngIf="product as p" class="pd-tabs only-desktop">
   <div class="tabs-row">
     <a class="tab-link active" href="#pd-details">Product Details</a>
     <a class="tab-link" href="javascript:void(0)">Frequently Asked Questions</a>
@@ -168,8 +196,8 @@
   </div>
 </section>
 
-<!-- ===== Product Details body ===== -->
-<section *ngIf="product as p" id="pd-details" class="pd-section">
+<!-- ===== Desktop Product Details body (giữ nguyên) ===== -->
+<section *ngIf="product as p" id="pd-details" class="pd-section only-desktop">
   <div class="pd-cols">
     <!-- LEFT -->
     <div class="pd-col-left">
@@ -178,7 +206,6 @@
 
       <h3 class="pd-h3">Features</h3>
       <ul class="pd-features">
-        <!-- demo features; có thể bind từ API nếu backend có -->
         <li>Raised edges protect camera + screen</li>
         <li>Textured all over for peak grip</li>
         <li>Built-in magnets work with MagSafe accessories</li>
@@ -188,7 +215,6 @@
     <!-- RIGHT -->
     <div class="pd-col-right">
       <dl class="pd-specs">
-        <!-- Compatibility -->
         <div class="spec-row" *ngIf="toArray(p.compatibility).length">
           <dt>Compatibility</dt>
           <dd>
@@ -198,7 +224,6 @@
           </dd>
         </div>
 
-        <!-- Dimensions -->
         <div class="spec-row" *ngIf="p.dimensions">
           <dt>Dimensions</dt>
           <dd>
@@ -208,7 +233,6 @@
           </dd>
         </div>
 
-        <!-- Weight -->
         <div
           class="spec-row"
           *ngIf="p.weight !== null && p.weight !== undefined"
@@ -221,16 +245,163 @@
           </dd>
         </div>
 
-        <!-- Materials -->
-      <div class="spec-row" *ngIf="toArray(p.materials).length">
-  <dt>Materials</dt>
-  <dd>
-    <ul class="bullets">
-      <li *ngFor="let m of toArray(p.materials)">{{ m }}</li>
-    </ul>
-  </dd>
-</div>
+        <div class="spec-row" *ngIf="toArray(p.materials).length">
+          <dt>Materials</dt>
+          <dd>
+            <ul class="bullets">
+              <li *ngFor="let m of toArray(p.materials)">{{ m }}</li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
 
+      <div class="pd-warning">
+        <span class="ico" aria-hidden="true">⚠</span>
+        <span>
+          <strong>WARNING:</strong> Reproductive Harm —
+          <a
+            href="https://www.P65Warnings.ca.gov"
+            target="_blank"
+            rel="noopener"
+            >www.P65Warnings.ca.gov</a
+          >
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Mobile Accordions (CHỈ mobile) ===== -->
+<section *ngIf="product as p" id="pd-accordions" class="pd-section only-mobile">
+  <div class="pd-cols">
+    <div class="pd-col-left">
+      <!-- Product Details -->
+      <details class="pd-acc" #accDetails>
+        <summary>Product Details</summary>
+        <div class="acc-body">
+          <p class="pd-desc clamp" [class.unclamp]="accDetails.open">
+            {{ p.description ?? "" }}
+          </p>
+          <h3 class="pd-h3">Features</h3>
+          <ul class="pd-features clamp" [class.unclamp]="accDetails.open">
+            <li>Raised edges protect camera + screen</li>
+            <li>Textured all over for peak grip</li>
+            <li>Built-in magnets work with MagSafe accessories</li>
+          </ul>
+
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="!accDetails.open"
+            (click)="accDetails.open = true"
+          >
+            SHOW MORE
+          </button>
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="accDetails.open"
+            (click)="accDetails.open = false"
+          >
+            SHOW LESS
+          </button>
+        </div>
+      </details>
+
+      <!-- FAQs -->
+      <details class="pd-acc" #accFaq>
+        <summary>Frequently Asked Questions</summary>
+        <div class="acc-body clamp" [class.unclamp]="accFaq.open">
+          <p><b>Q:</b> Is this case MagSafe compatible?<br /><b>A:</b> Yes.</p>
+          <p>
+            <b>Q:</b> Does it include a screen protector?<br /><b>A:</b> Not
+            included.
+          </p>
+
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="!accFaq.open"
+            (click)="accFaq.open = true"
+          >
+            SHOW MORE
+          </button>
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="accFaq.open"
+            (click)="accFaq.open = false"
+          >
+            SHOW LESS
+          </button>
+        </div>
+      </details>
+
+      <!-- Reviews -->
+      <details class="pd-acc" #accReviews>
+        <summary>Reviews</summary>
+        <div class="acc-body clamp" [class.unclamp]="accReviews.open">
+          <p><b>Jane D.</b> – Solid build, grips well.</p>
+          <p><b>Mark T.</b> – Magnetic alignment is great.</p>
+
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="!accReviews.open"
+            (click)="accReviews.open = true"
+          >
+            SHOW MORE
+          </button>
+          <button
+            type="button"
+            class="filter-more"
+            *ngIf="accReviews.open"
+            (click)="accReviews.open = false"
+          >
+            SHOW LESS
+          </button>
+        </div>
+      </details>
+    </div>
+
+    <div class="pd-col-right">
+      <!-- specs & warning tái dùng từ desktop (nếu muốn, có thể ẩn bớt trên mobile) -->
+      <dl class="pd-specs">
+        <div class="spec-row" *ngIf="toArray(p.compatibility).length">
+          <dt>Compatibility</dt>
+          <dd>
+            <ul class="bullets">
+              <li *ngFor="let c of toArray(p.compatibility)">{{ c }}</li>
+            </ul>
+          </dd>
+        </div>
+        <div class="spec-row" *ngIf="p.dimensions">
+          <dt>Dimensions</dt>
+          <dd>
+            <ul class="bullets">
+              <li>{{ p.dimensions }}</li>
+            </ul>
+          </dd>
+        </div>
+        <div
+          class="spec-row"
+          *ngIf="p.weight !== null && p.weight !== undefined"
+        >
+          <dt>Weight</dt>
+          <dd>
+            <ul class="bullets">
+              <li>{{ p.weight }}</li>
+            </ul>
+          </dd>
+        </div>
+        <div class="spec-row" *ngIf="toArray(p.materials).length">
+          <dt>Materials</dt>
+          <dd>
+            <ul class="bullets">
+              <li *ngFor="let m of toArray(p.materials)">{{ m }}</li>
+            </ul>
+          </dd>
+        </div>
       </dl>
 
       <div class="pd-warning">

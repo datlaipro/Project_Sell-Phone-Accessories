@@ -213,6 +213,20 @@
           *ngFor="let p of list"
           (click)="goToProductDetail(p.id)"
         >
+          <button
+            class="wish-btn icon-only"
+            type="button"
+            [matTooltip]="
+              isWished(p.id) ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích'
+            "
+            (click)="toggleWish(p.id); $event.stopPropagation()"
+            aria-label="Wishlist"
+          >
+            <mat-icon [ngClass]="isWished(p.id) ? 'on' : 'off'">
+              {{ isWished(p.id) ? "favorite" : "favorite_border" }}
+            </mat-icon>
+          </button>
+
           <span class="badge">TOP SELLER</span>
           <div class="card__media">
             <img [src]="p.coverImageUrl" alt="Defender Series" />

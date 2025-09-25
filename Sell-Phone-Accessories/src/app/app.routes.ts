@@ -7,6 +7,7 @@ import { authGuard } from '../Auth/auth.guard';
 import { adminGuard } from '../Auth/auth.guard';
 import { AuthComponent } from '../LoginAndRegister/LoginAndRegister.component';
 import { ProductFormComponent } from '../Admin/AddNewProducts/addNewProducts.component';
+import { WishlistComponent } from '../Component/Main/Wishlist/wishlist.component';
 import { DashboardComponent } from '../Admin/Dashboard/dashboard.component';
 import { Login } from '../Admin/Auth/login.component';
 
@@ -26,6 +27,8 @@ export const routes: Routes = [
           { path: 'productDetail/:id', component: ProductsDetail }, // /product/productDetail/:id -> chi tiết
         ],
       },
+
+      { path: 'wishlist', component: WishlistComponent },
     ],
   },
   { path: 'auth', component: AuthComponent },
