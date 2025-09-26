@@ -29,7 +29,7 @@ public class AdminLoginService {
     private static final Logger log = LoggerFactory.getLogger(AdminLoginService.class);
 
     private final AdminRepository userRepo;// gọi tham chiếu tới truy vấn db cho đối tượng admin
-    private final AdminRefreshTokenRepository rtRepo;//gọi tham chiếu tới truy vấn db cho đối tượng refreshToken
+    private final AdminRefreshTokenRepository rtRepo;// gọi tham chiếu tới truy vấn db cho đối tượng refreshToken
     private final PasswordEncoder encoder;
     private final JwtService jwt;
 
@@ -131,38 +131,56 @@ public class AdminLoginService {
     @Transactional
     public Tokens refresh(String refreshToken, HttpServletRequest httpReq) {
         if (refreshToken == null || refreshToken.isBlank())
-            throw new RuntimeException("Missing refresh token");
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.UNAUTHORIZED, "Missing refresh token");
 
         var jws = jwt.parse(refreshToken);
-        if (jwt.isExpired(jws))
-            throw new RuntimeException("Refresh token expired");
-
         String jti = jws.getBody().get("jti", String.class);
         String fid = jws.getBody().get("fid", String.class);
-        Long userId = Long.valueOf(jws.getBody().getSubject());
 
-        AdminRefreshTokenEntity row = rtRepo.findByJti(jti)// tạo biến row có kiểu dữ liệu là
-                                                           // AdminRefreshTokenEntity và được gán giá trị từ
-                                                           // rtRepo.findByJti(jti)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
-
-        // Reuse detection: DB chưa bị revoke nhưng token hash không khớp -> reuse
-        String hash = sha256(refreshToken);
-        if (!hash.equals(row.getTokenHash()) || row.isRevoked() || row.getExpiresAt().isBefore(LocalDateTime.now())) {
-            // revoke toàn bộ family
-            // đơn giản: mark revoked cho tất cả token cùng family còn sống
-            // (tùy DB: ở đây demo nhẹ - production dùng update batch)
-            rtRepo.findAll().stream()
-                    .filter(t -> fid.equals(t.getFamilyId()) && t.getRevokedAt() == null)
-                    .forEach(t -> {
-                        t.setRevokedAt(LocalDateTime.now());
-                        rtRepo.save(t);
-                    });
-            throw new RuntimeException("Detected token reuse. Please login again.");
+        // 1) HẾT HẠN => 401 (KHÔNG coi là reuse, KHÔNG revoke cả family)
+        if (jwt.isExpired(jws)) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.UNAUTHORIZED, "Refresh token expired");
         }
 
-        // rotate
-        AdminEntity u = row.getAdmin();// lấy ra đối tượng admin có kiểu dữ liệu là adminEntity
+        // 2) Lấy bản ghi và KHÓA để tránh race (2 refresh song song)
+        AdminRefreshTokenEntity row = rtRepo.findByJtiForUpdate(jti)
+                .orElseThrow(() -> {
+                    // Không tìm thấy: nhiều khả năng reuse (token cũ đã bị rotate)
+                    // Revoke family để chặn chuỗi reuse tiếp theo
+                    rtRepo.revokeFamily(fid, LocalDateTime.now());
+                    return new org.springframework.web.server.ResponseStatusException(
+                            org.springframework.http.HttpStatus.UNAUTHORIZED,
+                            "Detected token reuse. Please login again.");
+                });
+
+        String nowMsg = "Detected token reuse. Please login again.";
+        LocalDateTime now = LocalDateTime.now();
+
+        // 3) Hash mismatch => chắc chắn reuse -> revoke cả family + 401
+        String hash = sha256(refreshToken);
+        if (!hash.equals(row.getTokenHash())) {
+            rtRepo.revokeFamily(fid, now);
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.UNAUTHORIZED, nowMsg);
+        }
+
+        // 4) Token đã bị thay thế hoặc đã bị revoke => reuse -> revoke family + 401
+        if (row.getReplacedBy() != null || row.getRevokedAt() != null) {
+            rtRepo.revokeFamily(fid, now);
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.UNAUTHORIZED, nowMsg);
+        }
+
+        // 5) Hết hạn (double-check theo DB) => 401 (không revoke family)
+        if (row.getExpiresAt() != null && row.getExpiresAt().isBefore(now)) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.UNAUTHORIZED, "Refresh token expired");
+        }
+
+        // 6) Phát hành token mới (trong CÙNG transaction)
+        AdminEntity u = row.getAdmin();
         String newAccess = createAccessToken(u);
         String newRefresh = createRefreshTokenAndStore(
                 u, fid,
@@ -170,11 +188,14 @@ public class AdminLoginService {
                 httpReq.getRemoteAddr(),
                 Optional.ofNullable(httpReq.getHeader("User-Agent")).orElse(""));
 
-        // revoke old & link replaced_by
-        row.setRevokedAt(LocalDateTime.now());
-        // tìm record mới theo hash
+        // 7) Gắn replaced_by + đánh dấu revoke token cũ (chặn reuse)
+        row.setLastUsedAt(now);
+        row.setRevokedAt(now);
+        // Tìm newRow theo jti của token mới: tốt nhất bạn encode jti vào claims, rồi
+        // lấy jtiNew trực tiếp
+        // Ở đây lấy theo hash cho nhanh:
         String newHash = sha256(newRefresh);
-        AdminRefreshTokenEntity newRow = rtRepo.findAll().stream()
+        AdminRefreshTokenEntity newRow = rtRepo.findAliveByFamily(fid).stream()
                 .filter(t -> newHash.equals(t.getTokenHash()))
                 .findFirst().orElse(null);
         if (newRow != null) {

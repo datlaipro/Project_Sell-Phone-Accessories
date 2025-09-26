@@ -1,6 +1,5 @@
 package com.github.datlaipro.shop.domain.product.service;
 
-
 import com.github.datlaipro.shop.exception.NotFoundException;
 import com.github.datlaipro.shop.domain.util.SlugUtil;
 import com.github.datlaipro.shop.domain.addNewProduct.entity.ProductImageEntity;
@@ -29,6 +28,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProductQueryServiceImpl implements ProductQueryService {
 
+  // ===== enforce 15 items/req =====
+  private static final int PAGE_SIZE = 15;
+
   private final ProductRepository productRepository;
   private final CategoryProductRepository categoryRepository;
   private final DeviceModelRepository deviceModelRepository;
@@ -50,7 +52,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ProductRes> search(SearchProductReq req) {// trả về ảnh đại diện cho mỗi product
+  public Page<ProductRes> search(SearchProductReq req) { // trả về ảnh đại diện cho mỗi product
     Page<ProductEntity> page = searchEntities(req);
 
     // ---- LẤY COVER THEO LÔ (TRÁNH N+1) ----
@@ -63,10 +65,9 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         ? Map.of()
         : productImageRepository.findCoversByProductIds(ids).stream()
             .collect(Collectors.toMap(
-                pi -> pi.getProduct().getId(),            // nếu bạn đổi sang ProductEntity thì vẫn là getProduct().getId()
+                pi -> pi.getProduct().getId(),
                 Function.identity(),
-                // nếu lỡ có nhiều cover (không nên), giữ tấm có id mới hơn
-                (a, b) -> a.getId() > b.getId() ? a : b
+                (a, b) -> a.getId() > b.getId() ? a : b // nếu có nhiều cover, giữ tấm mới hơn
             ));
 
     // ---- MAP DTO + GẮN COVER ----
@@ -75,7 +76,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
       ProductImageEntity cover = coverMap.get(p.getId());
       if (cover != null) {
         r.setCoverImageId(cover.getId());
-        r.setCoverImageUrl(cover.getImageUrl()); // field trong entity của bạn
+        r.setCoverImageUrl(cover.getImageUrl());
       }
       return r;
     });
@@ -83,7 +84,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<ProductEntity> searchEntities(SearchProductReq req) {// hàm tìm kiếm chính
+  public Page<ProductEntity> searchEntities(SearchProductReq req) { // hàm tìm kiếm chính
     if (req == null) throw new IllegalArgumentException("Request must not be null");
     if (req.getCategory() == null || req.getCategory().isBlank())
       throw new IllegalArgumentException("Category is required");
@@ -105,7 +106,8 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     DeviceModelEntity model = deviceModelRepository.findBySlug(modelSlug)
         .orElseThrow(() -> new NotFoundException("Device model not found: " + req.getModel()));
 
-    Pageable pageable = buildPageable(req.getPage(), req.getSize(), req.getSort());
+    // **Chốt phân trang 15/sp mỗi lần**
+    Pageable pageable = buildPageable(req.getPage(), req.getSort());
 
     // JPQL linh hoạt (đã định nghĩa trong ProductRepository)
     return productRepository.searchByCategoryAndModel(
@@ -117,11 +119,11 @@ public class ProductQueryServiceImpl implements ProductQueryService {
   // Helpers
   // -------------------------------------------------------------------------
 
-  private Pageable buildPageable(Integer page, Integer size, String sort) {
+  // Giữ chữ ký gọn: luôn dùng PAGE_SIZE = 15, bỏ qua size từ request
+  private Pageable buildPageable(Integer page, String sort) {
     int p = (page == null || page < 0) ? 0 : page;
-    int s = (size == null || size <= 0 || size > 100) ? 20 : size;
 
-    // default sort
+    // default sort: mới nhất trước
     Sort sortObj = Sort.by(Sort.Order.desc("createdAt"));
 
     if (sort != null && !sort.isBlank()) {
@@ -132,7 +134,9 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         sortObj = "asc".equals(dir) ? Sort.by(field).ascending() : Sort.by(field).descending();
       }
     }
-    return PageRequest.of(p, s, sortObj);
+
+    // **luôn 15/sp**
+    return PageRequest.of(p, PAGE_SIZE, sortObj);
   }
 
   private ProductRes toRes(ProductEntity e) {

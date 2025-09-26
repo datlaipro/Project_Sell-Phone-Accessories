@@ -64,41 +64,43 @@ export class NavbarComponent {
 
   isAccountOpen = false;
 
-  onLogout() {
-    this.http
-      .post<void>(`${this.apiBase}/auth/logout`, null, {
-        withCredentials: true,
-      })
-      .pipe(
-        catchError((err) => {
-          if (err.status === 403) {
-            // access hết hạn -> refresh rồi logout lại
-            return this.http
-              .post<void>(`${this.apiBase}/auth/refresh`, null, {
-                withCredentials: true,
-              })
-              .pipe(
-                switchMap(() =>
-                  this.http.post<void>(`${this.apiBase}/auth/logout`, null, {
-                    withCredentials: true,
-                  })
-                )
-              );
-          }
-          return throwError(() => err);
-        })
-      )
-      .subscribe({
-        next: () => {
-          // clear state UI của bạn ở đây
-          // ví dụ:
-          this.auth.setUser(null);
-          // this.router.navigateByUrl('/login');
-        },
-        error: (e) => {
-          console.error('Logout thất bại:', e);
-          // tuỳ chọn: vẫn clear client state nếu muốn
-        },
-      });
+ onLogout() {
+  const logout$ = () =>
+    this.http.post<void>(`${this.apiBase}/auth/logout`, null, {
+      withCredentials: true,
+    });
+
+  logout$().pipe(
+    // Nếu access token hết hạn → thử refresh rồi logout lại
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 401 || err.status === 403) {
+        return this.http.post<void>(`${this.apiBase}/auth/refresh`, null, {
+          withCredentials: true,
+        }).pipe(
+          switchMap(() => logout$()),
+          // Refresh fail (401 / token reuse) → hard signout
+          catchError((e: HttpErrorResponse) => {
+            this.hardSignout(e);
+            return of(void 0);
+          })
+        );
+      }
+      // Lỗi khác → hard signout luôn
+      this.hardSignout(err);
+      return of(void 0);
+    })
+  ).subscribe({
+    next: () => this.hardSignout(), // logout OK → vẫn clear state & điều hướng
+    error: (e) => this.hardSignout(e),
+  });
+}
+
+private hardSignout(err?: any) {
+  if (err?.error?.message) {
+    console.warn('Client signout:', err.error.message);
   }
+  this.auth.setUser(null);
+  this.router.navigateByUrl('/auth');
+}
+
 }

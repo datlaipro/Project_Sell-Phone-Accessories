@@ -45,6 +45,17 @@ type Product = {
   createdAt: string; // BE trả ISO string -> để string cho đơn giản
   updatedAt: string;
 };
+
+// 👇 Kiểu Page (Spring)
+type PageRes<T> = {
+  content: T[];
+  number: number; // trang hiện tại (0-based)
+  size: number; // kích thước trang
+  last: boolean; // có phải trang cuối cùng
+  totalElements?: number;
+  totalPages?: number; // 👈 dùng để tính last chuẩn hơn
+};
+
 @Component({
   standalone: true,
   selector: 'product',
@@ -83,6 +94,13 @@ export class Products {
   sortKey = signal<'best' | 'price-asc' | 'price-desc' | 'rating' | 'newest'>(
     'best'
   );
+
+  // 👇 Trạng thái phân trang
+  private readonly PAGE_SIZE = 15; // BE đã cố định 15/sp
+  showCount = signal(this.PAGE_SIZE); // lần đầu hiển thị tối đa 15
+  page = 0; // 0-based
+  last = false; // đã tới trang cuối chưa
+  loadingMore = signal(false); // loading cho nút More results
 
   onSortChange(v: string) {
     this.sortKey.set(v as any);
@@ -129,6 +147,13 @@ export class Products {
     return arr;
   });
 
+  // 👇 Danh sách đem đi render: nếu <=15 thì trả hết, >15 thì cắt còn 15
+  displayed = computed<Product[]>(() => {
+    const data = this.items();
+    const n = this.showCount();
+    return data.slice(0, Math.min(n, data.length));
+  });
+
   // Đóng panel khi phóng to lên desktop
   @HostListener('window:resize')
   onResize() {
@@ -147,7 +172,7 @@ export class Products {
         // Ưu tiên bus nếu có (đi từ trang trước)
         const p = this.bus.payload();
         if (p?.category && p?.model) {
-          this.fetch(p.category, p.model);
+          this.fetch(p.category, p.model); // 👈 lần đầu sẽ reset & nạp trang 0
           return;
         }
 
@@ -157,7 +182,7 @@ export class Products {
         const model = q.get('model');
 
         if (category && model) {
-          this.fetch(category, model);
+          this.fetch(category, model); // 👈 lần đầu sẽ reset & nạp trang 0
           return;
         }
 
@@ -192,35 +217,120 @@ export class Products {
       .replace(/-+/g, '-');
   }
 
-  private fetch(category: string, model: string) {
-    this.loading.set(true);
+  // ================== FETCH & LOAD MORE ==================
+
+  private categoryCurrent = '';
+  private modelCurrent = '';
+
+  private requestPage(
+    category: string,
+    model: string,
+    page: number,
+    append: boolean
+  ) {
+    // dùng loading cho lần đầu, loadingMore cho các lần "More results"
+    if (append) this.loadingMore.set(true);
+    else this.loading.set(true);
     this.error.set(null);
 
     const params = new HttpParams()
       .set('category', category)
-      .set('model', model);
+      .set('model', model)
+      .set('page', page.toString()); // 👈 gửi page 0-based, BE cố định size = 15
 
     this.http
-      .get<any>(`${this.apiBase}/api/products`, { params })
+      .get<PageRes<Product>>(`${this.apiBase}/api/products`, { params })
       .pipe(
-        map((res: any) => {
-          if (Array.isArray(res)) return res; // BE trả thẳng mảng
-          if (Array.isArray(res?.content)) return res.content; // Spring Page
-          if (Array.isArray(res?.data)) return res.data; // wrapper data
-          if (Array.isArray(res?.items)) return res.items; // wrapper items
-          // nếu lỡ trả về object key->product:
-          if (res && typeof res === 'object') return Object.values(res);
-          return [];
+        map((pg) => {
+          
+
+          // --- CHỈ xử lý kiểu Page ---
+          if (!pg || !Array.isArray(pg.content)) {
+            throw new Error('Response is not a Spring Page');
+          }
+
+          const items = pg.content ?? [];
+          const number = page;
+
+          // Ưu tiên totalPages nếu có (chính xác tuyệt đối)
+          let last: boolean;
+          if (typeof pg.totalPages === 'number') {
+            last = number + 1 >= pg.totalPages; // kiểm tra có đang ở trang cuối không khi number là chỉ số trang 0-based còn totalPages là tổng số trang.
+          } else if (typeof pg.last === 'boolean') {
+            last = pg.last;
+            const pageSize = pg.size && pg.size > 0 ? pg.size : this.PAGE_SIZE;
+            if (items.length < pageSize) last = true; // nếu danh sách sản phẩm < pageSize thì disable nút result
+          } else {
+            last = items.length < (pg.size ?? this.PAGE_SIZE);
+          }
+
+          return { items, last, number };
         }),
         catchError((err) => {
-          this.error.set(err?.error?.message || 'Load sản phẩm thất bại');
-          return of([] as Product[]);
+          this.error.set(
+            err?.error?.message || err?.message || 'Load sản phẩm thất bại'
+          );
+          return of({ items: [] as Product[], last: true, number: page });
         }),
-        finalize(() => this.loading.set(false))
+        finalize(() => {
+          if (append) this.loadingMore.set(false);
+          else this.loading.set(false);
+        })
       )
-      .subscribe((list: Product[]) => this.allItems.set(list));
+      .subscribe(({ items, last, number }) => {
+        if (append) {
+          // append thêm vào danh sách hiện có
+          this.allItems.set([...this.allItems(), ...items]);
+
+          // 👉 cho phép hiển thị thêm đúng số item vừa tải
+          this.showCount.set(
+            Math.min(this.showCount() + items.length, this.allItems().length)
+          );
+        } else {
+          // lần đầu: reset danh sách
+          this.allItems.set(items);
+
+          // 👉 lần đầu chỉ hiển thị tối đa 15 hoặc ít hơn nếu tổng < 15
+          this.showCount.set(Math.min(this.PAGE_SIZE, items.length));
+        }
+
+        this.last = last;
+        this.page = typeof number === 'number' ? number : page;
+      });
+  }
+
+  private fetch(category: string, model: string) {
+    this.loading.set(true);
+    this.error.set(null);
+
+    // lưu filter hiện tại để dùng khi bấm More
+    this.categoryCurrent = category;
+    this.modelCurrent = model;
+
+    // reset trạng thái phân trang
+    this.page = 0;
+    this.last = false;
+    this.allItems.set([]);
+
+    // gọi trang đầu (page = 0)
+    this.requestPage(category, model, 0, /* append */ false);
+
     // luw danh sách sản phẩm lấy được từ api rồi gán vào items
   }
+
+  // 👇 Hàm bấm nút “More results”: lấy trang kế tiếp
+  loadMore() {
+    if (this.loadingMore() || this.last) return; // đang tải hoặc hết rồi thì thôi
+    const nextPage = this.page + 1;
+    this.requestPage(
+      this.categoryCurrent,
+      this.modelCurrent,
+      nextPage,
+      /* append */ true
+    );
+  }
+
+  // ================== END FETCH & LOAD MORE ==================
 
   goToProductDetail(productId: number) {
     // thực hiện điều hướng
@@ -236,34 +346,33 @@ export class Products {
   }
 
   // ========= Wishlist state =========
-private wishKey = 'wishlist_ids';
-wished = new Set<number>();
+  private wishKey = 'wishlist_ids';
+  wished = new Set<number>();
 
-ngOnInit() {
-  const raw = localStorage.getItem(this.wishKey);
-  if (raw) {
-    try {
-      const arr: number[] = JSON.parse(raw);
-      this.wished = new Set(arr);
-    } catch {}
+  ngOnInit() {
+    const raw = localStorage.getItem(this.wishKey);
+    if (raw) {
+      try {
+        const arr: number[] = JSON.parse(raw);
+        this.wished = new Set(arr);
+      } catch {}
+    }
   }
-}
 
-isWished(id: number): boolean {
-  return this.wished.has(id);
-}
-
-toggleWish(id: number): void {
-  if (this.wished.has(id)) {
-    this.wished.delete(id);
-  } else {
-    this.wished.add(id);
+  isWished(id: number): boolean {
+    return this.wished.has(id);
   }
-  localStorage.setItem(this.wishKey, JSON.stringify(Array.from(this.wished)));
 
-  // TODO: nếu có API:
-  // (this.isWished(id) ? this.wishlistService.add(id) : this.wishlistService.remove(id))
-  //   .subscribe();
-}
+  toggleWish(id: number): void {
+    if (this.wished.has(id)) {
+      this.wished.delete(id);
+    } else {
+      this.wished.add(id);
+    }
+    localStorage.setItem(this.wishKey, JSON.stringify(Array.from(this.wished)));
 
+    // TODO: nếu có API:
+    // (this.isWished(id) ? this.wishlistService.add(id) : this.wishlistService.remove(id))
+    //   .subscribe();
+  }
 }

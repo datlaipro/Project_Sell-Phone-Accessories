@@ -206,11 +206,11 @@
         </label>
       </div>
 
-      <div class="product-grid" *ngIf="items() as list">
-        <!-- CARD 1 -->
+      <div class="product-grid" *ngIf="displayed() as list">
+        <!-- chỉ hiển thị 15 item đầu tiên -->
         <article
           class="card"
-          *ngFor="let p of list"
+          *ngFor="let p of list "
           (click)="goToProductDetail(p.id)"
         >
           <button
@@ -253,6 +253,24 @@
     </section>
   </main>
   <div class="filters-backdrop" (click)="filtersOpen = false"></div>
+  <!-- ... danh sách sản phẩm ... -->
+
+  <div
+    class="footer-actions"
+    style="display: flex; justify-content: center; padding: 16px 0"
+  >
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="loadMore()"
+      [disabled]="loadingMore() || last"
+      aria-label="More results"
+    >
+      {{
+        loadingMore() ? "Đang tải..." : last ? "Hết kết quả" : "More results"
+      }}
+    </button>
+  </div>
 
   <!-- WHY SECTION -->
   <section class="why">
